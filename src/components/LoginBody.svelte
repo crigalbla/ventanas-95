@@ -17,10 +17,16 @@
 <div class="background-silver flex gap-4 p-4 w-">
   <img class="h-16 w-16" src="icons/connection-2-computers.png" alt="connection-2-computers" />
   <div class="flex gap-4 flex-col">
-    <span>{@html $t("login.description")}</span>
+    <p>{@html $t("login.description")}</p>
     <div class="flex gap-2 flex-col">
-      <input type="text" on:keyup={onKeyUp}/>
-      <input type="password" />
+      <div class="flex items-center">
+        <p class="w-28">{@html $t("login.username")}</p>
+        <input type="text" on:keyup={onKeyUp}/>
+      </div>
+      <div class="flex items-center">
+        <p class="w-28">{@html $t("login.password")}</p>
+        <input type="password" />
+      </div>
     </div>
   </div>
   <div class="flex gap-2 flex-col">

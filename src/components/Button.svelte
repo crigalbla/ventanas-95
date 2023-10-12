@@ -1,3 +1,3 @@
-<button class="background-silver px-4 border-2" on:click>
+<button class="background-silver border-color px-4" on:click>
   <slot />
 </button>

@@ -19,7 +19,7 @@
 
   let windowDiv: HTMLElement;
 
-  const onQuestionButtonClick = () => console.log("?");
+  const onQuestionButtonClick = (e: Event) => console.log("?");
   const onMinimizeButtonClick = () => console.log("_");
   const onMaximizeButtonClick = () => console.log("❒");
   const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }));
@@ -34,18 +34,18 @@
 </script>
 
 <div
-  class="border-2 border-gray-600 absolute"
+  class="border-color absolute"
   class:window-hidden={$windowsHidden.login}
   class:window-center={!left && !top}
   class:window-position={left || top}
-  class:window-maxWidth={maxWidth}
+  class:window-max-width={maxWidth}
   style="--left:{left}; --top:{top}; --maxWidth:{maxWidth};"
   bind:this={windowDiv}
 >
   <DraggableItem bind:left bind:top>
-    <div class="background-window-head flex justify-between">
+    <div class="background-window-head flex justify-between px-1">
       <span class="text-white">{@html $t(title)}</span>
-      <div>
+      <div class="flex self-center gap-1">
         {#if hasQuestionButton}
           <WindowButton on:click={onQuestionButtonClick}>?</WindowButton>
         {/if}
@@ -78,7 +78,7 @@
     left: calc(var(--left) * 1px);
   }
 
-  .window-maxWidth {
+  .window-max-width {
     max-width: calc(var(--maxWidth) * 1px);
   }
 </style>
