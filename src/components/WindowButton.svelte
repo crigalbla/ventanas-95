@@ -1,4 +1,4 @@
-<button class="background-silver border-color button-text w-4 h-4" on:click>
+<button class="background-silver button-text w-4 h-4" on:click>
   <slot />
 </button>
 

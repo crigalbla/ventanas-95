@@ -21,16 +21,16 @@
     <div class="flex gap-2 flex-col">
       <div class="flex items-center">
         <p class="w-28">{@html $t("login.username")}</p>
-        <input type="text" on:keyup={onKeyUp}/>
+        <input class="flex-1" type="text" on:keyup={onKeyUp}/>
       </div>
       <div class="flex items-center">
         <p class="w-28">{@html $t("login.password")}</p>
-        <input type="password" />
+        <input class="flex-1"type="password" />
       </div>
     </div>
   </div>
   <div class="flex gap-2 flex-col">
-    <Button on:click={onClickButtons}>{@html $t("acept")}</Button>
+    <Button on:click={onClickButtons}>{@html $t("accept")}</Button>
     <Button on:click={onClickButtons}>{@html $t("cancel")}</Button>
   </div>
 </div>

@@ -34,7 +34,7 @@
 </script>
 
 <div
-  class="border-color absolute"
+  class="background-silver border-color-up absolute"
   class:window-hidden={$windowsHidden.login}
   class:window-center={!left && !top}
   class:window-position={left || top}
@@ -43,7 +43,7 @@
   bind:this={windowDiv}
 >
   <DraggableItem bind:left bind:top>
-    <div class="background-window-head flex justify-between px-1">
+    <div class="background-window-head flex justify-between px-1 m-px">
       <span class="text-white">{@html $t(title)}</span>
       <div class="flex self-center gap-1">
         {#if hasQuestionButton}
