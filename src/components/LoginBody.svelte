@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { windowsHidden } from '@/stores';
+  import { windowsHidden } from "@/stores";
   import type { WindowsHiddenType } from "@/stores";
   import { t } from "@/i18n";
 

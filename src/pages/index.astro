@@ -3,6 +3,7 @@ import LoginBody from '@/components/LoginBody.svelte';
 import Window from '@/components/Window.svelte';
 import Layout from '@/layouts/Layout.astro';
 import ChooseLanguage from "@/components/ChooseLanguage.svelte";
+import Resize from '@/components/Resize.svelte';
 ---
 
 <Layout title="Ventanas 95">
@@ -11,5 +12,6 @@ import ChooseLanguage from "@/components/ChooseLanguage.svelte";
 		<Window client:visible title="login.title" hasQuestionButton maxWidth={530} canBeResized={false}>
 			<LoginBody client:visible />
 		</Window>
+		<Resize client:visible minWidth={300} />
 	</main>
 </Layout>

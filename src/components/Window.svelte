@@ -2,11 +2,11 @@
   import { onMount } from "svelte";
 
   import DraggableItem from "@/components/DraggableItem.svelte";
-  import { windowsHidden } from '@/stores';
+  import { windowsHidden } from "@/stores";
   import type { WindowsHiddenType } from "@/stores";
   import { t } from "@/i18n";
 
-  import WindowButton from './WindowButton.svelte';
+  import WindowButton from "./WindowButton.svelte";
 
   export let title: string;
   export let hasQuestionButton = false;
