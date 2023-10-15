@@ -70,7 +70,7 @@
 				delta = event.pageX - cursorPosition.x
 				const newWidth = initialRect.width + delta
 				if (minWidth < newWidth) {
-					element.style.width = `${newWidth}px`
+					// element.style.width = `${newWidth}px`
 					width = newWidth;
 				}
 			}
@@ -80,10 +80,10 @@
 				const newWidth = initialRect.width + delta
 				const newLeft = initialRect.left - delta
 				if (minWidth < newWidth) {
-					element.style.width = `${newWidth}px`
-					element.style.left = `${newLeft}px`
+					// element.style.width = `${newWidth}px`
+					// element.style.left = `${newLeft}px`
 					width = newWidth
-					left = newLeft
+					left = event.pageX
 				}
 			}
 			
@@ -92,10 +92,10 @@
 				const newHeight = initialRect.height + delta
 				const newTop = initialRect.top - delta
 				if (minHeight < newHeight) {
-					element.style.height = `${newHeight}px`
-					element.style.top = `${newTop}px`
+					// element.style.height = `${newHeight}px`
+					// element.style.top = `${newTop}px`
 					height = newHeight
-					top = newTop
+					top = event.pageY
 				}
 			}
 			
@@ -103,7 +103,7 @@
 				delta = event.pageY - cursorPosition.y
 				const newHeight = initialRect.height + delta
 				if (minHeight < newHeight) {
-					element.style.height = `${newHeight}px`
+					// element.style.height = `${newHeight}px`
 					height = newHeight
 				}
 			}
@@ -127,21 +127,17 @@
 </script>
 
 {#if canBeResized}
-	<section
-		style="--minWidth:{minWidth}; --minHeight:{minHeight}; --width:{width}; --height:{height}; --left:{left}; --top:{top};"
-	>
-		<div class="redizable-box" use:resize>
-			<div><slot /></div>
-			<div class="resizer top"/>
-			<div class="resizer right" />
-			<div class="resizer bottom" />
-			<div class="resizer left" />
-			<div class="resizer top-right" />
-			<div class="resizer top-left" />
-			<div class="resizer bottom-right" />
-			<div class="resizer bottom-left" />
-		</div>
-	</section>
+	<div class="redizable-box sizes" use:resize>
+		<div class="sizes"><slot /></div>
+		<div class="resizer top"/>
+		<div class="resizer right" />
+		<div class="resizer bottom" />
+		<div class="resizer left" />
+		<div class="resizer top-right" />
+		<div class="resizer top-left" />
+		<div class="resizer bottom-right" />
+		<div class="resizer bottom-left" />
+	</div>
 {:else}
 	<slot />
 {/if}
@@ -150,16 +146,19 @@
 	.redizable-box {
     /* top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px); */
-		height: calc(var(--height) * 1px);
-		width: calc(var(--width) * 1px);
-		min-height: calc(var(--minHeight) * 1px);
-		min-width: calc(var(--minWidth) * 1px);
 		background: #e5e5e5;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		position: relative;
 		user-select: none;
+	}
+
+	.sizes {
+		height: calc(var(--height) * 1px);
+		width: calc(var(--width) * 1px);
+		min-height: calc(var(--minHeight) * 1px);
+		min-width: calc(var(--minWidth) * 1px);
 	}
 	
 	.resizer {

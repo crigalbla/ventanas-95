@@ -20,6 +20,9 @@
 
   let width: number;
 	let height: number;
+  let minWidth = 200;
+  let minHeight = 100;
+  let headerHeight = 24;
   let windowDiv: HTMLElement;
 
   const onQuestionButtonClick = (e: Event) => console.log("?");
@@ -45,12 +48,12 @@
   class:window-center={!left && !top}
   class:window-position={left || top}
   class:window-max-width={maxWidth}
-  style="--left:{left}; --top:{top}; --maxWidth:{maxWidth}; --width:{width}; --height:{height};"
+  style="--left:{left}; --top:{top}; --minWidth{minWidth}; --minHeight:{minHeight}; --maxWidth:{maxWidth}; --width:{width}; --height:{height};"
   bind:this={windowDiv}
 >
-  <Resize {canBeResized} bind:width bind:height bind:top bind:left>
+  <Resize {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>
     <Draggable bind:left bind:top>
-      <div class="background-window-head flex justify-between px-1 m-px">
+      <div class="background-window-head window-header-height flex justify-between h-6 px-1 m-px">
         <span class="text-white">{@html $t(title)}</span>
         <div class="flex self-center gap-1">
           {#if hasQuestionButton}
