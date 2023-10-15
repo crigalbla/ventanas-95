@@ -1,49 +1,38 @@
 <script>
-	export let minWidth = 100;
-	export let minHeight = 50;
+	export let width = 500;
+	export let height = 200;
+	export let minWidth = 200;
+	export let minHeight = 100;
+	export let top = 0;
+	export let left = 0;
+	export let canBeResized = true;
 
 	const resize = (element) => {
-		const top = document.createElement("div")
-		top.direction = "north"
-		top.classList.add("resizer")
-		top.classList.add("top")
+		const resizerTop = document.querySelector(".resizer.top")
+		resizerTop.direction = "north"
 		
-		const right = document.createElement("div")
-		right.direction = "east"
-		right.classList.add("resizer")
-		right.classList.add("right")
+		const resizerRight = document.querySelector(".resizer.right")
+		resizerRight.direction = "east"
 		
-		const bottom = document.createElement("div")
-		bottom.direction = "south"
-		bottom.classList.add("resizer")
-		bottom.classList.add("bottom")
+		const resizerBottom = document.querySelector(".resizer.bottom")
+		resizerBottom.direction = "south"
 
-		const left = document.createElement("div")
-		left.direction = "west"
-		left.classList.add("resizer")
-		left.classList.add("left")
+		const resizerLeft = document.querySelector(".resizer.left")
+		resizerLeft.direction = "west"
 		
-		const topRight = document.createElement("div")
-		topRight.direction = "northeast"
-		topRight.classList.add("resizer")
-		topRight.classList.add("top-right")
+		const resizerTopRight = document.querySelector(".resizer.top-right")
+		resizerTopRight.direction = "northeast"
 		
-		const topLeft = document.createElement("div")
-		topLeft.direction = "northwest"
-		topLeft.classList.add("resizer")
-		topLeft.classList.add("top-left")
+		const resizerTopLeft = document.querySelector(".resizer.top-left")
+		resizerTopLeft.direction = "northwest"
 		
-		const bottomRight = document.createElement("div")
-		bottomRight.direction = "southeast"
-		bottomRight.classList.add("resizer")
-		bottomRight.classList.add("bottom-right")
+		const resizerBottomRight = document.querySelector(".resizer.bottom-right")
+		resizerBottomRight.direction = "southeast"
 		
-		const bottomLeft = document.createElement("div")
-		bottomLeft.direction = "southwest"
-		bottomLeft.classList.add("resizer")
-		bottomLeft.classList.add("bottom-left")
+		const resizerBottomLeft = document.querySelector(".resizer.bottom-left")
+		resizerBottomLeft.direction = "southwest"
 				
-		const resizers = [top, right, bottom, left, topRight, topLeft, bottomRight, bottomLeft]
+		const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]
 		
 		let active = null, initialRect = null, cursorPosition = null
 		
@@ -63,7 +52,7 @@
 			cursorPosition = { x: event.pageX, y: event.pageY }
 		}
 		
-		const onMouseup = (event) => {
+		const onMouseup = () => {
 			if (!active) return
 			
 			active = null
@@ -79,32 +68,44 @@
 			
 			if (direction.match("east")) {
 				delta = event.pageX - cursorPosition.x
-				const newWidth = initialRect.width + delta;
-				if (minWidth < newWidth) element.style.width = `${newWidth}px`
+				const newWidth = initialRect.width + delta
+				if (minWidth < newWidth) {
+					element.style.width = `${newWidth}px`
+					width = newWidth;
+				}
 			}
 			
 			if (direction.match("west")) {
 				delta = cursorPosition.x - event.pageX
-				const newWidth = initialRect.width + delta;
+				const newWidth = initialRect.width + delta
+				const newLeft = initialRect.left - delta
 				if (minWidth < newWidth) {
-					element.style.left = `${initialRect.left - delta}px`
 					element.style.width = `${newWidth}px`
+					element.style.left = `${newLeft}px`
+					width = newWidth
+					left = newLeft
 				}
 			}
 			
 			if (direction.match("north")) {
 				delta = cursorPosition.y - event.pageY
-				const newHeight = initialRect.height + delta;
+				const newHeight = initialRect.height + delta
+				const newTop = initialRect.top - delta
 				if (minHeight < newHeight) {
 					element.style.height = `${newHeight}px`
-					element.style.top = `${initialRect.top - delta}px`
+					element.style.top = `${newTop}px`
+					height = newHeight
+					top = newTop
 				}
 			}
 			
 			if (direction.match("south")) {
 				delta = event.pageY - cursorPosition.y
-				const newHeight = initialRect.height + delta;
-				if (minHeight < newHeight) element.style.height = `${newHeight}px`
+				const newHeight = initialRect.height + delta
+				if (minHeight < newHeight) {
+					element.style.height = `${newHeight}px`
+					height = newHeight
+				}
 			}
 		}
 
@@ -125,18 +126,34 @@
 	}
 </script>
 
-<section class="h-0 w-0" style="--minWidth:{minWidth}; --minHeight:{minHeight};">
-	<div class="redizable-box" use:resize>
-		Redizable-box
-	</div>
-</section>
+{#if canBeResized}
+	<section
+		style="--minWidth:{minWidth}; --minHeight:{minHeight}; --width:{width}; --height:{height}; --left:{left}; --top:{top};"
+	>
+		<div class="redizable-box" use:resize>
+			<div><slot /></div>
+			<div class="resizer top"/>
+			<div class="resizer right" />
+			<div class="resizer bottom" />
+			<div class="resizer left" />
+			<div class="resizer top-right" />
+			<div class="resizer top-left" />
+			<div class="resizer bottom-right" />
+			<div class="resizer bottom-left" />
+		</div>
+	</section>
+{:else}
+	<slot />
+{/if}
 
 <style>
 	.redizable-box {
-		left: 300px;
-		top: 100px;
-		height: calc(var(--minHeight) * 1px);
-		width: calc(var(--minWidth) * 1px);
+    /* top: calc(var(--top) * 1px);
+    left: calc(var(--left) * 1px); */
+		height: calc(var(--height) * 1px);
+		width: calc(var(--width) * 1px);
+		min-height: calc(var(--minHeight) * 1px);
+		min-width: calc(var(--minWidth) * 1px);
 		background: #e5e5e5;
 		display: flex;
 		justify-content: center;
@@ -145,12 +162,12 @@
 		user-select: none;
 	}
 	
-	:global(.resizer) {
+	.resizer {
 		position: absolute;
 		box-sizing: border-box; 
 	}
 	
-	:global(.resizer.right) {
+	.resizer.right {
 		width: 4px;
 		height: 100%;
 		background: red;
@@ -158,7 +175,7 @@
 		cursor: e-resize;
 	}
 	
-	:global(.resizer.left) {
+	.resizer.left {
 		width: 4px;
 		height: 100%;
 		background: blue;
@@ -166,7 +183,7 @@
 		cursor: e-resize;
 	}
 	
-	:global(.resizer.top) {
+	.resizer.top {
 		height: 4px;
 		width: 100%;
 		background: green;
@@ -174,7 +191,7 @@
 		cursor: n-resize;
 	}
 	
-	:global(.resizer.bottom) {
+	.resizer.bottom {
 		height: 4px;
 		width: 100%;
 		background: orange;
@@ -182,7 +199,7 @@
 		cursor: n-resize;
 	}
 	
-	:global(.resizer.top-left) {
+	.resizer.top-left {
 		height: 8px;
 		width: 8px;
 		background: orange;
@@ -192,7 +209,7 @@
 		border-radius: 100%;
 	}
 	
-	:global(.resizer.top-right) {
+	.resizer.top-right {
 		height: 8px;
 		width: 8px;
 		background: orange;
@@ -202,7 +219,7 @@
 		border-radius: 100%;
 	}
 	
-	:global(.resizer.bottom-left) {
+	.resizer.bottom-left {
 		height: 8px;
 		width: 8px;
 		background: green;
@@ -212,7 +229,7 @@
 		border-radius: 100%;
 	}
 	
-	:global(.resizer.bottom-right) {
+	.resizer.bottom-right {
 		height: 8px;
 		width: 8px;
 		background: green;

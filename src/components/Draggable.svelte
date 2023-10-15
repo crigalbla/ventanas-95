@@ -23,7 +23,6 @@
 <section
   on:mousedown={onMouseDown}
   class="draggable"
-  style="left: {left}px; top: {top}px;"
   role="button"
   tabindex="0"
 >
