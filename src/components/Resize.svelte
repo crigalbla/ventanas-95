@@ -1,10 +1,10 @@
 <script>
-	export let width = 500;
-	export let height = 200;
-	export let minWidth = 200;
-	export let minHeight = 100;
-	export let top = 0;
-	export let left = 0;
+	export let width;
+	export let height;
+	export let minWidth;
+	export let minHeight;
+	export let top;
+	export let left;
 	export let canBeResized = true;
 
 	const resize = (element) => {
@@ -70,7 +70,6 @@
 				delta = event.pageX - cursorPosition.x
 				const newWidth = initialRect.width + delta
 				if (minWidth < newWidth) {
-					// element.style.width = `${newWidth}px`
 					width = newWidth;
 				}
 			}
@@ -78,10 +77,7 @@
 			if (direction.match("west")) {
 				delta = cursorPosition.x - event.pageX
 				const newWidth = initialRect.width + delta
-				const newLeft = initialRect.left - delta
 				if (minWidth < newWidth) {
-					// element.style.width = `${newWidth}px`
-					// element.style.left = `${newLeft}px`
 					width = newWidth
 					left = event.pageX
 				}
@@ -90,10 +86,7 @@
 			if (direction.match("north")) {
 				delta = cursorPosition.y - event.pageY
 				const newHeight = initialRect.height + delta
-				const newTop = initialRect.top - delta
 				if (minHeight < newHeight) {
-					// element.style.height = `${newHeight}px`
-					// element.style.top = `${newTop}px`
 					height = newHeight
 					top = event.pageY
 				}
@@ -103,7 +96,6 @@
 				delta = event.pageY - cursorPosition.y
 				const newHeight = initialRect.height + delta
 				if (minHeight < newHeight) {
-					// element.style.height = `${newHeight}px`
 					height = newHeight
 				}
 			}
@@ -144,8 +136,6 @@
 
 <style>
 	.redizable-box {
-    /* top: calc(var(--top) * 1px);
-    left: calc(var(--left) * 1px); */
 		background: #e5e5e5;
 		display: flex;
 		justify-content: center;

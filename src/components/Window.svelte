@@ -18,11 +18,11 @@
   export let top = 0;
   export let maxWidth = 0;
 
+  const headerHeight = 24;
   let width: number;
 	let height: number;
-  let minWidth = 200;
-  let minHeight = 100;
-  let headerHeight = 24;
+  let minWidth: number;
+  let minHeight: number;
   let windowDiv: HTMLElement;
 
   const onQuestionButtonClick = (e: Event) => console.log("?");
@@ -31,13 +31,13 @@
   const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }));
 
   onMount(() => {
+    minWidth = windowDiv.clientWidth;
+    minHeight = windowDiv.clientHeight;
+  
     if (!left && !top) {
       const rect = windowDiv.getBoundingClientRect();
       top = rect.top + window.scrollY;
       left = rect.left + window.scrollX;
-      width = rect.width;
-      height = rect.height;
-      // TODO por qué coge un width de 503 en vez de uno mas grande?
     }
   })
 </script>
@@ -48,7 +48,7 @@
   class:window-center={!left && !top}
   class:window-position={left || top}
   class:window-max-width={maxWidth}
-  style="--left:{left}; --top:{top}; --minWidth{minWidth}; --minHeight:{minHeight}; --maxWidth:{maxWidth}; --width:{width}; --height:{height};"
+  style="--left:{left}; --top:{top}; --width:{width}; --height:{height}; --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight}"
   bind:this={windowDiv}
 >
   <Resize {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>

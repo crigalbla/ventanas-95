@@ -14,7 +14,7 @@
   };
 </script>
 
-<div class="background-silver flex gap-4 p-4">
+<div class="background-silver login-body-height flex justify-center gap-4 p-4">
   <img class="h-16 w-16" src="icons/connection-2-computers.png" alt="connection-2-computers" />
   <div class="flex gap-4 flex-col">
     <p>{@html $t("login.description")}</p>
@@ -34,3 +34,9 @@
     <Button on:click={onClickButtons}>{@html $t("cancel")}</Button>
   </div>
 </div>
+
+<style>
+  .login-body-height {
+    height: calc(100% - var(--headerHeight) * 1px);
+  }
+</style>
