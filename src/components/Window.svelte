@@ -31,8 +31,8 @@
   const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }));
 
   onMount(() => {
-    minWidth = windowDiv.clientWidth;
-    minHeight = windowDiv.clientHeight;
+    width = minWidth = windowDiv.clientWidth;
+    height = minHeight = windowDiv.clientHeight;
   
     if (!left && !top) {
       const rect = windowDiv.getBoundingClientRect();
@@ -52,7 +52,7 @@
   bind:this={windowDiv}
 >
   <Resize {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>
-    <Draggable bind:left bind:top>
+    <Draggable fake bind:left bind:top>
       <div class="background-window-head window-header-height flex justify-between h-6 px-1 m-px">
         <span class="text-white">{@html $t(title)}</span>
         <div class="flex self-center gap-1">
