@@ -41,7 +41,9 @@
 >
 	<slot />
 </section>
-<div class="fake-draggable display-none" bind:this={fakeDraggable} style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}" />
+{#if fake}
+	<div class="fake-draggable display-none" bind:this={fakeDraggable} style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}" />
+{/if}
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
 
 <style>

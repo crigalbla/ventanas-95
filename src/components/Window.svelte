@@ -31,7 +31,7 @@
   const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }));
 
   onMount(() => {
-    width = minWidth = windowDiv.clientWidth;
+    width = minWidth = windowDiv.clientWidth - 1;
     height = minHeight = windowDiv.clientHeight;
   
     if (!left && !top) {
@@ -43,12 +43,12 @@
 </script>
 
 <div
-  class="background-silver border-color-up window-size absolute"
+  class="background-silver border-color-up absolute"
   class:window-hidden={$windowsHidden.login}
   class:window-center={!left && !top}
   class:window-position={left || top}
   class:window-max-width={maxWidth}
-  style="--left:{left}; --top:{top}; --width:{width}; --height:{height}; --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight}"
+  style="--left:{left}; --top:{top}; --width:{width}; --height:{height}; --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
 >
   <Resize {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>

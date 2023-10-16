@@ -159,7 +159,6 @@
 	.resizer.right {
 		width: 4px;
 		height: 100%;
-		background: red;
 		right: -2px;
 		cursor: e-resize;
 	}
@@ -167,7 +166,6 @@
 	.resizer.left {
 		width: 4px;
 		height: 100%;
-		background: blue;
 		left: -2px;
 		cursor: e-resize;
 	}
@@ -175,7 +173,6 @@
 	.resizer.top {
 		height: 4px;
 		width: 100%;
-		background: green;
 		top: -2px;
 		cursor: n-resize;
 	}
@@ -183,7 +180,6 @@
 	.resizer.bottom {
 		height: 4px;
 		width: 100%;
-		background: orange;
 		bottom: -2px;
 		cursor: n-resize;
 	}
@@ -191,7 +187,6 @@
 	.resizer.top-left {
 		height: 8px;
 		width: 8px;
-		background: orange;
 		top: -4px;
 		left: -4px;
 		cursor: nw-resize;
@@ -201,7 +196,6 @@
 	.resizer.top-right {
 		height: 8px;
 		width: 8px;
-		background: orange;
 		top: -4px;
 		right: -4px;
 		cursor: ne-resize;
@@ -211,7 +205,6 @@
 	.resizer.bottom-left {
 		height: 8px;
 		width: 8px;
-		background: green;
 		bottom: -4px;
 		left: -4px;
 		cursor: sw-resize;
@@ -221,7 +214,6 @@
 	.resizer.bottom-right {
 		height: 8px;
 		width: 8px;
-		background: green;
 		bottom: -4px;
 		right: -4px;
 		cursor: se-resize;
