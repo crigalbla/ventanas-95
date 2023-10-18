@@ -119,8 +119,8 @@
 </script>
 
 {#if canBeResized}
-	<div class="redizable-box sizes" use:resize>
-		<div class="sizes"><slot /></div>
+	<div class="redizable-box" use:resize>
+		<slot />
 		<div class="resizer top"/>
 		<div class="resizer right" />
 		<div class="resizer bottom" />
@@ -142,13 +142,7 @@
 		align-items: center;
 		position: relative;
 		user-select: none;
-	}
-
-	.sizes {
-		height: calc(var(--height) * 1px);
-		width: calc(var(--width) * 1px);
-		min-height: calc(var(--minHeight) * 1px);
-		min-width: calc(var(--minWidth) * 1px);
+		height: 100%;
 	}
 	
 	.resizer {
