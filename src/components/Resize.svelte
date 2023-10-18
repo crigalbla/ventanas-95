@@ -31,12 +31,20 @@
 		
 		const resizerBottomLeft = document.querySelector(".resizer.bottom-left")
 		resizerBottomLeft.direction = "southwest"
-				
-		const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]
 		
+		const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]
+		const html = document.querySelector("html")
+		const body = document.querySelector("body")
+
 		let active = null, initialRect = null, cursorPosition = null
 		
 		const onMousedown = (event) => {
+			const estiloCalculado = window.getComputedStyle(event.toElement);
+			const cursor = estiloCalculado.cursor
+
+			html.style.cursor = cursor
+			body.style.pointerEvents = 'none'
+
 			active = event.target
 			const rect = element.getBoundingClientRect()
 			const parent = element.parentElement.getBoundingClientRect()
@@ -55,6 +63,8 @@
 		const onMouseup = () => {
 			if (!active) return
 			
+			html.style.cursor = null
+			body.style.pointerEvents = null
 			active = null
 			initialRect = null
 			cursorPosition = null
