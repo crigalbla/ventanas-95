@@ -1,4 +1,6 @@
 <script>
+  import { mouseOutOfScreen } from "@/utils"
+
 	export let width
 	export let height
 	export let minWidth
@@ -71,7 +73,7 @@
 		}
 
 		const onMove = (event) => {
-			if (!active) return
+			if (!active || mouseOutOfScreen(event)) return
 
 			const direction = active.direction
 			let delta
