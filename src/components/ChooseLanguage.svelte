@@ -1,5 +1,5 @@
 <script>
-  import { locale, locales } from "@/i18n";  
+  import { locale, locales } from "@/i18n"
 </script>
 
 <select bind:value={$locale}>

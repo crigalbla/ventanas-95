@@ -1,9 +1,9 @@
-import { writable } from "svelte/store";
+import { writable } from "svelte/store"
 
 export type WindowsHiddenType = {
   [key: string]: boolean;
 }
 
-const state: WindowsHiddenType = {};
+const state: WindowsHiddenType = {}
 
-export const windowsHidden = writable(state);
+export const windowsHidden = writable(state)

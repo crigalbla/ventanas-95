@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { windowsHidden } from "@/stores";
-  import type { WindowsHiddenType } from "@/stores";
-  import { t } from "@/i18n";
+  import { windowsHidden } from "@/stores"
+  import type { WindowsHiddenType } from "@/stores"
+  import { t } from "@/i18n"
 
-  import Button from "./Button.svelte";
+  import Button from "./Button.svelte"
 
-  const onClickButtons = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }));
+  const onClickButtons = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
   const onKeyUp = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
+  	const target = event.target as HTMLInputElement
+  	const value = target.value
 
-    console.log(value);
-  };
+  	console.log(value)
+  }
 </script>
 
 <div class="background-silver login-body-height flex justify-center gap-4 p-4">

@@ -1,46 +1,46 @@
 <script lang="ts">
-  import { onMount, afterUpdate } from "svelte";
+  import { onMount } from "svelte"
 
-  import { windowsHidden } from "@/stores";
-  import type { WindowsHiddenType } from "@/stores";
-  import { t } from "@/i18n";
-  
-  import Draggable from "./Draggable.svelte";
-  import WindowButton from "./WindowButton.svelte";
-  import Resize from "./Resize.svelte";
+  import { windowsHidden } from "@/stores"
+  import type { WindowsHiddenType } from "@/stores"
+  import { t } from "@/i18n"
 
-  export let title: string;
-  export let hasQuestionButton = false;
-  export let canBeMinimized = false;
-  export let canBeMaximized = false;
-  export let canBeResized = true;
-  export let initialWidth = 0;
-  export let initialHeight = 0;
-  export let left = 0;
-  export let top = 0;
-  export let maxWidth = 0;
+  import Draggable from "./Draggable.svelte"
+  import WindowButton from "./WindowButton.svelte"
+  import Resize from "./Resize.svelte"
 
-  const headerHeight = 24;
-  let width: number;
-	let height: number;
-  let minWidth: number;
-  let minHeight: number;
-  let windowDiv: HTMLElement;
+  export let title: string
+  export let hasQuestionButton = false
+  export let canBeMinimized = false
+  export let canBeMaximized = false
+  export let canBeResized = true
+  export let initialWidth = 0
+  export let initialHeight = 0
+  export let left = 0
+  export let top = 0
+  export let maxWidth = 0
 
-  const onQuestionButtonClick = (e: Event) => console.log("?");
-  const onMinimizeButtonClick = () => console.log("_");
-  const onMaximizeButtonClick = () => console.log("❒");
-  const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }));
+  const headerHeight = 24
+  let width: number
+	let height: number
+  let minWidth: number
+  let minHeight: number
+  let windowDiv: HTMLElement
+
+  const onQuestionButtonClick = () => console.log("?")
+  const onMinimizeButtonClick = () => console.log("_")
+  const onMaximizeButtonClick = () => console.log("❒")
+  const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
 
   onMount(() => {
-    width = minWidth = windowDiv.clientWidth;
-    height = minHeight = windowDiv.clientHeight;
-  
-   if (!left && !top) {
-      const rect = windowDiv.getBoundingClientRect();
-      top = rect.top + window.scrollY;
-      left = rect.left + window.scrollX;
-    }
+  	width = minWidth = windowDiv.clientWidth
+  	height = minHeight = windowDiv.clientHeight
+
+  	if (!left && !top) {
+  		const rect = windowDiv.getBoundingClientRect()
+  		top = rect.top + window.scrollY
+  		left = rect.left + window.scrollX
+  	}
   })
 </script>
 
@@ -88,7 +88,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  
+
   .window-position {
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
