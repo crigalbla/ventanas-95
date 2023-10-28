@@ -166,28 +166,28 @@
 		width: 4px;
 		height: 100%;
 		right: -2px;
-		cursor: e-resize;
+		cursor: url('/cursors/e-resize.cur'), e-resize;
 	}
 
 	.resizer.left {
 		width: 4px;
 		height: 100%;
 		left: -2px;
-		cursor: e-resize;
+		cursor: url('/cursors/e-resize.cur'), e-resize;
 	}
 
 	.resizer.top {
 		height: 4px;
 		width: 100%;
 		top: -2px;
-		cursor: n-resize;
+		cursor: url('/cursors/n-resize.cur'), n-resize;
 	}
 
 	.resizer.bottom {
 		height: 4px;
 		width: 100%;
 		bottom: -2px;
-		cursor: n-resize;
+		cursor: url('/cursors/n-resize.cur'), n-resize;
 	}
 
 	.resizer.top-left {
@@ -195,7 +195,7 @@
 		width: 8px;
 		top: -4px;
 		left: -4px;
-		cursor: nw-resize;
+		cursor: url('/cursors/nw-resize.cur'), nw-resize;
 		border-radius: 100%;
 	}
 
@@ -204,7 +204,7 @@
 		width: 8px;
 		top: -4px;
 		right: -4px;
-		cursor: ne-resize;
+		cursor: url('/cursors/ne-resize.cur'), ne-resize;
 		border-radius: 100%;
 	}
 
@@ -213,7 +213,7 @@
 		width: 8px;
 		bottom: -4px;
 		left: -4px;
-		cursor: sw-resize;
+		cursor: url('/cursors/ne-resize.cur'), sw-resize;
 		border-radius: 100%;
 	}
 
@@ -222,7 +222,7 @@
 		width: 8px;
 		bottom: -4px;
 		right: -4px;
-		cursor: se-resize;
+		cursor: url('/cursors/nw-resize.cur'), se-resize;
 		border-radius: 100%;
 	}
 </style>

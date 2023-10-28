@@ -38,7 +38,7 @@
 <section
   on:mousedown={onMouseDown}
   class="draggable"
-  role="button"
+  role="tab"
   tabindex="0"
 >
 	<slot />
@@ -51,7 +51,6 @@
 <style>
 	.draggable {
 		user-select: none;
-    cursor: default;
 	}
 
 	.fake-draggable {

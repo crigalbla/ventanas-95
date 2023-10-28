@@ -21,6 +21,12 @@ const { title } = Astro.props;
 	</body>
 </html>
 
+<script type="module">
+	document.querySelector("body")?.addEventListener('contextmenu', (e) => {
+		// e.preventDefault();
+	});
+</script>
+
 <style is:global>
 	@font-face {
 		font-family: 'W95fa';
@@ -34,16 +40,24 @@ const { title } = Astro.props;
 		overflow: hidden;
 	}
 
+	body {
+		cursor: url('/cursors/arrow.cur'), default;
+	}
+
 	.background-wallpaper {
 		background: #00B0B0
 	}
 
 	.background-window-head {
-    background: #010081;
-  }
+		background: #010081;
+	}
 
 	.background-silver {
 		background: #c0c0c0;
+	}
+
+	button {
+		cursor: url('/cursors/pointer.cur'), pointer;
 	}
 
 	button, .border-color-up {
