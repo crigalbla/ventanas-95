@@ -1,5 +1,5 @@
 <script>
-  import { mouseOutOfScreen } from "@/utils"
+  import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 
 	export let width
 	export let height
@@ -7,126 +7,159 @@
 	export let minHeight
 	export let top
 	export let left
+	export let fake = false
 	export let canBeResized = true
 
+	let fakeWidth = width
+	let fakeHeight = height
+	let fakeTop = 0
+	let fakeLeft = 0
+	let resizing = false
+	let fakeResize
+
 	const resize = (element) => {
-		const resizerTop = document.querySelector(".resizer.top")
-		resizerTop.direction = "north"
+	  const resizerTop = document.querySelector(".resizer.top")
+	  resizerTop.direction = "north"
 
-		const resizerRight = document.querySelector(".resizer.right")
-		resizerRight.direction = "east"
+	  const resizerRight = document.querySelector(".resizer.right")
+	  resizerRight.direction = "east"
 
-		const resizerBottom = document.querySelector(".resizer.bottom")
-		resizerBottom.direction = "south"
+	  const resizerBottom = document.querySelector(".resizer.bottom")
+	  resizerBottom.direction = "south"
 
-		const resizerLeft = document.querySelector(".resizer.left")
-		resizerLeft.direction = "west"
+	  const resizerLeft = document.querySelector(".resizer.left")
+	  resizerLeft.direction = "west"
 
-		const resizerTopRight = document.querySelector(".resizer.top-right")
-		resizerTopRight.direction = "northeast"
+	  const resizerTopRight = document.querySelector(".resizer.top-right")
+	  resizerTopRight.direction = "northeast"
 
-		const resizerTopLeft = document.querySelector(".resizer.top-left")
-		resizerTopLeft.direction = "northwest"
+	  const resizerTopLeft = document.querySelector(".resizer.top-left")
+	  resizerTopLeft.direction = "northwest"
 
-		const resizerBottomRight = document.querySelector(".resizer.bottom-right")
-		resizerBottomRight.direction = "southeast"
+	  const resizerBottomRight = document.querySelector(".resizer.bottom-right")
+	  resizerBottomRight.direction = "southeast"
 
-		const resizerBottomLeft = document.querySelector(".resizer.bottom-left")
-		resizerBottomLeft.direction = "southwest"
+	  const resizerBottomLeft = document.querySelector(".resizer.bottom-left")
+	  resizerBottomLeft.direction = "southwest"
 
-		const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]
-		const html = document.querySelector("html")
-		const body = document.querySelector("body")
+	  const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]
 
-		let active = null; let initialRect = null; let cursorPosition = null
+	  let active = null; let initialRect = null; let cursorPosition = null
 
-		const onMousedown = (event) => {
-			const estiloCalculado = window.getComputedStyle(event.toElement)
-			const cursor = estiloCalculado.cursor
+	  const onMouseDown = (event) => {
+			freezeCurrentCursor(event)
+			resizing = true
 
-			html.style.cursor = cursor
-			body.style.pointerEvents = "none"
+	    active = event.target
+	    const rect = element.getBoundingClientRect()
+	    const parent = element.parentElement.getBoundingClientRect()
 
-			active = event.target
-			const rect = element.getBoundingClientRect()
-			const parent = element.parentElement.getBoundingClientRect()
+	    initialRect = {
+	      width: rect.width,
+	      height: rect.height,
+	      left: rect.left - parent.left,
+	      right: parent.right - rect.right,
+	      top: rect.top - parent.top,
+	      bottom: parent.bottom - rect.bottom
+	    }
+	    cursorPosition = { x: event.pageX, y: event.pageY }
+	  }
 
-			initialRect = {
-				width: rect.width,
-				height: rect.height,
-				left: rect.left - parent.left,
-				right: parent.right - rect.right,
-				top: rect.top - parent.top,
-				bottom: parent.bottom - rect.bottom
+	  const onMouseUp = () => {
+	    if (!active) return
+
+			unfreezeCurrentCursor()
+			resizing = false
+	    active = null
+	    initialRect = null
+	    cursorPosition = null
+
+			if (fake) {
+				fakeResize.classList.add("display-none")
+				left += fakeLeft
+				top += fakeTop
+				width = fakeWidth
+				height = fakeHeight
+
+				fakeLeft = 0
+				fakeTop = 0
 			}
-			cursorPosition = { x: event.pageX, y: event.pageY }
-		}
+	  }
 
-		const onMouseup = () => {
-			if (!active) return
+	  const onMouseMove = (event) => {
+	    if (!active || !resizing || mouseOutOfScreen(event)) return
 
-			html.style.cursor = null
-			body.style.pointerEvents = null
-			active = null
-			initialRect = null
-			cursorPosition = null
-		}
+			fakeResize.classList.remove("display-none")
+	    const direction = active.direction
+	    let delta
 
-		const onMove = (event) => {
-			if (!active || mouseOutOfScreen(event)) return
-
-			const direction = active.direction
-			let delta
-
-			if (direction.match("east")) {
+	    if (direction.match("east")) {
 				delta = event.pageX - cursorPosition.x
-				const newWidth = initialRect.width + delta
-				if (minWidth < newWidth) {
-					width = newWidth
-				}
-			}
+	      const newWidth = initialRect.width + delta
+	      if (minWidth < newWidth) {
+					if (fake) {
+						fakeWidth = newWidth
+					} else {
+						width = newWidth
+					}
+	      }
+	    }
 
-			if (direction.match("west")) {
-				delta = cursorPosition.x - event.pageX
-				const newWidth = initialRect.width + delta
-				if (minWidth < newWidth) {
-					width = newWidth
-					left = event.pageX
-				}
-			}
+	    if (direction.match("west")) {
+	      delta = cursorPosition.x - event.pageX
+	      const newWidth = initialRect.width + delta
+	      if (minWidth < newWidth) {
+					if (fake) {
+						fakeWidth = newWidth
+						fakeLeft += event.movementX
+					} else {
+						width = newWidth
+						left = event.pageX
+					}
+	      }
+	    }
 
-			if (direction.match("north")) {
-				delta = cursorPosition.y - event.pageY
-				const newHeight = initialRect.height + delta
-				if (minHeight < newHeight) {
-					height = newHeight
-					top = event.pageY
-				}
-			}
+	    if (direction.match("north")) {
+	      delta = cursorPosition.y - event.pageY
+	      const newHeight = initialRect.height + delta
+	      if (minHeight < newHeight) {
+					if (fake) {
+						fakeHeight = newHeight
+						fakeTop += event.movementY
+					} else {
+						height = newHeight
+						top = event.pageY
+					}
+	      }
+	    }
 
-			if (direction.match("south")) {
-				delta = event.pageY - cursorPosition.y
-				const newHeight = initialRect.height + delta
-				if (minHeight < newHeight) {
-					height = newHeight
-				}
-			}
-		}
+	    if (direction.match("south")) {
+	      delta = event.pageY - cursorPosition.y
+	      const newHeight = initialRect.height + delta
+	      if (minHeight < newHeight) {
+					if (fake) {
+						fakeHeight = newHeight
+					} else {
+						height = newHeight
+					}
+	      }
+	    }
+	  }
 
-		resizers.forEach(resizer => {
-			element.appendChild(resizer)
-			resizer.addEventListener("mousedown", onMousedown)
-		})
+	  resizers.forEach(resizer => {
+	    element.appendChild(resizer)
+	    resizer.addEventListener("mousedown", onMouseDown)
+	  })
 
-		window.addEventListener("mousemove", onMove)
-		window.addEventListener("mouseup", onMouseup)
+	  window.addEventListener("mousemove", onMouseMove)
+	  window.addEventListener("mouseup", onMouseUp)
 
-		return () => {
-			window.removeEventListener("mousemove", onMove)
-			window.removeEventListener("mousemove", onMousedown)
+	  return () => {
+	    window.removeEventListener("mousemove", onMouseMove)
+	    window.removeEventListener("mousemove", onMouseDown)
 
-			resizers.forEach(resizer => element.removeChild(resizer))
-		}
+	    resizers.forEach(resizer => element.removeChild(resizer))
+	  }
 	}
 </script>
 
@@ -141,6 +174,13 @@
 		<div class="resizer top-left" />
 		<div class="resizer bottom-right" />
 		<div class="resizer bottom-left" />
+		{#if fake && resizing}
+			<div
+				class="fake-resize display-none"
+				bind:this={fakeResize}
+				style="--fakeWidth:{fakeWidth || width}; --fakeHeight:{fakeHeight || height}; --fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}"
+			/>
+		{/if}
 	</div>
 {:else}
 	<slot />
@@ -163,30 +203,30 @@
 	}
 
 	.resizer.right {
-		width: 4px;
+		width: 5px;
 		height: 100%;
-		right: -2px;
+		right: -3px;
 		cursor: url('/cursors/e-resize.cur'), e-resize;
 	}
 
 	.resizer.left {
-		width: 4px;
+		width: 5px;
 		height: 100%;
-		left: -2px;
+		left: -3px;
 		cursor: url('/cursors/e-resize.cur'), e-resize;
 	}
 
 	.resizer.top {
-		height: 4px;
+		height: 5px;
 		width: 100%;
-		top: -2px;
+		top: -3px;
 		cursor: url('/cursors/n-resize.cur'), n-resize;
 	}
 
 	.resizer.bottom {
-		height: 4px;
+		height: 5px;
 		width: 100%;
-		bottom: -2px;
+		bottom: -3px;
 		cursor: url('/cursors/n-resize.cur'), n-resize;
 	}
 
@@ -224,5 +264,18 @@
 		right: -4px;
 		cursor: url('/cursors/nw-resize.cur'), se-resize;
 		border-radius: 100%;
+	}
+
+	.fake-resize {
+		border: 1px dotted black;
+		position: absolute;
+		top: calc(var(--fakeTop) * 1px);
+    left: calc(var(--fakeLeft) * 1px);
+		width: calc(var(--fakeWidth) * 1px);
+    height: calc(var(--fakeHeight) * 1px);
+	}
+
+	.display-none {
+		display: none;
 	}
 </style>

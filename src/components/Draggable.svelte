@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { mouseOutOfScreen } from "@/utils"
+  import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 
 	export let left = 0
 	export let top = 0
@@ -9,8 +9,13 @@
 	let fakeLeft = 0
 	let fakeTop = 0
 
-	const onMouseDown = () => moving = true
+	const onMouseDown = (e: MouseEvent) => {
+	  freezeCurrentCursor(e)
+		moving = true
+	}
+
   const onMouseUp = () => {
+  	unfreezeCurrentCursor()
   	moving = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
@@ -21,17 +26,18 @@
   		fakeTop = 0
   	}
   }
+
 	const onMouseMove = (e: MouseEvent) => {
-		if (moving && !mouseOutOfScreen(e)) {
-			if (fake && fakeDraggable) {
-				fakeDraggable.classList.remove("display-none")
-				fakeLeft += e.movementX
-				fakeTop += e.movementY
-			} else {
-				left += e.movementX
-				top += e.movementY
-			}
-		}
+	  if (moving && !mouseOutOfScreen(e)) {
+	    if (fake && fakeDraggable) {
+	      fakeDraggable.classList.remove("display-none")
+	      fakeLeft += e.movementX
+	      fakeTop += e.movementY
+	    } else {
+	      left += e.movementX
+	      top += e.movementY
+	    }
+	  }
 	}
 </script>
 

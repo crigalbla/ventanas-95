@@ -27,7 +27,22 @@
   let minHeight: number
   let windowDiv: HTMLElement
 
-  const onQuestionButtonClick = () => console.log("?")
+  const onQuestionButtonClick = () => {
+  	const modifyCursor = (cursor: string = "", pointerEvents: string = "") => {
+  		windowDiv.style.cursor = cursor
+  		for (const child of windowDiv.children) {
+  			(child as HTMLElement).style.pointerEvents = pointerEvents
+  		}
+  	}
+
+  	const removeHelpCursor = () => {
+  		modifyCursor()
+  		windowDiv.removeEventListener("click", removeHelpCursor)
+  	}
+
+  	modifyCursor("url('/cursors/help.cur'), help", "none")
+  	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
+  }
   const onMinimizeButtonClick = () => console.log("_")
   const onMaximizeButtonClick = () => console.log("❒")
   const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
@@ -54,7 +69,7 @@
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
 >
-  <Resize {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>
+  <Resize fake {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>
     <div class="h-full w-full">
       <Draggable fake bind:left bind:top>
         <div class="background-window-head window-header-height flex justify-between h-6 px-1 m-px">

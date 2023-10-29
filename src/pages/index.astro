@@ -6,10 +6,10 @@ import ChooseLanguage from "@/components/ChooseLanguage.svelte";
 ---
 
 <Layout title="Ventanas 95">
-	<main class="background-wallpaper h-screen w-screen">
-		<ChooseLanguage client:visible />
-		<Window client:visible title="login.title" hasQuestionButton initialWidth={530}>
-			<LoginBody client:visible />
-		</Window>
-	</main>
+  <main class="background-wallpaper h-screen w-screen">
+    <ChooseLanguage client:visible />
+    <Window client:visible title="login.title" hasQuestionButton initialWidth={530}>
+      <LoginBody client:visible />
+    </Window>
+  </main>
 </Layout>
