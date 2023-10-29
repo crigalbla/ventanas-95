@@ -11,6 +11,8 @@ module.exports = {
     "no-return-assign": "off",
     "no-mixed-spaces-and-tabs": "off",
     "css-semicolonexpected": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-unused-vars": "warn",
     "prefer-const": "warn"
   }
 };

@@ -10,6 +10,9 @@
 	let fakeTop = 0
 
 	const onMouseDown = (e: MouseEvent) => {
+		const target: HTMLElement = e?.target as HTMLElement
+		if (target?.tagName === "BUTTON") return
+
 	  freezeCurrentCursor(e)
 		moving = true
 	}
@@ -28,7 +31,7 @@
   }
 
 	const onMouseMove = (e: MouseEvent) => {
-	  if (moving && !mouseOutOfScreen(e)) {
+		if (moving && !mouseOutOfScreen(e)) {
 	    if (fake && fakeDraggable) {
 	      fakeDraggable.classList.remove("display-none")
 	      fakeLeft += e.movementX

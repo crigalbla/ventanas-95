@@ -27,7 +27,8 @@
   let minHeight: number
   let windowDiv: HTMLElement
 
-  const onQuestionButtonClick = () => {
+  const onQuestionButtonClick = (event: Event) => {
+  	const helpButton: HTMLButtonElement = event.target as HTMLButtonElement
   	const modifyCursor = (cursor: string = "", pointerEvents: string = "") => {
   		windowDiv.style.cursor = cursor
   		for (const child of windowDiv.children) {
@@ -37,9 +38,11 @@
 
   	const removeHelpCursor = () => {
   		modifyCursor()
+  		helpButton?.classList.remove("border-color-down")
   		windowDiv.removeEventListener("click", removeHelpCursor)
   	}
 
+  	helpButton?.classList.add("border-color-down")
   	modifyCursor("url('/cursors/help.cur'), help", "none")
   	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
   }
