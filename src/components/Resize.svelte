@@ -78,8 +78,8 @@
 				fakeResize.classList.add("display-none")
 				left += fakeLeft
 				top += fakeTop
-				width = fakeWidth
-				height = fakeHeight
+				width = fakeWidth || width
+				height = fakeHeight || height
 
 				fakeLeft = 0
 				fakeTop = 0
