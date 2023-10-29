@@ -64,7 +64,7 @@
 
 <div
   class="background-silver border-color-up window-sizes absolute"
-  class:window-hidden={$windowsHidden.login}
+  class:display-none={$windowsHidden.login}
   class:window-center={!left && !top}
   class:window-position={left || top}
   class:window-max-width={maxWidth}
@@ -97,10 +97,6 @@
 </div>
 
 <style>
-  .window-hidden {
-    display: none;
-  }
-
   .window-center {
     top: 50%;
     left: 50%;

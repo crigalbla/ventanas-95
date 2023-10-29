@@ -274,8 +274,4 @@
 		width: calc(var(--fakeWidth) * 1px);
     height: calc(var(--fakeHeight) * 1px);
 	}
-
-	.display-none {
-		display: none;
-	}
 </style>

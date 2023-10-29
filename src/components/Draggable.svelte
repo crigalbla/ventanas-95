@@ -46,7 +46,6 @@
 
 <section
   on:mousedown={onMouseDown}
-  class="draggable"
   role="tab"
   tabindex="0"
 >
@@ -58,10 +57,6 @@
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
 
 <style>
-	.draggable {
-		user-select: none;
-	}
-
 	.fake-draggable {
 		border: 1px dotted black;
 		position: absolute;
@@ -69,9 +64,5 @@
     left: calc(var(--fakeLeft) * 1px);
 		width: calc(var(--width) * 1px);
     height: calc(var(--height) * 1px);
-	}
-
-	.display-none {
-		display: none;
 	}
 </style>
