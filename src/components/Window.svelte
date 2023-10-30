@@ -14,6 +14,7 @@
   export let canBeMinimized = false
   export let canBeMaximized = false
   export let canBeResized = true
+  export let isLogin = false
   export let initialWidth = 0
   export let initialHeight = 0
   export let left = 0
@@ -48,7 +49,10 @@
   }
   const onMinimizeButtonClick = () => console.log("_")
   const onMaximizeButtonClick = () => console.log("❒")
-  const onCloseButtonClick = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
+  const onCloseButtonClick = () => {
+  	windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
+  	if (isLogin) window.postMessage({ isUserLoggedIn: true })
+  }
 
   onMount(() => {
   	width = minWidth = windowDiv.clientWidth

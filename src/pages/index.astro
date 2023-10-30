@@ -2,14 +2,29 @@
 import LoginBody from "@/components/LoginBody.svelte"
 import Window from "@/components/Window.svelte"
 import Layout from "@/layouts/Layout.astro"
-import ChooseLanguage from "@/components/ChooseLanguage.svelte";
+import ChooseLanguage from "@/components/ChooseLanguage.svelte"
+
+let userName = ""
+let isUserLoggedIn = false
 ---
+
+<script is:inline lang="ts">
+	const audio = new Audio("/sounds/starting.mp3")
+  // audio.play()
+
+	window.addEventListener('message', event => {
+		if (event?.origin !== window.location.origin) return
+
+		if (event?.data?.isUserLoggedIn) $isUserLoggedIn = event.data.isUserLoggedIn
+	});
+</script>
 
 <Layout title="Ventanas 95">
 	<main class="background-wallpaper h-screen w-screen">
 		<ChooseLanguage client:visible />
-		<Window client:visible title="login.title" hasQuestionButton initialWidth={530}>
+		<Window client:visible title="login.title" hasQuestionButton isLogin initialWidth={530}>
 			<LoginBody client:visible />
 		</Window>
+		{isUserLoggedIn && "¡Has iniciado sesion!"}
 	</main>
 </Layout>

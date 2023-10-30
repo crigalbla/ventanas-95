@@ -10,7 +10,7 @@
   	const target = event.target as HTMLInputElement
   	const value = target.value
 
-  	console.log(value)
+  	window.postMessage({ userName: value })
   }
 </script>
 
