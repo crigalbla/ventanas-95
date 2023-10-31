@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { windowsHidden } from "@/stores"
-  import type { WindowsHiddenType } from "@/stores"
+  import { windowsHidden, user } from "@/stores"
+  import type { UserType, WindowsHiddenType } from "@/stores"
   import { t } from "@/i18n"
 
   import Draggable from "./Draggable.svelte"
@@ -51,7 +51,7 @@
   const onMaximizeButtonClick = () => console.log("❒")
   const onCloseButtonClick = () => {
   	windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
-  	if (isLogin) window.postMessage({ isUserLoggedIn: true })
+  	if (isLogin) user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
   onMount(() => {

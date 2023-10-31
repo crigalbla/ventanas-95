@@ -1,16 +1,19 @@
 <script lang="ts">
-  import { windowsHidden } from "@/stores"
-  import type { WindowsHiddenType } from "@/stores"
+  import { user, windowsHidden } from "@/stores"
+  import type { UserType, WindowsHiddenType } from "@/stores"
   import { t } from "@/i18n"
 
   import Button from "./Button.svelte"
 
-  const onClickButtons = () => windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
+  const onClickButtons = () => {
+  	windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
+  	user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
+  }
   const onKeyUp = (event: Event) => {
   	const target = event.target as HTMLInputElement
   	const value = target.value
 
-  	window.postMessage({ userName: value })
+  	user.update((u: UserType) => ({ ...u, userName: value }))
   }
 </script>
 
