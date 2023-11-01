@@ -11,7 +11,8 @@ const translations: Translations = {
 		"login.title": "Escriba la contraseña de red",
 		"login.description": "Escriba la contraseña de red 'Ventanas 95'. Es un login falso :)",
 		"login.username": "Nombre de usuario:",
-		"login.password": "Contraseña:"
+		"login.password": "Contraseña:",
+		"navigationBar.start": "Inicio"
 	},
 	en: {
 		accept: "OK",
@@ -19,7 +20,8 @@ const translations: Translations = {
 		"login.title": "Enter Network Password",
 		"login.description": "Enter your network password for 'Ventanas 95' Networking. It is a fake login :)",
 		"login.username": "User name:",
-		"login.password": "Password:"
+		"login.password": "Password:",
+		"navigationBar.start": "Start"
 	}
 }
 
