@@ -27,3 +27,16 @@ export const unfreezeCurrentCursor = () => {
 	html.style.cursor = ""
 	body.style.pointerEvents = ""
 }
+
+export const getCurrentTime = () => {
+	const date = new Date()
+	let hours = date.getHours()
+	let minutes: number | string = date.getMinutes()
+	const ampm = hours >= 12 ? "PM" : "AM"
+
+	hours = hours % 12
+	hours = hours || 12
+	minutes = minutes < 10 ? "0" + minutes : minutes
+
+	return hours + ":" + minutes + " " + ampm
+}
