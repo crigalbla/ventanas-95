@@ -55,13 +55,13 @@
   }
 
   onMount(() => {
-  	width = minWidth = windowDiv.clientWidth
-  	height = minHeight = windowDiv.clientHeight
+  	width = minWidth = windowDiv.offsetWidth
+  	height = minHeight = windowDiv.offsetHeight
 
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
-  		top = rect.top + window.scrollY
-  		left = rect.left + window.scrollX
+  		top = rect.top
+  		left = rect.left
   	}
   })
 </script>
