@@ -11,6 +11,24 @@ export const mouseOutOfScreen = (e: MouseEvent) => {
 	return false
 }
 
+export const waitingCursor = () => {
+	const html = document.querySelector("html") as HTMLElement
+	const body = document.querySelector("body") as HTMLElement
+
+	const freezeWaitCursor = () => {
+		html.style.cursor = "url('/cursors/wait.cur'), wait"
+		body.style.pointerEvents = "none"
+	}
+
+	freezeWaitCursor()
+	document.addEventListener("click", freezeWaitCursor)
+
+	setTimeout(() => {
+		document.removeEventListener("click", freezeWaitCursor)
+		unfreezeCurrentCursor()
+	}, 2000)
+}
+
 export const freezeCurrentCursor = (e: MouseEvent) => {
 	const html = document.querySelector("html") as HTMLElement
 	const body = document.querySelector("body") as HTMLElement
@@ -27,6 +45,24 @@ export const unfreezeCurrentCursor = () => {
 	html.style.cursor = ""
 	body.style.pointerEvents = ""
 }
+
+export const avaliableDimensions = () => {
+	const body = document.querySelector("body") as HTMLElement
+	const navigationBar = document.getElementById("navigation-bar") as HTMLElement
+	const avaliableWidth = body.offsetWidth
+	const avaliableHeight = body.offsetHeight - navigationBar.offsetHeight
+
+	return { avaliableWidth, avaliableHeight }
+}
+
+// TODO: use when necessary
+// export const doItIfClickOutOfElement = <T>(searchElement: string, callBack: (args: T) => void) => {
+// 	document.addEventListener("click", (event) => {
+// 		const menu = document.querySelector(searchElement)
+
+// 		if (menu && !menu.contains(event.target)) callBack()
+// 	})
+// }
 
 export const getCurrentTime = () => {
 	const date = new Date()

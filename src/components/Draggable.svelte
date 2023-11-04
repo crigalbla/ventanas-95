@@ -1,9 +1,11 @@
 <script lang="ts">
   import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 
-	export let left = 0
-	export let top = 0
+	export let left: number
+	export let top: number
 	export let fake = false
+	export let canBeDraggabled = true
+
 	let moving = false
 	let fakeDraggable: HTMLElement
 	let fakeLeft = 0
@@ -11,7 +13,7 @@
 
 	const onMouseDown = (e: MouseEvent) => {
 		const target: HTMLElement = e?.target as HTMLElement
-		if (target?.tagName === "BUTTON") return
+		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
 
 	  freezeCurrentCursor(e)
 		moving = true
@@ -44,15 +46,19 @@
 	}
 </script>
 
-<section
-  on:mousedown={onMouseDown}
-  role="tab"
-  tabindex="0"
->
-	<slot />
-</section>
-{#if fake && moving}
-	<div class="fake-draggable display-none" bind:this={fakeDraggable} style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}" />
+{#if canBeDraggabled}
+	<section
+		on:mousedown={onMouseDown}
+		role="tab"
+		tabindex="0"
+	>
+		<slot />
+	</section>
+	{#if fake && moving}
+		<div class="fake-draggable display-none" bind:this={fakeDraggable} style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}" />
+	{/if}
+{:else}
+		<slot />
 {/if}
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
 

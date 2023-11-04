@@ -24,6 +24,11 @@ const translate = (locale: string, key: string, vars: TranslationVars) => {
 
 export const locale: Writable<string> = writable("es")
 export const locales: string[] = Object.keys(translations)
-export const t = derived(locale, ($locale) => (key: string, vars: TranslationVars = {}) =>
-	translate($locale, key, vars)
+export const t = derived(locale, ($locale) => (key: string, vars: TranslationVars = {}) => {
+	try {
+		return translate($locale, key, vars)
+	} catch (error) {
+		return key
+	}
+}
 )

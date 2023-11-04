@@ -8,25 +8,47 @@
   import Draggable from "./Draggable.svelte"
   import WindowButton from "./WindowButton.svelte"
   import Resize from "./Resize.svelte"
+  import { avaliableDimensions } from "@/utils"
 
   export let title: string
   export let hasQuestionButton = false
-  export let canBeMinimized = false
-  export let canBeMaximized = false
+  export let canBeHidden = false
+  export let canBeMaximizedOrMinimized = false
   export let canBeResized = true
   export let isLogin = false
+  export let isFullScreen = false
   export let initialWidth = 0
   export let initialHeight = 0
-  export let left = 0
-  export let top = 0
+  export let left: number = undefined!
+  export let top: number = undefined!
   export let maxWidth = 0
+  export let windowId = Math.random().toString().replace("0.", "")
 
   const headerHeight = 24
+  let canBeDraggabled = true
   let width: number
 	let height: number
   let minWidth: number
   let minHeight: number
   let windowDiv: HTMLElement
+  let oldWidth: number
+  let oldHeight: number
+  let oldTop: number
+  let oldLeft: number
+
+  const doIfIsFullScreen = () => {
+  	if (isFullScreen) {
+  		const { avaliableWidth, avaliableHeight } = avaliableDimensions()
+  		width = avaliableWidth
+  		height = avaliableHeight
+  		top = 0
+  		left = 0
+  		canBeDraggabled = false
+  		canBeResized = false
+  	}
+  }
+
+  doIfIsFullScreen()
 
   const onQuestionButtonClick = (event: Event) => {
   	const helpButton: HTMLButtonElement = event.target as HTMLButtonElement
@@ -47,10 +69,33 @@
   	modifyCursor("url('/cursors/help.cur'), help", "none")
   	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
   }
-  const onMinimizeButtonClick = () => console.log("_")
-  const onMaximizeButtonClick = () => console.log("❒")
+  const onHideButtonClick = () => console.log("_")
+  const onMaximizeOrMinimizeButtonClick = () => {
+  	if (isFullScreen) {
+  		width = oldWidth
+  		height = oldHeight
+  		top = oldTop
+  		left = oldLeft
+  		canBeDraggabled = true
+  		canBeResized = true
+  	} else {
+  		const { avaliableWidth, avaliableHeight } = avaliableDimensions()
+  		oldWidth = width
+  		oldHeight = height
+  		oldTop = top
+  		oldLeft = left
+  		width = avaliableWidth
+  		height = avaliableHeight
+  		top = 0
+  	  left = 0
+  		canBeDraggabled = false
+  		canBeResized = false
+  	}
+
+  	isFullScreen = !isFullScreen
+  }
   const onCloseButtonClick = () => {
-  	windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, login: true }))
+  	windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, [windowId]: true }))
   	if (isLogin) user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
@@ -68,9 +113,9 @@
 
 <div
   class="background-silver border-color-up window-sizes absolute"
-  class:display-none={$windowsHidden.login}
-  class:window-center={!left && !top}
-  class:window-position={left || top}
+  class:display-none={$windowsHidden[windowId]}
+  class:window-center={typeof left === "undefined" && typeof top === "undefined"}
+  class:window-position={typeof left === "number" || typeof top === "number"}
   class:window-max-width={maxWidth}
   style="--left:{left}; --top:{top}; --width:{width || initialWidth}; --height:{initialHeight || height};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
@@ -78,18 +123,24 @@
 >
   <Resize fake {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>
     <div class="h-full w-full">
-      <Draggable fake bind:left bind:top>
+      <Draggable fake {canBeDraggabled} bind:left bind:top>
         <div class="background-window-head window-header-height flex justify-between h-6 px-1 m-px">
-          <span class="text-white">{@html $t(title)}</span>
+          <span class="text-white">{$t(title)}</span>
           <div class="flex self-center gap-1">
             {#if hasQuestionButton}
               <WindowButton on:click={onQuestionButtonClick}>?</WindowButton>
             {/if}
-            {#if canBeMinimized}
-              <WindowButton on:click={onMinimizeButtonClick}>_</WindowButton>
+            {#if canBeHidden}
+              <WindowButton on:click={onHideButtonClick}>_</WindowButton>
             {/if}
-            {#if canBeMaximized}
-              <WindowButton on:click={onMaximizeButtonClick}>❒</WindowButton>
+            {#if canBeMaximizedOrMinimized}
+              <WindowButton on:click={onMaximizeOrMinimizeButtonClick}>
+                {#if isFullScreen}
+                  <img class="h-3 w-3" src="icons/minimalist-window.png" alt="minimalist-window"/>
+                {:else}
+                  <img class="h-3 w-3" src="icons/minimalist-windows.png" alt="minimalist-windows"/>
+                {/if}
+              </WindowButton>
             {/if}
             <WindowButton on:click={onCloseButtonClick}>X</WindowButton>
           </div>
