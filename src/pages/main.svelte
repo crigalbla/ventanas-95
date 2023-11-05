@@ -2,10 +2,8 @@
   import LoginBody from "@/components/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import Window from "@/components/Window.svelte"
-  import { user, windowsHidden } from "@/stores"
+  import { createWindow, user, windows } from "@/stores"
   import { waitingCursor } from "@/utils"
-
-  const windowId = Math.random().toString().replace("0.", "")
 
   const playStartingAudio = () => {
   	// eslint-disable-next-line no-undef
@@ -16,16 +14,34 @@
   $: if ($user?.isLoggedIn) {
   	playStartingAudio()
   	waitingCursor()
+  	// Why this need a setTimeout?
+  	setTimeout(() => createWindow({
+  		title: "hola",
+  		windowId: Math.random().toString().replace("0.", ""),
+  		initialWidth: 200,
+  		canBeHidden: true,
+  		canBeMaximizedOrMinimized: true
+  	}), 1)
   }
+
+  createWindow({
+  	title: "login.title",
+  	windowId: Math.random().toString().replace("0.", ""),
+  	hasQuestionButton: true,
+  	isLogin: true,
+  	initialWidth: 530
+  })
 </script>
 
-<Window title="login.title" hasQuestionButton isLogin initialWidth={530} {windowId}>
-  <LoginBody {windowId} />
-</Window>
-{#if $user?.isLoggedIn}
-  <Window title="hola" initialWidth={200} canBeHidden canBeMaximizedOrMinimized>
-    Bienvenido!
+{#each $windows as window}
+  <Window {...window}>
+    {#if window.isLogin}
+      <LoginBody windowId={window.windowId} />
+    {:else}
+      Bienvenido!
+    {/if}
   </Window>
+{/each}
+{#if $user?.isLoggedIn}
   <NavigationBar />
 {/if}
-<!-- {JSON.stringify($windowsHidden)} -->

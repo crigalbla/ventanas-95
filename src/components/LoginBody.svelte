@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { user, windowsHidden } from "@/stores"
-  import type { UserType, WindowsHiddenType } from "@/stores"
+  import { removeWindow, user } from "@/stores"
+  import type { UserType } from "@/stores"
   import { t } from "@/i18n"
   import Button from "./Button.svelte"
 
   export let windowId: string
 
   const onClickButtons = () => {
-  	windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, [windowId]: true }))
+  	removeWindow(windowId)
   	user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
   const onKeyUp = (event: Event) => {

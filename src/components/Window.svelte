@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { windowsHidden, user } from "@/stores"
-  import type { UserType, WindowsHiddenType } from "@/stores"
+  import { windows, user, removeWindow } from "@/stores"
+  import type { UserType, WindowsType } from "@/stores"
   import { t } from "@/i18n"
 
   import Draggable from "./Draggable.svelte"
@@ -11,18 +11,20 @@
   import { avaliableDimensions } from "@/utils"
 
   export let title: string
+  export let windowId: string
+  export let icon: string = undefined!
   export let hasQuestionButton = false
   export let canBeHidden = false
   export let canBeMaximizedOrMinimized = false
   export let canBeResized = true
   export let isLogin = false
+  export let isMinimized = false
   export let isFullScreen = false
   export let initialWidth = 0
   export let initialHeight = 0
   export let left: number = undefined!
   export let top: number = undefined!
   export let maxWidth = 0
-  export let windowId = Math.random().toString().replace("0.", "")
 
   const headerHeight = 24
   let canBeDraggabled = true
@@ -95,7 +97,7 @@
   	isFullScreen = !isFullScreen
   }
   const onCloseButtonClick = () => {
-  	windowsHidden.update((wH: WindowsHiddenType) => ({ ...wH, [windowId]: true }))
+  	removeWindow(windowId)
   	if (isLogin) user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
@@ -113,7 +115,6 @@
 
 <div
   class="background-silver border-color-up window-sizes absolute"
-  class:display-none={$windowsHidden[windowId]}
   class:window-center={typeof left === "undefined" && typeof top === "undefined"}
   class:window-position={typeof left === "number" || typeof top === "number"}
   class:window-max-width={maxWidth}

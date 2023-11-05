@@ -1,2 +1,2 @@
-export * from "./windowsHidden"
+export * from "./windows"
 export * from "./user"
