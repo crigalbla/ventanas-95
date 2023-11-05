@@ -10,6 +10,8 @@
 	let fakeDraggable: HTMLElement
 	let fakeLeft = 0
 	let fakeTop = 0
+	let outOfScreenLeft = 0
+	let outOfScreenTop = 0
 
 	const onMouseDown = (e: MouseEvent) => {
 		const target: HTMLElement = e?.target as HTMLElement
@@ -33,16 +35,23 @@
   }
 
 	const onMouseMove = (e: MouseEvent) => {
-		if (moving && !mouseOutOfScreen(e)) {
-	    if (fake && fakeDraggable) {
-	      fakeDraggable.classList.remove("display-none")
-	      fakeLeft += e.movementX
-	      fakeTop += e.movementY
-	    } else {
-	      left += e.movementX
-	      top += e.movementY
-	    }
-	  }
+		if (moving) {
+			if (!mouseOutOfScreen(e)) {
+				if (fake && fakeDraggable) {
+					fakeDraggable.classList.remove("display-none")
+					fakeLeft += e.movementX + outOfScreenLeft
+					fakeTop += e.movementY + outOfScreenTop
+				} else {
+					left += e.movementX + outOfScreenLeft
+					top += e.movementY + outOfScreenTop
+				}
+				outOfScreenLeft = 0
+				outOfScreenTop = 0
+			} else {
+				outOfScreenLeft += e.movementX
+				outOfScreenTop += e.movementY
+			}
+		}
 	}
 </script>
 
