@@ -17,6 +17,7 @@ type IndividualWindowType = {
   left?: number
   top?: number
   maxWidth?: number
+  zIndex?: number
 }
 export type WindowsType = IndividualWindowType[]
 

@@ -19,6 +19,8 @@
 
 	  freezeCurrentCursor(e)
 		moving = true
+		outOfScreenLeft = 0
+		outOfScreenTop = 0
 	}
 
   const onMouseUp = () => {

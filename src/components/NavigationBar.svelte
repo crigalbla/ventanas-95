@@ -1,14 +1,16 @@
 <script lang="ts">
   import Button from "./Button.svelte"
+  import Curtain from "./Curtain.svelte"
   import { t } from "@/i18n"
   import { getCurrentTime } from "@/utils"
-  import { user } from "@/stores"
+  import { createWindow, user } from "@/stores"
 
   type MenuOptions = "closeSession" | "suspend" | "turnOff"
 
   let hideStartMenu = true
   let currentTime = getCurrentTime()
   let buttonRef: HTMLElement
+  let showCurtain = false
 
   setInterval(() => currentTime = getCurrentTime(), 1000)
 
@@ -20,15 +22,25 @@
 
   const onClickInOption = (option: MenuOptions) => {
   	if (option === "closeSession") {
-  		console.log("closeSession")
+  		setTimeout(() => {
+  			createWindow({
+  				title: "navigationBar.closeVentanas95Session",
+  				windowId: Math.random().toString().replace("0.", ""),
+  				zIndex: 100
+  			})
+  		}, 1200)
   	} else if (option === "suspend") {
   		console.log("suspend")
   	} else if (option === "turnOff") {
   		console.log("turnOff")
   	}
+
+  	showCurtain = !showCurtain
+  	hideStartMenu = !hideStartMenu
   }
 </script>
 
+<Curtain show={showCurtain} />
 <section
   class="background-silver border-top-white w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
   id="navigation-bar"

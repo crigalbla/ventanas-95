@@ -25,6 +25,7 @@
   export let left: number = undefined!
   export let top: number = undefined!
   export let maxWidth = 0
+  export let zIndex = 0
 
   const headerHeight = 24
   let canBeDraggabled = true
@@ -118,7 +119,7 @@
   class:window-center={typeof left === "undefined" && typeof top === "undefined"}
   class:window-position={typeof left === "number" || typeof top === "number"}
   class:window-max-width={maxWidth}
-  style="--left:{left}; --top:{top}; --width:{width || initialWidth}; --height:{initialHeight || height};
+  style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth}; --height:{initialHeight || height};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
 >
@@ -169,5 +170,6 @@
 		width: calc(var(--width) * 1px);
 		min-height: calc(var(--minHeight) * 1px);
 		min-width: calc(var(--minWidth) * 1px);
+    z-index: var(--zIndex);
   }
 </style>
