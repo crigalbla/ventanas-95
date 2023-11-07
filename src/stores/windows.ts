@@ -1,15 +1,13 @@
 import { writable } from "svelte/store"
 
-// Math.random().toString().replace("0.", "")
 type IndividualWindowType = {
   title: string
-  windowId: string
+  windowId?: string
   icon?: string
   hasQuestionButton?: boolean
   canBeHidden?: boolean
   canBeMaximizedOrMinimized?: boolean
   canBeResized?: boolean
-  isLogin?: boolean
   isMinimized?: boolean
   isFullScreen?: boolean
   initialWidth?: number
@@ -25,6 +23,8 @@ const state: WindowsType = []
 
 export const windows = writable(state)
 
-export const createWindow = (newWindow: IndividualWindowType) => windows.update((ws: WindowsType) => [...ws, newWindow])
+export const createWindow = ({ windowId = Math.random().toString().replace("0.", ""), ...rest }: IndividualWindowType) => {
+	windows.update((ws: WindowsType) => [...ws, { windowId, ...rest }])
+}
 
 export const removeWindow = (windowId: string) => windows.update((ws: WindowsType) => ws.filter(w => w.windowId !== windowId))

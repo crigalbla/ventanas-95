@@ -2,8 +2,8 @@
   import Button from "./Button.svelte"
   import Curtain from "./Curtain.svelte"
   import { t } from "@/i18n"
-  import { getCurrentTime } from "@/utils"
-  import { createWindow, user } from "@/stores"
+  import { createLoginWindow, getCurrentTime, waitingCursor } from "@/utils"
+  import { createWindow, user, type UserType } from "@/stores"
 
   type MenuOptions = "closeSession" | "suspend" | "turnOff"
 
@@ -21,26 +21,38 @@
   }
 
   const onClickInOption = (option: MenuOptions) => {
+  	const miliseconds = 1200
   	if (option === "closeSession") {
+  		showCurtain = !showCurtain
   		setTimeout(() => {
   			createWindow({
   				title: "navigationBar.closeVentanas95Session",
-  				windowId: Math.random().toString().replace("0.", ""),
+  				windowId: "closeSession",
   				zIndex: 100
   			})
-  		}, 1200)
+  		}, miliseconds)
   	} else if (option === "suspend") {
-  		console.log("suspend")
+  		waitingCursor(miliseconds)
+  		setTimeout(() => {
+  			user.update((u: UserType) => ({ ...u, isLoggedIn: false }))
+  		}, miliseconds)
   	} else if (option === "turnOff") {
-  		console.log("turnOff")
+  		showCurtain = !showCurtain
+  		setTimeout(() => {
+  			createWindow({
+  				title: "", // TODO
+  				windowId: "turnOff",
+  				zIndex: 100
+  			})
+  		}, miliseconds)
   	}
 
-  	showCurtain = !showCurtain
   	hideStartMenu = !hideStartMenu
   }
 </script>
 
 <Curtain show={showCurtain} />
+
 <section
   class="background-silver border-top-white w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
   id="navigation-bar"

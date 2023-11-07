@@ -4,7 +4,7 @@
   import { t } from "@/i18n"
   import Button from "./Button.svelte"
 
-  export let windowId: string
+  export let windowId: string = undefined!
 
   const onClickButtons = () => {
   	removeWindow(windowId)

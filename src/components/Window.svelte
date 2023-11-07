@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { windows, user, removeWindow } from "@/stores"
-  import type { UserType, WindowsType } from "@/stores"
+  import { user, removeWindow } from "@/stores"
+  import type { UserType } from "@/stores"
   import { t } from "@/i18n"
 
   import Draggable from "./Draggable.svelte"
@@ -11,13 +11,12 @@
   import { avaliableDimensions } from "@/utils"
 
   export let title: string
-  export let windowId: string
+  export let windowId: string = undefined!
   export let icon: string = undefined!
   export let hasQuestionButton = false
   export let canBeHidden = false
   export let canBeMaximizedOrMinimized = false
   export let canBeResized = true
-  export let isLogin = false
   export let isMinimized = false
   export let isFullScreen = false
   export let initialWidth = 0
@@ -99,7 +98,7 @@
   }
   const onCloseButtonClick = () => {
   	removeWindow(windowId)
-  	if (isLogin) user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
+  	if (windowId === "login") user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
   onMount(() => {

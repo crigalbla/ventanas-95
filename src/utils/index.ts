@@ -1,3 +1,5 @@
+import { createWindow } from "@/stores"
+
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
 }
@@ -12,7 +14,7 @@ export const mouseOutOfScreen = (e: MouseEvent) => {
 	return false
 }
 
-export const waitingCursor = () => {
+export const waitingCursor = (miliseconds: number = 2000) => {
 	const html = document.querySelector("html") as HTMLElement
 	const body = document.querySelector("body") as HTMLElement
 
@@ -27,7 +29,7 @@ export const waitingCursor = () => {
 	setTimeout(() => {
 		document.removeEventListener("click", freezeWaitCursor)
 		unfreezeCurrentCursor()
-	}, 2000)
+	}, miliseconds)
 }
 
 export const freezeCurrentCursor = (e: MouseEvent) => {
@@ -77,3 +79,10 @@ export const getCurrentTime = () => {
 
 	return hours + ":" + minutes + " " + ampm
 }
+
+export const createLoginWindow = () => createWindow({
+	title: "login.title",
+	windowId: "login",
+	hasQuestionButton: true,
+	initialWidth: 530
+})
