@@ -41,7 +41,7 @@
   	setTimeout(() => createWindow({
   		title: "hola",
   		windowId: Math.random().toString().replace("0.", ""),
-  		initialWidth: 200,
+  		// initialWidth: 200,
   		canBeHidden: true,
   		canBeMaximizedOrMinimized: true
   	}), 1)
@@ -56,7 +56,7 @@
   {/each}
   <NavigationBar />
 {:else}
-  {#if loginWindow} <!-- INITIAL SCREEN! User has to log i -->
+  {#if loginWindow} <!-- INITIAL SCREEN! User has to log in -->
     <Window {...loginWindow}>
       <LoginBody windowId={loginWindow.windowId} />
     </Window>

@@ -17,6 +17,7 @@
   export let canBeHidden = false
   export let canBeMaximizedOrMinimized = false
   export let canBeResized = true
+  export let canBeDraggabled = true
   export let isMinimized = false
   export let isFullScreen = false
   export let initialWidth = 0
@@ -25,9 +26,9 @@
   export let top: number = undefined!
   export let maxWidth = 0
   export let zIndex = 0
+  export let closeCallBack: () => void = undefined!
 
   const headerHeight = 24
-  let canBeDraggabled = true
   let width: number
 	let height: number
   let minWidth: number
@@ -71,7 +72,9 @@
   	modifyCursor("url('/cursors/help.cur'), help", "none")
   	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
   }
+
   const onHideButtonClick = () => console.log("_")
+
   const onMaximizeOrMinimizeButtonClick = () => {
   	if (isFullScreen) {
   		width = oldWidth
@@ -96,7 +99,9 @@
 
   	isFullScreen = !isFullScreen
   }
+
   const onCloseButtonClick = () => {
+  	closeCallBack && closeCallBack()
   	removeWindow(windowId)
   	if (windowId === "login") user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
@@ -118,7 +123,7 @@
   class:window-center={typeof left === "undefined" && typeof top === "undefined"}
   class:window-position={typeof left === "number" || typeof top === "number"}
   class:window-max-width={maxWidth}
-  style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth}; --height:{initialHeight || height};
+  style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{initialWidth || width}; --height:{initialHeight || height};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
 >
@@ -127,7 +132,7 @@
       <Draggable fake {canBeDraggabled} bind:left bind:top>
         <div class="background-window-head window-header-height flex justify-between h-6 px-1 m-px">
           <span class="text-white">{$t(title)}</span>
-          <div class="flex self-center gap-1">
+          <div class="flex self-center gap-1 ml-4">
             {#if hasQuestionButton}
               <WindowButton on:click={onQuestionButtonClick}>?</WindowButton>
             {/if}

@@ -2,7 +2,7 @@
   import Button from "./Button.svelte"
   import Curtain from "./Curtain.svelte"
   import { t } from "@/i18n"
-  import { createLoginWindow, getCurrentTime, waitingCursor } from "@/utils"
+  import { getCurrentTime, waitingCursor } from "@/utils"
   import { createWindow, user, type UserType } from "@/stores"
 
   type MenuOptions = "closeSession" | "suspend" | "turnOff"
@@ -28,9 +28,12 @@
   			createWindow({
   				title: "navigationBar.closeVentanas95Session",
   				windowId: "closeSession",
-  				zIndex: 100
+  				zIndex: 100,
+  				canBeResized: false,
+  				canBeDraggabled: false,
+  				closeCallBack: () => showCurtain = !showCurtain
   			})
-  		}, miliseconds)
+  		}, 700)
   	} else if (option === "suspend") {
   		waitingCursor(miliseconds)
   		setTimeout(() => {
@@ -52,7 +55,6 @@
 </script>
 
 <Curtain show={showCurtain} />
-
 <section
   class="background-silver border-top-white w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
   id="navigation-bar"

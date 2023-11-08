@@ -18,28 +18,28 @@
 	let fakeResize
 
 	const resize = (element) => {
-	  const resizerTop = document.querySelector(".resizer.top")
+	  const resizerTop = element.querySelector(".resizer.top")
 	  resizerTop.direction = "north"
 
-	  const resizerRight = document.querySelector(".resizer.right")
+	  const resizerRight = element.querySelector(".resizer.right")
 	  resizerRight.direction = "east"
 
-	  const resizerBottom = document.querySelector(".resizer.bottom")
+	  const resizerBottom = element.querySelector(".resizer.bottom")
 	  resizerBottom.direction = "south"
 
-	  const resizerLeft = document.querySelector(".resizer.left")
+	  const resizerLeft = element.querySelector(".resizer.left")
 	  resizerLeft.direction = "west"
 
-	  const resizerTopRight = document.querySelector(".resizer.top-right")
+	  const resizerTopRight = element.querySelector(".resizer.top-right")
 	  resizerTopRight.direction = "northeast"
 
-	  const resizerTopLeft = document.querySelector(".resizer.top-left")
+	  const resizerTopLeft = element.querySelector(".resizer.top-left")
 	  resizerTopLeft.direction = "northwest"
 
-	  const resizerBottomRight = document.querySelector(".resizer.bottom-right")
+	  const resizerBottomRight = element.querySelector(".resizer.bottom-right")
 	  resizerBottomRight.direction = "southeast"
 
-	  const resizerBottomLeft = document.querySelector(".resizer.bottom-left")
+	  const resizerBottomLeft = element.querySelector(".resizer.bottom-left")
 	  resizerBottomLeft.direction = "southwest"
 
 	  const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]

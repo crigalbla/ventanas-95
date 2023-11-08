@@ -8,6 +8,7 @@ type IndividualWindowType = {
   canBeHidden?: boolean
   canBeMaximizedOrMinimized?: boolean
   canBeResized?: boolean
+  canBeDraggabled?: boolean
   isMinimized?: boolean
   isFullScreen?: boolean
   initialWidth?: number
@@ -16,6 +17,7 @@ type IndividualWindowType = {
   top?: number
   maxWidth?: number
   zIndex?: number
+  closeCallBack?: () => void
 }
 export type WindowsType = IndividualWindowType[]
 
