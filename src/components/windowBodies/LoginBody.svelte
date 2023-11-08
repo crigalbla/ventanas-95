@@ -2,7 +2,7 @@
   import { removeWindow, user } from "@/stores"
   import type { UserType } from "@/stores"
   import { t } from "@/i18n"
-  import Button from "./Button.svelte"
+  import Button from "../Button.svelte"
 
   export let windowId: string = undefined!
 

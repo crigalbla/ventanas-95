@@ -1,6 +1,7 @@
 <script lang="ts">
   import Button from "./Button.svelte"
   import Curtain from "./Curtain.svelte"
+  import CloseSessionBody from "./windowBodies/CloseSessionBody.svelte"
   import { t } from "@/i18n"
   import { getCurrentTime, waitingCursor } from "@/utils"
   import { createWindow, user, type UserType } from "@/stores"
@@ -31,6 +32,7 @@
   				zIndex: 100,
   				canBeResized: false,
   				canBeDraggabled: false,
+  				body: CloseSessionBody,
   				closeCallBack: () => showCurtain = !showCurtain
   			})
   		}, 700)

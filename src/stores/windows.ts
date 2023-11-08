@@ -1,7 +1,9 @@
+import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
 
 type IndividualWindowType = {
   title: string
+  body?: ComponentType
   windowId?: string
   icon?: string
   hasQuestionButton?: boolean

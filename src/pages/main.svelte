@@ -1,5 +1,5 @@
 <script lang="ts">
-  import LoginBody from "@/components/LoginBody.svelte"
+  import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import Window from "@/components/Window.svelte"
   import { createWindow, user, windows } from "@/stores"
@@ -41,7 +41,6 @@
   	setTimeout(() => createWindow({
   		title: "hola",
   		windowId: Math.random().toString().replace("0.", ""),
-  		// initialWidth: 200,
   		canBeHidden: true,
   		canBeMaximizedOrMinimized: true
   	}), 1)
@@ -51,7 +50,7 @@
 {#if $user?.isLoggedIn} <!-- HOME SCREEN! User can use Ventanas 95 -->
   {#each $windows as window}
     <Window {...window}>
-      Bienvenido!
+      <svelte:component this={window.body} />
     </Window>
   {/each}
   <NavigationBar />
