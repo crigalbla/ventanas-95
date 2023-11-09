@@ -50,7 +50,7 @@
 {#if $user?.isLoggedIn} <!-- HOME SCREEN! User can use Ventanas 95 -->
   {#each $windows as window}
     <Window {...window}>
-      <svelte:component this={window.body} />
+      <svelte:component this={window.body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
     </Window>
   {/each}
   <NavigationBar />
