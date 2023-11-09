@@ -1,7 +1,7 @@
 <script lang="ts">
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
-  import { removeWindow, user, type UserType } from "@/stores"
+  import { removeWindow, user } from "@/stores"
   import { createLoginWindow, waitingCursor } from "@/utils"
 
   export let windowId: string
@@ -13,11 +13,12 @@
   }
 
   const onClickYesAnswer = () => {
-  	user.set({})
-  	removeWindow(windowId)
-  	closeCallBack()
-  	createLoginWindow()
-  	waitingCursor(1000)
+  	waitingCursor(1500)
+  	setTimeout(() => {
+  		user.set({})
+  		removeWindow(windowId)
+  		createLoginWindow()
+  	}, 500)
   }
 </script>
 

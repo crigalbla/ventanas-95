@@ -5,6 +5,7 @@
   import { t } from "@/i18n"
   import { getCurrentTime, waitingCursor } from "@/utils"
   import { createWindow, user, type UserType } from "@/stores"
+  import TurnOffBody from "./windowBodies/TurnOffBody.svelte"
 
   type MenuOptions = "closeSession" | "suspend" | "turnOff"
 
@@ -22,7 +23,6 @@
   }
 
   const onClickInOption = (option: MenuOptions) => {
-  	const miliseconds = 1200
   	if (option === "closeSession") {
   		showCurtain = !showCurtain
   		setTimeout(() => {
@@ -37,6 +37,7 @@
   			})
   		}, 700)
   	} else if (option === "suspend") {
+  		const miliseconds = 1200
   		waitingCursor(miliseconds)
   		setTimeout(() => {
   			user.update((u: UserType) => ({ ...u, isLoggedIn: false }))
@@ -45,11 +46,15 @@
   		showCurtain = !showCurtain
   		setTimeout(() => {
   			createWindow({
-  				title: "", // TODO
+  				title: "navigationBar.closeVentanas95",
   				windowId: "turnOff",
-  				zIndex: 100
+  				zIndex: 100,
+  				canBeResized: false,
+  				canBeDraggabled: false,
+  				body: TurnOffBody,
+  				closeCallBack: () => showCurtain = !showCurtain
   			})
-  		}, miliseconds)
+  		}, 700)
   	}
 
   	hideStartMenu = !hideStartMenu

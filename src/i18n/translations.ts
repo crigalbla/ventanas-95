@@ -19,7 +19,11 @@ const translations: Translations = {
 		"navigationBar.suspend": "Suspender",
 		"navigationBar.turnOff": "Apagar el sistema",
 		"navigationBar.closeVentanas95Session": "Cerrar la sesión de 'Ventanas 95'",
-		"navigationBar.sureCloseSession": "¿Seguro que desea cerrar la sesión?"
+		"navigationBar.sureCloseSession": "¿Seguro que desea cerrar la sesión?",
+		"navigationBar.closeVentanas95": "Cerrar 'Ventanas 95'",
+		"navigationBar.confirmWhatWant": "Confirme que desea",
+		"navigationBar.turnOffSystem": "apagar el sistema",
+		"navigationBar.restart": "reiniciar"
 	},
 	en: {
 		accept: "OK",
@@ -35,7 +39,11 @@ const translations: Translations = {
 		"navigationBar.suspend": "Suspend",
 		"navigationBar.turnOff": "Turn off the system",
 		"navigationBar.closeVentanas95Session": "Close 'Ventanas 95' session",
-		"navigationBar.sureCloseSession": "Are you sure you want close session?"
+		"navigationBar.sureCloseSession": "Are you sure you want close session?",
+		"navigationBar.closeVentanas95": "Close 'Ventanas 95'",
+		"navigationBar.confirmWhatWant": "Confirm what you want",
+		"navigationBar.turnOffSystem": "turn off the system",
+		"navigationBar.restart": "restart"
 	}
 }
 
