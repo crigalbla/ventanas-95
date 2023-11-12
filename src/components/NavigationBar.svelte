@@ -3,10 +3,11 @@
   import Curtain from "./Curtain.svelte"
   import CloseSessionBody from "./windowBodies/CloseSessionBody.svelte"
   import { t } from "@/i18n"
-  import { getCurrentTime, waitingCursor } from "@/utils"
+  import { doItClickEvent, getCurrentTime, waitingCursor } from "@/utils"
   import { createWindow, user, windows, type UserType } from "@/stores"
   import TurnOffBody from "./windowBodies/TurnOffBody.svelte"
   import TabWindow from "./TabWindow.svelte"
+  import { onMount } from "svelte"
 
   type MenuOptions = "closeSession" | "suspend" | "turnOff"
 
@@ -33,6 +34,7 @@
   				zIndex: 100,
   				canBeResized: false,
   				canBeDraggabled: false,
+  				canLoseFocus: false,
   				body: CloseSessionBody,
   				closeCallBack: () => showCurtain = !showCurtain
   			})
@@ -52,6 +54,7 @@
   				zIndex: 100,
   				canBeResized: false,
   				canBeDraggabled: false,
+  				canLoseFocus: false,
   				body: TurnOffBody,
   				closeCallBack: () => showCurtain = !showCurtain
   			})
@@ -60,6 +63,11 @@
 
   	hideStartMenu = !hideStartMenu
   }
+
+  onMount(() => {
+  	const { removeEvent } = doItClickEvent("#navigation-bar", () => hideStartMenu = true)
+  	return removeEvent
+  })
 </script>
 
 <Curtain show={showCurtain} />
@@ -100,8 +108,14 @@
       <img src="icons/window.png" alt="start" draggable="false"/>
       <span class="text-xl tracking-wider font-extrabold ml-2">{$t("navigationBar.start")}</span>
     </Button>
-    {#each $windows as window}
-      <TabWindow title={window.title} windowId={window.windowId} isMinimized={window.isMinimized ?? false} icon={window.icon}>
+    {#each $windows.filter(w => w.canLoseFocus !== false) as window}
+      <TabWindow
+        title={window.title}
+        windowId={window.windowId}
+        icon={window.icon}
+        isMinimized={window.isMinimized ?? false}
+        isFocused={window.isFocused ?? true}
+      >
         <svelte:component this={window.body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
       </TabWindow>
     {/each}

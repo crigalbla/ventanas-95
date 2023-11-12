@@ -8,7 +8,7 @@
   import Draggable from "./Draggable.svelte"
   import WindowButton from "./WindowButton.svelte"
   import Resize from "./Resize.svelte"
-  import { avaliableDimensions } from "@/utils"
+  import { avaliableDimensions, doItClickEvent } from "@/utils"
 
   export let title: string
   export let windowId: string = undefined!
@@ -18,6 +18,7 @@
   export let canBeMaximizedOrMinimized = false
   export let canBeResized = true
   export let canBeDraggabled = true
+  export let canLoseFocus = true
   export let isMinimized = false
   export let isFullScreen = false
   export let isFocused = true
@@ -110,6 +111,12 @@
   	if (windowId === "login") user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
+  const onFocus = () => windows.update((ws: WindowsType) =>
+  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isFocused: true }) : w))
+
+  const onUnFocus = () => windows.update((ws: WindowsType) =>
+  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isFocused: false }) : w))
+
   onMount(() => {
   	width = minWidth = windowDiv.offsetWidth
   	height = minHeight = windowDiv.offsetHeight
@@ -118,6 +125,11 @@
   		const rect = windowDiv.getBoundingClientRect()
   		top = rect.top
   		left = rect.left
+  	}
+
+  	if (canLoseFocus) {
+  		const { removeEvent } = doItClickEvent(`#${windowId}`, onUnFocus, onFocus)
+  		return removeEvent
   	}
   })
 </script>
@@ -128,6 +140,7 @@
   class:window-position={typeof left === "number" || typeof top === "number"}
   class:window-max-width={maxWidth}
   class:display-none={isMinimized}
+  id={windowId}
   style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{initialWidth || width}; --height:{initialHeight || height};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}

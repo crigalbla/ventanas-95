@@ -1,5 +1,6 @@
 <script lang="ts">
   export let className = ""
+  export let id: string = undefined!
   export let removeButtonStyles = false
   export let isMousePointer = false
   export let hasHover = false
@@ -11,6 +12,7 @@
   class:mouse-pointer={isMousePointer}
   class:option={hasHover}
   class={`background-silver flex items-center ${className}`.trim()}
+  id={id}
   on:click
   bind:this={buttonRef}
 >

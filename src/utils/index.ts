@@ -58,12 +58,21 @@ export const avaliableDimensions = () => {
 	return { avaliableWidth, avaliableHeight }
 }
 
-export const doItIfClickOutOfElement = <T>(searchElement: string, callBack: (args?: T) => void) => {
-	document.addEventListener("click", (event) => {
+export const doItClickEvent = (searchElement: string, callBackClickOutside: () => void, callBackInside?: () => void) => {
+	const doIt = (event: Event) => {
 		const menu = document.querySelector(searchElement)
 
-		if (menu && !menu.contains(event.target as Node)) callBack()
-	})
+		if (menu) {
+			if (!menu.contains(event.target as Node)) {
+				callBackClickOutside()
+			} else {
+				callBackInside && callBackInside()
+			}
+		}
+	}
+	if (typeof document !== "undefined") document.addEventListener("mousedown", doIt)
+
+	return { removeEvent: () => document.removeEventListener("mousedown", doIt) }
 }
 
 export const getCurrentTime = () => {
@@ -83,5 +92,6 @@ export const createLoginWindow = () => createWindow({
 	title: "login.title",
 	windowId: "login",
 	hasQuestionButton: true,
+	canLoseFocus: false,
 	initialWidth: 530
 })

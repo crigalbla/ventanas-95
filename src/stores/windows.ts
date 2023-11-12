@@ -11,6 +11,7 @@ export type IndividualWindowType = {
   canBeMaximizedOrMinimized?: boolean
   canBeResized?: boolean
   canBeDraggabled?: boolean
+  canLoseFocus?: boolean
   isMinimized?: boolean
   isFullScreen?: boolean
   isFocused?: boolean
@@ -29,7 +30,7 @@ const state: WindowsType = []
 
 export const windows = writable(state)
 
-export const createWindow = ({ windowId = Math.random().toString().replace("0.", ""), ...rest }: CreateWindowParams) => {
+export const createWindow = ({ windowId = `w-${Math.random().toString().replace("0.", "")}`, ...rest }: CreateWindowParams) => {
 	windows.update((ws: WindowsType) => [...ws, { windowId, ...rest }])
 }
 
