@@ -58,14 +58,13 @@ export const avaliableDimensions = () => {
 	return { avaliableWidth, avaliableHeight }
 }
 
-// TODO: use when necessary
-// export const doItIfClickOutOfElement = <T>(searchElement: string, callBack: (args: T) => void) => {
-// 	document.addEventListener("click", (event) => {
-// 		const menu = document.querySelector(searchElement)
+export const doItIfClickOutOfElement = <T>(searchElement: string, callBack: (args?: T) => void) => {
+	document.addEventListener("click", (event) => {
+		const menu = document.querySelector(searchElement)
 
-// 		if (menu && !menu.contains(event.target)) callBack()
-// 	})
-// }
+		if (menu && !menu.contains(event.target as Node)) callBack()
+	})
+}
 
 export const getCurrentTime = () => {
 	const date = new Date()

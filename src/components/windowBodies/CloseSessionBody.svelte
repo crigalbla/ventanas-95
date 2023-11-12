@@ -23,7 +23,7 @@
 </script>
 
 <section class="flex m-5 mr-11">
-  <img class="h-16 w-16" src="icons/key-250px.png" alt="key" />
+  <img class="h-16 w-16" src="icons/key-250px.png" alt="key" draggable="false"/>
   <div class="flex flex-col gap-6">
     <p class="w-max">{$t("navigationBar.sureCloseSession")}</p>
     <div class="flex gap-3">

@@ -19,7 +19,7 @@
 </script>
 
 <div class="background-silver login-body-height flex justify-center gap-4 p-4">
-  <img class="h-16 w-16" src="icons/connection-2-computers.png" alt="connection-2-computers" />
+  <img class="h-16 w-16" src="icons/connection-2-computers.png" alt="connection-2-computers" draggable="false"/>
   <div class="flex gap-4 flex-col">
     <p>{$t("login.description")}</p>
     <div class="flex gap-2 flex-col">

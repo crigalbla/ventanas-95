@@ -25,7 +25,7 @@
 </script>
 
 <section class="flex m-5 mr-11">
-  <img class="h-16 w-16" src="icons/turn-off.png" alt="turn-off" />
+  <img class="h-16 w-16" src="icons/turn-off.png" alt="turn-off" draggable="false"/>
   <div class="flex flex-col ml-4">
     <p class="w-max mb-4">{$t("navigationBar.confirmWhatWant")}</p>
     <label class="flex items-center gap-1">

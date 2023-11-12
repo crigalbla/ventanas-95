@@ -17,15 +17,14 @@
 </script>
 
 <Button
-  className={`${isMinimized ? "border-color-soft-up" : "border-color-soft-down"} h-5/6 w-1/3 px-1`}
+  className={`${isMinimized ? "border-color-soft-up" : "border-color-soft-down background-granulated font-extrabold"} h-5/6 w-1/3 px-1`}
   on:click={onClickTabWindow}
 >
   {#if icon}
-    <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon}/>
+    <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
   {/if}
-  <span class="text-white ml-1">{$t(title)}</span>
+  <span class="ml-1">{$t(title)}</span>
 </Button>
 
 <style>
-
 </style>

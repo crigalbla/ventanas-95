@@ -13,6 +13,7 @@ export type IndividualWindowType = {
   canBeDraggabled?: boolean
   isMinimized?: boolean
   isFullScreen?: boolean
+  isFocused?: boolean
   initialWidth?: number
   initialHeight?: number
   left?: number

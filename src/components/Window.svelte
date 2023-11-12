@@ -141,7 +141,7 @@
         } window-header-height flex justify-between h-6 px-1 m-px`}>
           <div class="flex items-center">
             {#if icon}
-              <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon}/>
+              <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
             {/if}
             <span class="text-white ml-1">{$t(title)}</span>
           </div>
@@ -155,9 +155,9 @@
             {#if canBeMaximizedOrMinimized}
               <WindowButton on:click={onMaximizeOrMinimizeButtonClick}>
                 {#if isFullScreen}
-                  <img class="h-3 w-3" src="icons/minimalist-window.png" alt="minimalist-window"/>
+                  <img class="h-3 w-3" src="icons/minimalist-window.png" alt="minimalist-window" draggable="false"/>
                 {:else}
-                  <img class="h-3 w-3" src="icons/minimalist-windows.png" alt="minimalist-windows"/>
+                  <img class="h-3 w-3" src="icons/minimalist-windows.png" alt="minimalist-windows" draggable="false"/>
                 {/if}
               </WindowButton>
             {/if}
