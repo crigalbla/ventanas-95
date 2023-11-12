@@ -4,8 +4,9 @@
   import CloseSessionBody from "./windowBodies/CloseSessionBody.svelte"
   import { t } from "@/i18n"
   import { getCurrentTime, waitingCursor } from "@/utils"
-  import { createWindow, user, type UserType } from "@/stores"
+  import { createWindow, user, windows, type UserType } from "@/stores"
   import TurnOffBody from "./windowBodies/TurnOffBody.svelte"
+  import TabWindow from "./TabWindow.svelte"
 
   type MenuOptions = "closeSession" | "suspend" | "turnOff"
 
@@ -94,11 +95,18 @@
     </div>
   </div>
 
-  <Button className="px-1 h-5/6" on:click={() => hideStartMenu = !hideStartMenu} bind:buttonRef>
-    <img src="icons/window.png" alt="start" />
-    <span class="text-xl tracking-wider font-extrabold ml-2">{$t("navigationBar.start")}</span>
-  </Button>
-  <div class="background-silver border-under flex items-center justify-between pl-1 pr-2 h-5/6 w-28">
+  <div class="flex items-center gap-1 h-full w-full">
+    <Button className="px-1 h-5/6" on:click={() => hideStartMenu = !hideStartMenu} bind:buttonRef>
+      <img src="icons/window.png" alt="start" />
+      <span class="text-xl tracking-wider font-extrabold ml-2">{$t("navigationBar.start")}</span>
+    </Button>
+    {#each $windows as window}
+      <TabWindow title={window.title} windowId={window.windowId} isMinimized={window.isMinimized ?? false} icon={window.icon}>
+        <svelte:component this={window.body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
+      </TabWindow>
+    {/each}
+  </div>
+  <div class="background-silver border-color-soft-down flex items-center justify-between pl-1 pr-2 h-5/6 w-28">
     <img class="h-8 w-8" src="icons/speaker-220px.png" alt="speaker"/>
     {currentTime}
   </div>

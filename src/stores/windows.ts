@@ -1,10 +1,10 @@
 import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
 
-type IndividualWindowType = {
+export type IndividualWindowType = {
   title: string
+  windowId: string
   body?: ComponentType
-  windowId?: string
   icon?: string
   hasQuestionButton?: boolean
   canBeHidden?: boolean
@@ -21,13 +21,14 @@ type IndividualWindowType = {
   zIndex?: number
   closeCallBack?: () => void
 }
+export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId">
 export type WindowsType = IndividualWindowType[]
 
 const state: WindowsType = []
 
 export const windows = writable(state)
 
-export const createWindow = ({ windowId = Math.random().toString().replace("0.", ""), ...rest }: IndividualWindowType) => {
+export const createWindow = ({ windowId = Math.random().toString().replace("0.", ""), ...rest }: CreateWindowParams) => {
 	windows.update((ws: WindowsType) => [...ws, { windowId, ...rest }])
 }
 

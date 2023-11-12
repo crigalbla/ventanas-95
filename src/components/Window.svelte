@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { user, removeWindow } from "@/stores"
-  import type { UserType } from "@/stores"
+  import { user, removeWindow, windows } from "@/stores"
+  import type { IndividualWindowType, UserType, WindowsType } from "@/stores"
   import { t } from "@/i18n"
 
   import Draggable from "./Draggable.svelte"
@@ -20,6 +20,7 @@
   export let canBeDraggabled = true
   export let isMinimized = false
   export let isFullScreen = false
+  export let isFocused = true
   export let initialWidth = 0
   export let initialHeight = 0
   export let left: number = undefined!
@@ -73,7 +74,10 @@
   	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
   }
 
-  const onHideButtonClick = () => console.log("_")
+  const onHideButtonClick = () => {
+  	windows.update((ws: WindowsType) =>
+  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isMinimized: !isMinimized }) : w))
+  }
 
   const onMaximizeOrMinimizeButtonClick = () => {
   	if (isFullScreen) {
@@ -123,6 +127,7 @@
   class:window-center={typeof left === "undefined" && typeof top === "undefined"}
   class:window-position={typeof left === "number" || typeof top === "number"}
   class:window-max-width={maxWidth}
+  class:display-none={isMinimized}
   style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{initialWidth || width}; --height:{initialHeight || height};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
@@ -130,8 +135,16 @@
   <Resize fake {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>
     <div class="h-full w-full">
       <Draggable fake {canBeDraggabled} bind:left bind:top>
-        <div class="background-window-head window-header-height flex justify-between h-6 px-1 m-px">
-          <span class="text-white">{$t(title)}</span>
+        <div class={`${isFocused
+        	? "background-window-head"
+        	: "background-dark-silver"
+        } window-header-height flex justify-between h-6 px-1 m-px`}>
+          <div class="flex items-center">
+            {#if icon}
+              <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon}/>
+            {/if}
+            <span class="text-white ml-1">{$t(title)}</span>
+          </div>
           <div class="flex self-center gap-1 ml-4">
             {#if hasQuestionButton}
               <WindowButton on:click={onQuestionButtonClick}>?</WindowButton>

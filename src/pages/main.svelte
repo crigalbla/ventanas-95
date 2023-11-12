@@ -40,7 +40,7 @@
   	// Why this need a setTimeout?
   	setTimeout(() => createWindow({
   		title: "hola",
-  		windowId: Math.random().toString().replace("0.", ""),
+  		icon: "window",
   		canBeHidden: true,
   		canBeMaximizedOrMinimized: true
   	}), 1)

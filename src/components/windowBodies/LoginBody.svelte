@@ -25,7 +25,7 @@
     <div class="flex gap-2 flex-col">
       <div class="flex items-center">
         <p class="w-28">{$t("login.username")}</p>
-        <input class="flex-1" type="text" on:keyup={onKeyUp}/>
+        <input class="flex-1" type="text" on:keyup={onKeyUp} value={$user?.userName ?? ""} />
       </div>
       <div class="flex items-center">
         <p class="w-28">{$t("login.password")}</p>
