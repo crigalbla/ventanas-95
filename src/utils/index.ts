@@ -64,9 +64,10 @@ export const doItClickEvent = (searchElement: string, callBackClickOutside: () =
 
 		if (menu) {
 			if (!menu.contains(event.target as Node)) {
+				// TODO hacer que no entre aquí si hace click en el tab de su propia ventana
 				callBackClickOutside()
 			} else {
-				callBackInside && callBackInside()
+				callBackInside?.()
 			}
 		}
 	}

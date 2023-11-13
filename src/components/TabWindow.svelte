@@ -11,9 +11,21 @@
 
   const onClickTabWindow = () => {
   	windows.update((ws: WindowsType) =>
-  		ws.map((w: IndividualWindowType) => w.windowId === windowId
-  			? ({ ...w, isMinimized: !isMinimized, isFocused: true })
-  			: ({ ...w, isMinimized: true })))
+  		ws.map((w: IndividualWindowType) => {
+  			if (w.windowId === windowId) {
+  				if (isMinimized) {
+  					return ({ ...w, isMinimized: false, isFocused: true })
+  				} else {
+  					if (isFocused) {
+  						return ({ ...w, isMinimized: true, isFocused: false })
+  					} else {
+  						return ({ ...w, isMinimized: false, isFocused: true })
+  					}
+  				}
+  			} else {
+  				return ({ ...w, isFocused: false })
+  			}
+  		}))
   }
 </script>
 
