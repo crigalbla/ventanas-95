@@ -58,16 +58,30 @@ export const avaliableDimensions = () => {
 	return { avaliableWidth, avaliableHeight }
 }
 
-export const doItClickEvent = (searchElement: string, callBackClickOutside: () => void, callBackInside?: () => void) => {
+export const doItClickEvent = ({
+	searchElement,
+	thisElementIsValid,
+	avoidCallBacksIfThisElement,
+	callBackClickOutside,
+	callBackInside
+}: {
+	searchElement: string,
+	thisElementIsValid?: string,
+	avoidCallBacksIfThisElement?: string,
+	callBackClickOutside: () => void,
+	callBackInside?: () => void
+}) => {
 	const doIt = (event: Event) => {
-		const menu = document.querySelector(searchElement)
+		const myElement = document.querySelector(searchElement)
+		const elementAcceptedAsInside = thisElementIsValid ? document.querySelector(thisElementIsValid) : null
+		const elementThatAvoidCallBacks = avoidCallBacksIfThisElement ? document.querySelector(avoidCallBacksIfThisElement) : null
 
-		if (menu) {
-			if (!menu.contains(event.target as Node)) {
-				// TODO hacer que no entre aquí si hace click en el tab de su propia ventana
-				callBackClickOutside()
-			} else {
+		if (myElement && !elementThatAvoidCallBacks?.contains(event.target as Node)) {
+			if (myElement.contains(event.target as Node) || elementAcceptedAsInside?.contains(event.target as Node)) {
 				callBackInside?.()
+			} else {
+				console.log(searchElement, event.target)
+				callBackClickOutside()
 			}
 		}
 	}

@@ -77,7 +77,7 @@
 
   const onHideButtonClick = () => {
   	windows.update((ws: WindowsType) =>
-  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isMinimized: !isMinimized }) : w))
+  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isMinimized: !isMinimized, isFocused: !isFocused }) : w))
   }
 
   const onMaximizeOrMinimizeButtonClick = () => {
@@ -128,7 +128,12 @@
   	}
 
   	if (canLoseFocus) {
-  		const { removeEvent } = doItClickEvent(`#${windowId}`, onUnFocus, onFocus)
+  		const { removeEvent } = doItClickEvent({
+  			searchElement: `#${windowId}`,
+  			callBackClickOutside: onUnFocus,
+  			callBackInside: onFocus,
+  			avoidCallBacksIfThisElement: `#${windowId}-tab`
+  		})
   		return removeEvent
   	}
   })

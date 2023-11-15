@@ -65,17 +65,18 @@
   }
 
   onMount(() => {
-  	const { removeEvent } = doItClickEvent("#navigation-bar", () => hideStartMenu = true)
+  	const { removeEvent } = doItClickEvent({
+  		searchElement: "#start-button",
+  		callBackClickOutside: () => hideStartMenu = true,
+  		thisElementIsValid: "#start-menu"
+  	})
   	return removeEvent
   })
 </script>
 
 <Curtain show={showCurtain} />
-<section
-  class="background-silver border-top-white w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
-  id="navigation-bar"
->
-  <div class:display-none={hideStartMenu} class="background-silver border-color-up w-64 fixed bottom-10 flex">
+<section class="background-silver border-top-white w-full h-11 absolute bottom-0 flex items-center justify-between px-1">
+  <div class:display-none={hideStartMenu} class="background-silver border-color-up w-64 fixed bottom-10 flex" id="start-menu">
     <div class="background-dark-silver text-color-silver vertical-text tracking-wide text-5xl pr-1 py-3">
       <span class="font-extrabold">Ventanas</span>
       <span class="text-white">95</span>
@@ -104,7 +105,7 @@
   </div>
 
   <div class="flex items-center gap-1 h-full w-full">
-    <Button className="px-1 h-5/6" on:click={() => hideStartMenu = !hideStartMenu} bind:buttonRef>
+    <Button className="px-1 h-5/6" on:click={() => hideStartMenu = !hideStartMenu} id="start-button" bind:buttonRef>
       <img src="icons/window.png" alt="start" draggable="false"/>
       <span class="text-xl tracking-wider font-extrabold ml-2">{$t("navigationBar.start")}</span>
     </Button>
@@ -115,9 +116,7 @@
         icon={window.icon}
         isMinimized={window.isMinimized ?? false}
         isFocused={window.isFocused ?? true}
-      >
-        <svelte:component this={window.body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
-      </TabWindow>
+      />
     {/each}
   </div>
   <div class="background-silver border-color-soft-down flex items-center justify-between pl-1 pr-2 h-5/6 w-28">
