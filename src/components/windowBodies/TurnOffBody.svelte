@@ -1,7 +1,7 @@
 <script lang="ts">
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
-  import { removeWindow, user } from "@/stores"
+  import { removeWindow, user, windows } from "@/stores"
   import { createLoginWindow, waitingCursor } from "@/utils"
 
   export let windowId: string
@@ -11,6 +11,7 @@
 
   const onClickCancelAnswer = () => {
   	removeWindow(windowId)
+  	windows.set([])
   	closeCallBack()
   }
 
@@ -18,6 +19,7 @@
   	waitingCursor(500)
   	setTimeout(() => {
   		user.set({})
+  		windows.set([])
   		removeWindow(windowId)
   		if (radioValue === "restart") createLoginWindow()
   	}, 500)

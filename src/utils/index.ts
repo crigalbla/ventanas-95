@@ -80,7 +80,6 @@ export const doItClickEvent = ({
 			if (myElement.contains(event.target as Node) || elementAcceptedAsInside?.contains(event.target as Node)) {
 				callBackInside?.()
 			} else {
-				console.log(searchElement, event.target)
 				callBackClickOutside()
 			}
 		}

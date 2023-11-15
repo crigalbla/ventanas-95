@@ -38,12 +38,23 @@
   	playStartingAudio()
   	waitingCursor()
   	// Why this need a setTimeout?
-  	setTimeout(() => createWindow({
-  		title: "hola",
-  		icon: "window",
-  		canBeHidden: true,
-  		canBeMaximizedOrMinimized: true
-  	}), 1)
+  	setTimeout(() => {
+  		createWindow({
+  			title: "hola",
+  			icon: "window",
+  			zIndex: 100,
+  			canBeHidden: true,
+  			canBeMaximizedOrMinimized: true
+  		})
+  		createWindow({
+  			title: "hola2",
+  			icon: "window",
+  			zIndex: 101,
+  			isFocused: false,
+  			canBeHidden: true,
+  			canBeMaximizedOrMinimized: true
+  		})
+  	}, 1)
   }
 </script>
 

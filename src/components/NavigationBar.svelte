@@ -44,6 +44,7 @@
   		waitingCursor(miliseconds)
   		setTimeout(() => {
   			user.update((u: UserType) => ({ ...u, isLoggedIn: false }))
+  			windows.set([])
   		}, miliseconds)
   	} else if (option === "turnOff") {
   		showCurtain = !showCurtain
