@@ -76,7 +76,10 @@
 </script>
 
 <Curtain show={showCurtain} />
-<section class="background-silver border-top-white w-full h-11 absolute bottom-0 flex items-center justify-between px-1">
+<section
+  class="background-silver border-top-white z-index-98 w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
+  id="navigation-bar"
+>
   <div class:display-none={hideStartMenu} class="background-silver border-color-up w-64 fixed bottom-10 flex" id="start-menu">
     <div class="background-dark-silver text-color-silver vertical-text tracking-wide text-5xl pr-1 py-3">
       <span class="font-extrabold">Ventanas</span>
@@ -127,6 +130,9 @@
 </section>
 
 <style>
+  .z-index-98 {
+    z-index: 98;
+  }
   .vertical-text {
     writing-mode: vertical-rl;
     white-space: nowrap;

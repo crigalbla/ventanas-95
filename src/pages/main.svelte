@@ -42,14 +42,34 @@
   		createWindow({
   			title: "hola",
   			icon: "window",
-  			zIndex: 100,
+  			initialWidth: 300,
+  			initialHeight: 100,
   			canBeHidden: true,
   			canBeMaximizedOrMinimized: true
   		})
   		createWindow({
   			title: "hola2",
   			icon: "window",
-  			zIndex: 101,
+  			initialWidth: 300,
+  			initialHeight: 100,
+  			isFocused: false,
+  			canBeHidden: true,
+  			canBeMaximizedOrMinimized: true
+  		})
+  		createWindow({
+  			title: "hola3",
+  			icon: "window",
+  			initialWidth: 300,
+  			initialHeight: 100,
+  			isFocused: false,
+  			canBeHidden: true,
+  			canBeMaximizedOrMinimized: true
+  		})
+  		createWindow({
+  			title: "hola4",
+  			icon: "window",
+  			initialWidth: 300,
+  			initialHeight: 100,
   			isFocused: false,
   			canBeHidden: true,
   			canBeMaximizedOrMinimized: true

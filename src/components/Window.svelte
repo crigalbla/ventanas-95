@@ -111,8 +111,16 @@
   	if (windowId === "login") user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
-  const onFocus = () => windows.update((ws: WindowsType) =>
-  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isFocused: true }) : w))
+  const onFocus = () => windows.update((ws: WindowsType) => {
+  	const oldZIndex: number = ws.find((w: IndividualWindowType) => w.windowId === windowId)?.zIndex as number
+
+  	return ws.map((w: IndividualWindowType) => {
+  		if (w.windowId === windowId) return ({ ...w, isFocused: true, zIndex: ws.length })
+  		if ((w.zIndex as number) > oldZIndex) return ({ ...w, zIndex: (w.zIndex as number) - 1 })
+
+  		return w
+  	})
+  })
 
   const onUnFocus = () => windows.update((ws: WindowsType) =>
   		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isFocused: false }) : w))

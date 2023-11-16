@@ -10,27 +10,31 @@
   export let isFocused: boolean
 
   const onClickTabWindow = () => {
-  	windows.update((ws: WindowsType) =>
-  		ws.map((w: IndividualWindowType) => {
+  	windows.update((ws: WindowsType) => {
+  		const oldZIndex: number = ws.find((w: IndividualWindowType) => w.windowId === windowId)?.zIndex as number
+
+  		return ws.map((w: IndividualWindowType) => {
   			if (w.windowId === windowId) {
   				if (isMinimized) {
-  					return ({ ...w, isMinimized: false, isFocused: true })
+  					return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length })
   				} else {
   					if (isFocused) {
   						return ({ ...w, isMinimized: true, isFocused: false })
   					} else {
-  						return ({ ...w, isMinimized: false, isFocused: true })
+  						return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length })
   					}
   				}
-  			} else {
-  				return ({ ...w, isFocused: false })
   			}
-  		}))
+  			if ((w.zIndex as number) > oldZIndex) return ({ ...w, zIndex: (w.zIndex as number) - 1 })
+
+  			return ({ ...w, isFocused: false })
+  		})
+  	})
   }
 </script>
 
 <Button
-  className={`${!isFocused ? "border-color-soft-up" : "border-color-soft-down background-granulated font-extrabold"} h-5/6 w-1/3 px-1`}
+  className={`${!isFocused ? "border-color-soft-up" : "border-color-soft-down background-granulated font-extrabold"} h-5/6 w-1/5 px-1`}
   id={`${windowId}-tab`}
   on:click={onClickTabWindow}
 >
