@@ -40,15 +40,7 @@
   	// Why this need a setTimeout?
   	setTimeout(() => {
   		createWindow({
-  			title: "hola",
-  			icon: "window",
-  			initialWidth: 300,
-  			initialHeight: 100,
-  			canBeHidden: true,
-  			canBeMaximizedOrMinimized: true
-  		})
-  		createWindow({
-  			title: "hola2",
+  			title: "1",
   			icon: "window",
   			initialWidth: 300,
   			initialHeight: 100,
@@ -57,7 +49,7 @@
   			canBeMaximizedOrMinimized: true
   		})
   		createWindow({
-  			title: "hola3",
+  			title: "2",
   			icon: "window",
   			initialWidth: 300,
   			initialHeight: 100,
@@ -66,7 +58,19 @@
   			canBeMaximizedOrMinimized: true
   		})
   		createWindow({
-  			title: "hola4",
+  			title: "3",
+  			icon: "window",
+  			initialWidth: 300,
+  			initialHeight: 100,
+  			// TODO fix when window has top and left
+  			// top: 300,
+  			// left: 300,
+  			isFocused: false,
+  			canBeHidden: true,
+  			canBeMaximizedOrMinimized: true
+  		})
+  		createWindow({
+  			title: "4",
   			icon: "window",
   			initialWidth: 300,
   			initialHeight: 100,

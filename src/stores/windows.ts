@@ -30,8 +30,10 @@ const state: WindowsType = []
 
 export const windows = writable(state)
 
-export const createWindow = ({ windowId = `w-${Math.random().toString().replace("0.", "")}`, zIndex, ...rest }: CreateWindowParams) => {
-	windows.update((ws: WindowsType) => [...ws, { windowId, zIndex: zIndex ?? ws.length + 1, ...rest }])
+export const createWindow = ({ windowId = `w-${Math.random().toString().replace("0.", "")}`, zIndex, isFocused, ...rest }: CreateWindowParams) => {
+	windows.update((ws: WindowsType) =>
+		[...ws, { windowId, zIndex: zIndex ?? ws.length + 1, isFocused: isFocused ?? true, ...rest }]
+	)
 }
 
 export const removeWindow = (windowId: string) => windows.update((ws: WindowsType) => ws.filter(w => w.windowId !== windowId))

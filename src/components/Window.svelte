@@ -154,7 +154,7 @@
   class:window-max-width={maxWidth}
   class:display-none={isMinimized}
   id={windowId}
-  style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{initialWidth || width}; --height:{initialHeight || height};
+  style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth || ""}; --height:{height || initialHeight || ""};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
 >
