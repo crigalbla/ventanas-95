@@ -1,5 +1,6 @@
 <script>
   import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
+	import { updateWindowParams } from "@/stores"
 
 	export let width
 	export let height
@@ -9,6 +10,7 @@
 	export let left
 	export let fake = false
 	export let canBeResized = true
+	export let windowId
 
 	let fakeWidth = width
 	let fakeHeight = height
@@ -76,8 +78,12 @@
 
 			if (fake) {
 				fakeResize.classList.add("display-none")
-				left += fakeLeft
-				top += fakeTop
+				updateWindowParams(windowId, {
+					left: left + fakeLeft,
+					top: top + fakeTop
+					// width: fakeWidth || width,
+					// height: fakeHeight || height
+				})
 				width = fakeWidth || width
 				height = fakeHeight || height
 
@@ -100,6 +106,7 @@
 					if (fake) {
 						fakeWidth = newWidth
 					} else {
+						// updateWindowParams(windowId, { width: newWidth })
 						width = newWidth
 					}
 	      }
@@ -113,8 +120,8 @@
 						fakeWidth = newWidth
 						fakeLeft += event.movementX
 					} else {
+						updateWindowParams(windowId, { left: event.pageX/*, width: newWidth */ })
 						width = newWidth
-						left = event.pageX
 					}
 	      }
 	    }
@@ -127,8 +134,8 @@
 						fakeHeight = newHeight
 						fakeTop += event.movementY
 					} else {
+						updateWindowParams(windowId, { top: event.pageY/*, height: newHeight */ })
 						height = newHeight
-						top = event.pageY
 					}
 	      }
 	    }
@@ -140,6 +147,7 @@
 					if (fake) {
 						fakeHeight = newHeight
 					} else {
+						// updateWindowParams(windowId, { height: newHeight })
 						height = newHeight
 					}
 	      }

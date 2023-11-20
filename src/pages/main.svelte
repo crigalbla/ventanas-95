@@ -44,6 +44,8 @@
   			icon: "window",
   			initialWidth: 300,
   			initialHeight: 100,
+  			top: 200,
+  			left: 400,
   			isFocused: false,
   			canBeHidden: true,
   			canBeMaximizedOrMinimized: true
@@ -53,6 +55,8 @@
   			icon: "window",
   			initialWidth: 300,
   			initialHeight: 100,
+  			top: 220,
+  			left: 420,
   			isFocused: false,
   			canBeHidden: true,
   			canBeMaximizedOrMinimized: true
@@ -62,9 +66,8 @@
   			icon: "window",
   			initialWidth: 300,
   			initialHeight: 100,
-  			// TODO fix when window has top and left
-  			// top: 300,
-  			// left: 300,
+  			top: 240,
+  			left: 440,
   			isFocused: false,
   			canBeHidden: true,
   			canBeMaximizedOrMinimized: true
@@ -74,6 +77,8 @@
   			icon: "window",
   			initialWidth: 300,
   			initialHeight: 100,
+  			top: 260,
+  			left: 460,
   			isFocused: false,
   			canBeHidden: true,
   			canBeMaximizedOrMinimized: true

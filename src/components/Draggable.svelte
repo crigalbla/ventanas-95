@@ -1,10 +1,12 @@
 <script lang="ts">
   import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
+	import { updateWindowParams } from "@/stores"
 
 	export let left: number
 	export let top: number
 	export let fake = false
 	export let canBeDraggabled = true
+	export let windowId: string
 
 	let moving = false
 	let fakeDraggable: HTMLElement
@@ -28,8 +30,7 @@
   	moving = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
-  		left += fakeLeft
-  		top += fakeTop
+  		updateWindowParams(windowId, { left: left + fakeLeft, top: top + fakeTop })
 
   		fakeLeft = 0
   		fakeTop = 0
@@ -44,8 +45,7 @@
 					fakeLeft += e.movementX + outOfScreenLeft
 					fakeTop += e.movementY + outOfScreenTop
 				} else {
-					left += e.movementX + outOfScreenLeft
-					top += e.movementY + outOfScreenTop
+					updateWindowParams(windowId, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop })
 				}
 				outOfScreenLeft = 0
 				outOfScreenTop = 0

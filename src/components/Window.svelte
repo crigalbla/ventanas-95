@@ -158,9 +158,9 @@
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
 >
-  <Resize fake {canBeResized} {minWidth} {minHeight} bind:width bind:height bind:top bind:left>
+  <Resize fake {canBeResized} {minWidth} {minHeight} {windowId} {top} {left} bind:width bind:height>
     <div class="h-full w-full">
-      <Draggable fake {canBeDraggabled} bind:left bind:top>
+      <Draggable fake {canBeDraggabled} {windowId} {top} {left}>
         <div class={`${isFocused
         	? "background-window-head"
         	: "background-dark-silver"
