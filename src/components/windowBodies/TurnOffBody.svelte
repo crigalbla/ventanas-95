@@ -11,7 +11,6 @@
 
   const onClickCancelAnswer = () => {
   	removeWindow(windowId)
-  	windows.set([])
   	closeCallBack()
   }
 
@@ -20,7 +19,6 @@
   	setTimeout(() => {
   		user.set({})
   		windows.set([])
-  		removeWindow(windowId)
   		if (radioValue === "restart") createLoginWindow()
   	}, 500)
   }

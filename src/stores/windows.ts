@@ -21,6 +21,14 @@ export type IndividualWindowType = {
   top?: number
   maxWidth?: number
   zIndex?: number
+  width?: number
+	height?: number
+  minWidth?: number
+  minHeight?: number
+  oldWidth?: number
+  oldHeight?: number
+  oldTop?: number
+  oldLeft?: number
   closeCallBack?: () => void
 }
 export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId">

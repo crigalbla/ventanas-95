@@ -109,7 +109,7 @@
   </div>
 
   <div class="flex items-center gap-1 h-full w-full">
-    <Button className="px-1 h-5/6" on:click={() => hideStartMenu = !hideStartMenu} id="start-button" bind:buttonRef>
+    <Button className="px-1 h-5/6 min-w-max" on:click={() => hideStartMenu = !hideStartMenu} id="start-button" bind:buttonRef>
       <img src="icons/window.png" alt="start" draggable="false"/>
       <span class="text-xl tracking-wider font-extrabold ml-2">{$t("navigationBar.start")}</span>
     </Button>
@@ -123,7 +123,7 @@
       />
     {/each}
   </div>
-  <div class="background-silver border-color-soft-down flex items-center justify-between pl-1 pr-2 h-5/6 w-28">
+  <div class="background-silver border-color-soft-down flex items-center justify-between ml-1 pl-1 pr-2 h-5/6 w-28">
     <img class="h-8 w-8" src="icons/speaker-220px.png" alt="speaker" draggable="false"/>
     {currentTime}
   </div>

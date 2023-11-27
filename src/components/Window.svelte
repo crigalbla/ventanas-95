@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { user, removeWindow, windows } from "@/stores"
+  import { user, removeWindow, windows, updateWindowParams } from "@/stores"
   import type { IndividualWindowType, UserType, WindowsType } from "@/stores"
   import { t } from "@/i18n"
 
@@ -13,43 +13,45 @@
   export let title: string
   export let windowId: string = undefined!
   export let icon: string = undefined!
-  export let hasQuestionButton = false
-  export let canBeHidden = false
-  export let canBeMaximizedOrMinimized = false
-  export let canBeResized = true
-  export let canBeDraggabled = true
-  export let canLoseFocus = true
-  export let isMinimized = false
-  export let isFullScreen = false
-  export let isFocused = true
-  export let initialWidth = 0
-  export let initialHeight = 0
+  export let hasQuestionButton: boolean = false
+  export let canBeHidden: boolean = false
+  export let canBeMaximizedOrMinimized: boolean = false
+  export let canBeResized: boolean = true
+  export let canBeDraggabled: boolean = true
+  export let canLoseFocus: boolean = true
+  export let isMinimized: boolean = false
+  export let isFullScreen: boolean = false
+  export let isFocused: boolean = true
+  export let initialWidth: number = 0
+  export let initialHeight: number = 0
   export let left: number = undefined!
   export let top: number = undefined!
-  export let maxWidth = 0
-  export let zIndex = 0
+  export let maxWidth: number = 0
+  export let zIndex: number = 0
+  export let width: number = undefined!
+	export let height: number = undefined!
+  export let minWidth: number = undefined!
+  export let minHeight: number = undefined!
+  export let oldWidth: number = undefined!
+  export let oldHeight: number = undefined!
+  export let oldTop: number = undefined!
+  export let oldLeft: number = undefined!
   export let closeCallBack: () => void = undefined!
 
+  let windowDiv: HTMLElement = undefined!
   const headerHeight = 24
-  let width: number
-	let height: number
-  let minWidth: number
-  let minHeight: number
-  let windowDiv: HTMLElement
-  let oldWidth: number
-  let oldHeight: number
-  let oldTop: number
-  let oldLeft: number
 
   const doIfIsFullScreen = () => {
   	if (isFullScreen) {
   		const { avaliableWidth, avaliableHeight } = avaliableDimensions()
-  		width = avaliableWidth
-  		height = avaliableHeight
-  		top = 0
-  		left = 0
-  		canBeDraggabled = false
-  		canBeResized = false
+  		updateWindowParams(windowId, {
+  			width: avaliableWidth,
+  			height: avaliableHeight,
+  			top: 0,
+  			left: 0,
+  			canBeDraggabled: false,
+  			canBeResized: false
+  		})
   	}
   }
 
@@ -75,34 +77,35 @@
   	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
   }
 
-  const onHideButtonClick = () => {
-  	windows.update((ws: WindowsType) =>
-  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isMinimized: !isMinimized, isFocused: !isFocused }) : w))
-  }
+  const onHideButtonClick = () => updateWindowParams(windowId, { isMinimized: !isMinimized, isFocused: !isFocused })
 
   const onMaximizeOrMinimizeButtonClick = () => {
   	if (isFullScreen) {
-  		width = oldWidth
-  		height = oldHeight
-  		top = oldTop
-  		left = oldLeft
-  		canBeDraggabled = true
-  		canBeResized = true
+  		updateWindowParams(windowId, {
+  			width: oldWidth,
+  			height: oldHeight,
+  			top: oldTop,
+  			left: oldLeft,
+  			canBeDraggabled: true,
+  			canBeResized: true,
+  	    isFullScreen: false
+  		})
   	} else {
   		const { avaliableWidth, avaliableHeight } = avaliableDimensions()
-  		oldWidth = width
-  		oldHeight = height
-  		oldTop = top
-  		oldLeft = left
-  		width = avaliableWidth
-  		height = avaliableHeight
-  		top = 0
-  	  left = 0
-  		canBeDraggabled = false
-  		canBeResized = false
+  		updateWindowParams(windowId, {
+  			oldWidth: width,
+  			oldHeight: height,
+  			oldTop: top,
+  			oldLeft: left,
+  			width: avaliableWidth,
+  			height: avaliableHeight,
+  			top: 0,
+  			left: 0,
+  			canBeDraggabled: false,
+  			canBeResized: false,
+  	    isFullScreen: true
+  		})
   	}
-
-  	isFullScreen = !isFullScreen
   }
 
   const onCloseButtonClick = () => {
@@ -122,17 +125,19 @@
   	})
   })
 
-  const onUnFocus = () => windows.update((ws: WindowsType) =>
-  		ws.map((w: IndividualWindowType) => w.windowId === windowId ? ({ ...w, isFocused: false }) : w))
+  const onUnFocus = () => updateWindowParams(windowId, { isFocused: false })
 
   onMount(() => {
-  	width = minWidth = windowDiv.offsetWidth
-  	height = minHeight = windowDiv.offsetHeight
+  	updateWindowParams(windowId, {
+  		width: windowDiv.offsetWidth,
+  		minWidth: windowDiv.offsetWidth,
+  	  height: windowDiv.offsetHeight,
+  		minHeight: windowDiv.offsetHeight
+  	})
 
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
-  		top = rect.top
-  		left = rect.left
+  		updateWindowParams(windowId, { top: rect.top, left: rect.left })
   	}
 
   	if (canLoseFocus) {
@@ -158,7 +163,7 @@
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   bind:this={windowDiv}
 >
-  <Resize fake {canBeResized} {minWidth} {minHeight} {windowId} {top} {left} bind:width bind:height>
+  <Resize fake {canBeResized} {minWidth} {minHeight} {windowId} {top} {left} {width} {height}>
     <div class="h-full w-full">
       <Draggable fake {canBeDraggabled} {windowId} {top} {left}>
         <div class={`${isFocused

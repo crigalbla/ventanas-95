@@ -80,9 +80,9 @@
 				fakeResize.classList.add("display-none")
 				updateWindowParams(windowId, {
 					left: left + fakeLeft,
-					top: top + fakeTop
-					// width: fakeWidth || width,
-					// height: fakeHeight || height
+					top: top + fakeTop,
+					width: fakeWidth || width,
+					height: fakeHeight || height
 				})
 				width = fakeWidth || width
 				height = fakeHeight || height
@@ -106,8 +106,7 @@
 					if (fake) {
 						fakeWidth = newWidth
 					} else {
-						// updateWindowParams(windowId, { width: newWidth })
-						width = newWidth
+						updateWindowParams(windowId, { width: newWidth })
 					}
 	      }
 	    }
@@ -120,8 +119,7 @@
 						fakeWidth = newWidth
 						fakeLeft += event.movementX
 					} else {
-						updateWindowParams(windowId, { left: event.pageX/*, width: newWidth */ })
-						width = newWidth
+						updateWindowParams(windowId, { left: event.pageX, width: newWidth })
 					}
 	      }
 	    }
@@ -134,8 +132,7 @@
 						fakeHeight = newHeight
 						fakeTop += event.movementY
 					} else {
-						updateWindowParams(windowId, { top: event.pageY/*, height: newHeight */ })
-						height = newHeight
+						updateWindowParams(windowId, { top: event.pageY, height: newHeight })
 					}
 	      }
 	    }
@@ -147,8 +144,7 @@
 					if (fake) {
 						fakeHeight = newHeight
 					} else {
-						// updateWindowParams(windowId, { height: newHeight })
-						height = newHeight
+						updateWindowParams(windowId, { height: newHeight })
 					}
 	      }
 	    }
