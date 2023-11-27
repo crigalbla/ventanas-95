@@ -31,6 +31,6 @@
 
   .option:hover {
     color: white;
-    background-color: #0000bb;
+    background-color: #0000aa;
   }
 </style>

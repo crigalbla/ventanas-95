@@ -1,9 +1,10 @@
 <script lang="ts">
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
+  import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
-  import { createWindow, user, windows } from "@/stores"
-  import { createLoginWindow, waitingCursor } from "@/utils"
+  import { createDesktopIcon, createLoginWindow, createWindow, desktopIcons, user, windows } from "@/stores"
+  import { waitingCursor } from "@/utils"
 
   $: loginWindow = $windows.find(w => w.windowId === "login")
 
@@ -83,6 +84,14 @@
   			canBeHidden: true,
   			canBeMaximizedOrMinimized: true
   		})
+  		createDesktopIcon({
+  			icon: "recycle-bin",
+  			text: "Papelera de reciclaje",
+  			zIndex: 0,
+  			isFocused: false,
+  			top: 50,
+  			left: 50
+  		})
   	}, 1)
   }
 </script>
@@ -93,6 +102,9 @@
       <svelte:component this={window.body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
     </Window>
   {/each}
+	{#each $desktopIcons as icon}
+		<DesktopIcon {...icon} />
+	{/each}
   <NavigationBar />
 {:else}
   {#if loginWindow} <!-- INITIAL SCREEN! User has to log in -->

@@ -1,5 +1,3 @@
-import { createWindow } from "@/stores"
-
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
 }
@@ -102,10 +100,4 @@ export const getCurrentTime = () => {
 	return hours + ":" + minutes + " " + ampm
 }
 
-export const createLoginWindow = () => createWindow({
-	title: "login.title",
-	windowId: "login",
-	hasQuestionButton: true,
-	canLoseFocus: false,
-	initialWidth: 530
-})
+export const generateId = (prefix: string) => `${prefix}-${Math.random().toString().replace("0.", "")}`

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
-  import { removeWindow, user, windows } from "@/stores"
-  import { createLoginWindow, waitingCursor } from "@/utils"
+  import { createLoginWindow, removeWindow, user, windows } from "@/stores"
+  import { waitingCursor } from "@/utils"
 
   export let windowId: string
   export let closeCallBack: () => void
