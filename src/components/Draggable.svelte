@@ -1,19 +1,28 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte"
   import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
-	import { updateWindowParams } from "@/stores"
+	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix } from "@/stores"
 
 	export let left: number
 	export let top: number
 	export let fake = false
 	export let canBeDraggabled = true
-	export let windowId: string
+	export let id: string
 
+	const dispatch = createEventDispatcher()
 	let moving = false
 	let fakeDraggable: HTMLElement
 	let fakeLeft = 0
 	let fakeTop = 0
 	let outOfScreenLeft = 0
 	let outOfScreenTop = 0
+
+	const updateParams = (() => {
+		if (id.includes(desktopIconIdPrefix)) return updateDesktopIconParams
+		if (id.includes(windowIdPrefix)) return updateWindowParams
+
+		return () => null
+	})()
 
 	const onMouseDown = (e: MouseEvent) => {
 		const target: HTMLElement = e?.target as HTMLElement
@@ -30,7 +39,7 @@
   	moving = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
-  		updateWindowParams(windowId, { left: left + fakeLeft, top: top + fakeTop })
+  		updateParams(id, { left: left + fakeLeft, top: top + fakeTop })
 
   		fakeLeft = 0
   		fakeTop = 0
@@ -45,7 +54,7 @@
 					fakeLeft += e.movementX + outOfScreenLeft
 					fakeTop += e.movementY + outOfScreenTop
 				} else {
-					updateWindowParams(windowId, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop })
+					updateParams(id, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop })
 				}
 				outOfScreenLeft = 0
 				outOfScreenTop = 0

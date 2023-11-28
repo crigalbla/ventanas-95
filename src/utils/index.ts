@@ -56,17 +56,17 @@ export const avaliableDimensions = () => {
 	return { avaliableWidth, avaliableHeight }
 }
 
-export const doItClickEvent = ({
+export const doItMouseDownEvent = ({
 	searchElement,
 	thisElementIsValid,
 	avoidCallBacksIfThisElement,
-	callBackClickOutside,
+	callBackMouseDownOutside,
 	callBackInside
 }: {
 	searchElement: string,
 	thisElementIsValid?: string,
 	avoidCallBacksIfThisElement?: string,
-	callBackClickOutside: () => void,
+	callBackMouseDownOutside: () => void,
 	callBackInside?: () => void
 }) => {
 	const doIt = (event: Event) => {
@@ -78,13 +78,32 @@ export const doItClickEvent = ({
 			if (myElement.contains(event.target as Node) || elementAcceptedAsInside?.contains(event.target as Node)) {
 				callBackInside?.()
 			} else {
-				callBackClickOutside()
+				callBackMouseDownOutside()
 			}
 		}
 	}
 	if (typeof document !== "undefined") document.addEventListener("mousedown", doIt)
 
 	return { removeEvent: () => document.removeEventListener("mousedown", doIt) }
+}
+
+// TODO fix
+export const doItDblClickEvent = ({
+	searchElement,
+	callBackInside
+}: {
+	searchElement: string,
+	callBackInside: () => void
+}) => {
+	const doIt = (event: Event) => {
+		const myElement = document.querySelector(searchElement)
+
+		// console.log({ myElement, target: event.target })
+		if (myElement?.contains(event.target as Node)) callBackInside()
+	}
+	if (typeof document !== "undefined") document.addEventListener("dblclick", doIt)
+
+	return { removeEvent: () => document.removeEventListener("dblclick", doIt) }
 }
 
 export const getCurrentTime = () => {

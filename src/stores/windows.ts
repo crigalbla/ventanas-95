@@ -38,9 +38,11 @@ export type WindowsType = IndividualWindowType[]
 
 const state: WindowsType = []
 
+export const windowIdPrefix = "w"
+
 export const windows = writable(state)
 
-export const createWindow = ({ windowId = generateId("w"), zIndex, isFocused, ...rest }: CreateWindowParams) => {
+export const createWindow = ({ windowId = generateId(windowIdPrefix), zIndex, isFocused, ...rest }: CreateWindowParams) => {
 	windows.update((ws: WindowsType) =>
 		[...ws, { windowId, zIndex: zIndex ?? ws.length + 1, isFocused: isFocused ?? true, ...rest }]
 	)
@@ -55,9 +57,11 @@ export const updateWindowParams = (windowId: string, params: UpdatableWindowPara
 
 export const removeWindow = (windowId: string) => windows.update((ws: WindowsType) => ws.filter(w => w.windowId !== windowId))
 
+export const loginWindowId = `${windowIdPrefix}-login`
+
 export const createLoginWindow = () => createWindow({
 	title: "login.title",
-	windowId: "login",
+	windowId: loginWindowId,
 	hasQuestionButton: true,
 	canLoseFocus: false,
 	initialWidth: 530

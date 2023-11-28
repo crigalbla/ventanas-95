@@ -16,9 +16,11 @@ export type DesktopIconType = IndividualDesktopIconType[]
 
 const state: DesktopIconType = []
 
+export const desktopIconIdPrefix = "di"
+
 export const desktopIcons = writable(state)
 
-export const createDesktopIcon = ({ desktopIconId = generateId("di"), zIndex, isFocused, ...rest }: CreateDesktopIconParams) => {
+export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), zIndex, isFocused, ...rest }: CreateDesktopIconParams) => {
 	desktopIcons.update((dis: DesktopIconType) =>
 		[...dis, { desktopIconId, zIndex: zIndex ?? dis.length + 1, isFocused: isFocused ?? true, ...rest }]
 	)

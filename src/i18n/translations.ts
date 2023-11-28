@@ -23,7 +23,11 @@ const translations: Translations = {
 		"navigationBar.closeVentanas95": "Cerrar 'Ventanas 95'",
 		"navigationBar.confirmWhatWant": "Confirme que desea",
 		"navigationBar.turnOffSystem": "apagar el sistema",
-		"navigationBar.restart": "reiniciar"
+		"navigationBar.restart": "reiniciar",
+		"desktopIcon.myPc": "Mi PC",
+		"desktopIcon.recycleBin": "Papelera de reciclaje",
+		"desktopIcon.newFolder": "Nueva carpeta",
+		"desktopIcon.about": "Sobre mi"
 	},
 	en: {
 		accept: "OK",
@@ -43,7 +47,11 @@ const translations: Translations = {
 		"navigationBar.closeVentanas95": "Close 'Ventanas 95'",
 		"navigationBar.confirmWhatWant": "Confirm what you want",
 		"navigationBar.turnOffSystem": "turn off the system",
-		"navigationBar.restart": "restart"
+		"navigationBar.restart": "restart",
+		"desktopIcon.myPc": "My PC",
+		"desktopIcon.recycleBin": "Recycle bin",
+		"desktopIcon.newFolder": "New folder",
+		"desktopIcon.about": "About"
 	}
 }
 

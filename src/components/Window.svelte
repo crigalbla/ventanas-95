@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { user, removeWindow, windows, updateWindowParams } from "@/stores"
+  import { user, removeWindow, windows, updateWindowParams, loginWindowId } from "@/stores"
   import type { IndividualWindowType, UserType, WindowsType } from "@/stores"
   import { t } from "@/i18n"
 
   import Draggable from "./Draggable.svelte"
   import WindowButton from "./WindowButton.svelte"
   import Resize from "./Resize.svelte"
-  import { avaliableDimensions, doItClickEvent } from "@/utils"
+  import { avaliableDimensions, doItMouseDownEvent } from "@/utils"
 
   export let title: string
   export let windowId: string = undefined!
@@ -111,7 +111,7 @@
   const onCloseButtonClick = () => {
   	closeCallBack && closeCallBack()
   	removeWindow(windowId)
-  	if (windowId === "login") user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
+  	if (windowId === loginWindowId) user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
   const onFocus = () => windows.update((ws: WindowsType) => {
@@ -141,9 +141,9 @@
   	}
 
   	if (canLoseFocus) {
-  		const { removeEvent } = doItClickEvent({
+  		const { removeEvent } = doItMouseDownEvent({
   			searchElement: `#${windowId}`,
-  			callBackClickOutside: onUnFocus,
+  			callBackMouseDownOutside: onUnFocus,
   			callBackInside: onFocus,
   			avoidCallBacksIfThisElement: `#${windowId}-tab`
   		})
@@ -165,7 +165,7 @@
 >
   <Resize fake {canBeResized} {minWidth} {minHeight} {windowId} {top} {left} {width} {height}>
     <div class="h-full w-full">
-      <Draggable fake {canBeDraggabled} {windowId} {top} {left}>
+      <Draggable id={windowId} fake {canBeDraggabled} {top} {left}>
         <div class={`${isFocused
         	? "background-window-head"
         	: "background-dark-silver"

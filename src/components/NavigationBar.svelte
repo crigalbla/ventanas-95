@@ -3,7 +3,7 @@
   import Curtain from "./Curtain.svelte"
   import CloseSessionBody from "./windowBodies/CloseSessionBody.svelte"
   import { t } from "@/i18n"
-  import { doItClickEvent, getCurrentTime, waitingCursor } from "@/utils"
+  import { doItMouseDownEvent, getCurrentTime, waitingCursor } from "@/utils"
   import { createWindow, user, windows, type UserType } from "@/stores"
   import TurnOffBody from "./windowBodies/TurnOffBody.svelte"
   import TabWindow from "./TabWindow.svelte"
@@ -66,9 +66,9 @@
   }
 
   onMount(() => {
-  	const { removeEvent } = doItClickEvent({
+  	const { removeEvent } = doItMouseDownEvent({
   		searchElement: "#start-button",
-  		callBackClickOutside: () => hideStartMenu = true,
+  		callBackMouseDownOutside: () => hideStartMenu = true,
   		thisElementIsValid: "#start-menu"
   	})
   	return removeEvent

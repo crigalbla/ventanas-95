@@ -3,10 +3,10 @@
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
-  import { createDesktopIcon, createLoginWindow, createWindow, desktopIcons, user, windows } from "@/stores"
+  import { createDesktopIcon, createLoginWindow, createWindow, desktopIcons, loginWindowId, user, windows } from "@/stores"
   import { waitingCursor } from "@/utils"
 
-  $: loginWindow = $windows.find(w => w.windowId === "login")
+  $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 
   createLoginWindow()
 
@@ -86,7 +86,7 @@
   		})
   		createDesktopIcon({
   			icon: "recycle-bin",
-  			text: "Papelera de reciclaje",
+  			text: "desktopIcon.recycleBin",
   			zIndex: 0,
   			isFocused: false,
   			top: 50,
