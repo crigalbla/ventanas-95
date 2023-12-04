@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
   import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix } from "@/stores"
+  import type { MouseEventHandler } from "svelte/elements"
 
 	export let left: number
 	export let top: number
 	export let fake = false
 	export let canBeDraggabled = true
 	export let id: string
+	export let dblclick: MouseEventHandler<EventTarget> | undefined = undefined
 
-	const dispatch = createEventDispatcher()
 	let moving = false
 	let fakeDraggable: HTMLElement
 	let fakeLeft = 0
@@ -69,6 +69,7 @@
 {#if canBeDraggabled}
 	<section
 		on:mousedown={onMouseDown}
+		on:dblclick={dblclick}
 		role="tab"
 		tabindex="0"
 	>
@@ -78,7 +79,7 @@
 		<div class="fake-draggable display-none" bind:this={fakeDraggable} style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}" />
 	{/if}
 {:else}
-		<slot />
+	<slot />
 {/if}
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
 

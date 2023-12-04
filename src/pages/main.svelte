@@ -1,9 +1,10 @@
 <script lang="ts">
+  import { createDesktopIcon, createLoginWindow, createWindow, desktopIcons, loginWindowId, user, windows } from "@/stores"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH } from "@/constants"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
-  import { createDesktopIcon, createLoginWindow, createWindow, desktopIcons, loginWindowId, user, windows } from "@/stores"
   import { waitingCursor } from "@/utils"
 
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
@@ -38,61 +39,74 @@
   $: if ($user?.isLoggedIn) {
   	playStartingAudio()
   	waitingCursor()
-  	// Why this need a setTimeout?
-  	setTimeout(() => {
-  		createWindow({
-  			title: "1",
-  			icon: "window",
-  			initialWidth: 300,
-  			initialHeight: 100,
-  			top: 200,
-  			left: 400,
-  			isFocused: false,
-  			canBeHidden: true,
-  			canBeMaximizedOrMinimized: true
-  		})
-  		createWindow({
-  			title: "2",
-  			icon: "window",
-  			initialWidth: 300,
-  			initialHeight: 100,
-  			top: 220,
-  			left: 420,
-  			isFocused: false,
-  			canBeHidden: true,
-  			canBeMaximizedOrMinimized: true
-  		})
-  		createWindow({
-  			title: "3",
-  			icon: "window",
-  			initialWidth: 300,
-  			initialHeight: 100,
-  			top: 240,
-  			left: 440,
-  			isFocused: false,
-  			canBeHidden: true,
-  			canBeMaximizedOrMinimized: true
-  		})
-  		createWindow({
-  			title: "4",
-  			icon: "window",
-  			initialWidth: 300,
-  			initialHeight: 100,
-  			top: 260,
-  			left: 460,
-  			isFocused: false,
-  			canBeHidden: true,
-  			canBeMaximizedOrMinimized: true
-  		})
-  		createDesktopIcon({
-  			icon: "recycle-bin",
-  			text: "desktopIcon.recycleBin",
-  			zIndex: 0,
-  			isFocused: false,
-  			top: 50,
-  			left: 50
-  		})
-  	}, 1)
+  	createWindow({
+  		title: "1",
+  		icon: "window",
+  		initialWidth: 300,
+  		initialHeight: 100,
+  		top: 200,
+  		left: 400,
+  		isFocused: false,
+  		canBeHidden: true,
+  		canBeMaximizedOrMinimized: true
+  	})
+  	createWindow({
+  		title: "2",
+  		icon: "window",
+  		initialWidth: 300,
+  		initialHeight: 100,
+  		top: 220,
+  		left: 420,
+  		isFocused: false,
+  		canBeHidden: true,
+  		canBeMaximizedOrMinimized: true
+  	})
+  	createWindow({
+  		title: "3",
+  		icon: "window",
+  		initialWidth: 300,
+  		initialHeight: 100,
+  		top: 240,
+  		left: 440,
+  		isFocused: false,
+  		canBeHidden: true,
+  		canBeMaximizedOrMinimized: true
+  	})
+  	createWindow({
+  		title: "4",
+  		icon: "window",
+  		initialWidth: 300,
+  		initialHeight: 100,
+  		top: 260,
+  		left: 460,
+  		isFocused: false,
+  		canBeHidden: true,
+  		canBeMaximizedOrMinimized: true
+  	})
+  	createDesktopIcon({
+  		desktopIconId: "di-my-pc",
+  		icon: "my-computer-280px",
+  		text: "desktopIcon.myPc",
+  		isFocused: false,
+  		top: DESKTOP_ICON_MARGIN,
+  		left: DESKTOP_ICON_MARGIN
+  	})
+  	createDesktopIcon({
+  		desktopIconId: "di-recycle-bin",
+  		icon: "recycle-bin",
+  		text: "desktopIcon.recycleBin",
+  		isFocused: false,
+  		top: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_HEIGHT,
+  		left: DESKTOP_ICON_MARGIN
+  	})
+  	createDesktopIcon({
+  		desktopIconId: "di-new-folder",
+  		icon: "open-folder",
+  		text: "desktopIcon.newFolder",
+  		isFocused: false,
+  		top: DESKTOP_ICON_MARGIN,
+  		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH
+  	})
   }
 </script>
 

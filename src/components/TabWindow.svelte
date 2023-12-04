@@ -2,6 +2,7 @@
   import { windows, type IndividualWindowType, type WindowsType } from "@/stores"
   import Button from "./Button.svelte"
   import { t } from "@/i18n"
+  import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
 
   export let title: string
   export let windowId: string
@@ -16,12 +17,12 @@
   		return ws.map((w: IndividualWindowType) => {
   			if (w.windowId === windowId) {
   				if (isMinimized) {
-  					return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length })
+  					return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length + INITIAL_WINDOW_Z_INDEX })
   				} else {
   					if (isFocused) {
   						return ({ ...w, isMinimized: true, isFocused: false })
   					} else {
-  						return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length })
+  						return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length + INITIAL_WINDOW_Z_INDEX })
   					}
   				}
   			}

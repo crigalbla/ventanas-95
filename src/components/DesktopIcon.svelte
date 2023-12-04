@@ -3,6 +3,7 @@
   import { t } from "@/i18n"
   import { doItDblClickEvent, doItMouseDownEvent } from "@/utils"
   import { updateDesktopIconParams } from "@/stores"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH } from "@/constants"
   import Draggable from "./Draggable.svelte"
 
   export let desktopIconId: string
@@ -38,11 +39,11 @@
   })
 </script>
 
-<Draggable id={desktopIconId} {top} {left}>
-  <section
-    class="desktop-icon flex flex-col items-center text-center absolute w-16"
+<Draggable id={desktopIconId} dblclick={onDbClickInDesktopIcon} {top} {left}>
+  <div
+    class="desktop-icon flex flex-col items-center text-center absolute"
     id={desktopIconId}
-    style="--zIndex:{zIndex}; --left:{left}; --top:{top};"
+    style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{DESKTOP_ICON_HEIGHT}"
     bind:this={desktopIconRef}
   >
     <img
@@ -53,20 +54,23 @@
       draggable="false"
     />
     <span
-      class="text text-white text-sm leading-none"
+      class="text text-white text-ellipsis overflow-hidden text-sm leading-none"
       class:focused={isFocused}
     >{$t(text)}</span>
-  </section>
+  </div>
 </Draggable>
 
 <style>
   .desktop-icon {
+    width: calc(var(--width) * 1px);
+    max-height: calc(var(--max-height) * 1px);
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
     z-index: var(--zIndex);
   }
 
   .text {
+    width: calc(var(--width) * 1px);
     margin: 1px;
     padding: 1px 1px 0px 1px;
   }
@@ -78,6 +82,6 @@
   }
 
   .blue-tone {
-    filter: sepia(1) saturate(25) hue-rotate(180deg) brightness(0.7)
+    filter: sepia(1) saturate(25) hue-rotate(180deg) brightness(0.7);
   }
 </style>

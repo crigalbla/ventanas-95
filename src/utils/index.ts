@@ -98,7 +98,7 @@ export const doItDblClickEvent = ({
 	const doIt = (event: Event) => {
 		const myElement = document.querySelector(searchElement)
 
-		// console.log({ myElement, target: event.target })
+		console.log({ myElement, target: event.target })
 		if (myElement?.contains(event.target as Node)) callBackInside()
 	}
 	if (typeof document !== "undefined") document.addEventListener("dblclick", doIt)

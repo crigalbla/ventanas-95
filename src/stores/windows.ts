@@ -1,5 +1,6 @@
 import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
+import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
 import { generateId } from "@/utils"
 
 export type IndividualWindowType = {
@@ -32,7 +33,7 @@ export type IndividualWindowType = {
   oldLeft?: number
   closeCallBack?: () => void
 }
-export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId">
+export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId" | "zIndex">
 export type UpdatableWindowParams = Omit<Partial<IndividualWindowType>, "windowId">
 export type WindowsType = IndividualWindowType[]
 
@@ -42,9 +43,9 @@ export const windowIdPrefix = "w"
 
 export const windows = writable(state)
 
-export const createWindow = ({ windowId = generateId(windowIdPrefix), zIndex, isFocused, ...rest }: CreateWindowParams) => {
+export const createWindow = ({ windowId = generateId(windowIdPrefix), isFocused, ...rest }: CreateWindowParams) => {
 	windows.update((ws: WindowsType) =>
-		[...ws, { windowId, zIndex: zIndex ?? ws.length + 1, isFocused: isFocused ?? true, ...rest }]
+		[...ws, { windowId, zIndex: ws.length + INITIAL_WINDOW_Z_INDEX, isFocused: isFocused ?? true, ...rest }]
 	)
 }
 

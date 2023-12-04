@@ -31,7 +31,7 @@
   			createWindow({
   				title: "navigationBar.closeVentanas95Session",
   				windowId: "closeSession",
-  				zIndex: 100,
+  				zIndex: 1000,
   				canBeResized: false,
   				canBeDraggabled: false,
   				canLoseFocus: false,
@@ -52,7 +52,7 @@
   			createWindow({
   				title: "navigationBar.closeVentanas95",
   				windowId: "turnOff",
-  				zIndex: 100,
+  				zIndex: 1000,
   				canBeResized: false,
   				canBeDraggabled: false,
   				canLoseFocus: false,
@@ -77,7 +77,7 @@
 
 <Curtain show={showCurtain} />
 <section
-  class="background-silver border-top-white z-index-98 w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
+  class="background-silver border-top-white z-index-998 w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
   id="navigation-bar"
 >
   <div class:display-none={hideStartMenu} class="background-silver border-color-up w-64 fixed bottom-10 flex" id="start-menu">
@@ -130,8 +130,8 @@
 </section>
 
 <style>
-  .z-index-98 {
-    z-index: 98;
+  .z-index-998 {
+    z-index: 998;
   }
   .vertical-text {
     writing-mode: vertical-rl;

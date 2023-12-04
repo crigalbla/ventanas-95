@@ -10,7 +10,7 @@ export type IndividualDesktopIconType = {
   top?: number,
   left?: number,
 }
-export type CreateDesktopIconParams = { desktopIconId?: string } & Omit<IndividualDesktopIconType, "desktopIconId">
+export type CreateDesktopIconParams = { desktopIconId?: string } & Omit<IndividualDesktopIconType, "desktopIconId" | "zIndex">
 export type UpdatableDesktopIconParams = Omit<Partial<IndividualDesktopIconType>, "desktopIconId">
 export type DesktopIconType = IndividualDesktopIconType[]
 
@@ -20,9 +20,9 @@ export const desktopIconIdPrefix = "di"
 
 export const desktopIcons = writable(state)
 
-export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), zIndex, isFocused, ...rest }: CreateDesktopIconParams) => {
+export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), isFocused, ...rest }: CreateDesktopIconParams) => {
 	desktopIcons.update((dis: DesktopIconType) =>
-		[...dis, { desktopIconId, zIndex: zIndex ?? dis.length + 1, isFocused: isFocused ?? true, ...rest }]
+		[...dis, { desktopIconId, zIndex: dis.length + 1, isFocused: isFocused ?? true, ...rest }]
 	)
 }
 

@@ -3,12 +3,13 @@
 
   import { user, removeWindow, windows, updateWindowParams, loginWindowId } from "@/stores"
   import type { IndividualWindowType, UserType, WindowsType } from "@/stores"
+  import { avaliableDimensions, doItMouseDownEvent } from "@/utils"
+  import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
   import { t } from "@/i18n"
 
   import Draggable from "./Draggable.svelte"
   import WindowButton from "./WindowButton.svelte"
   import Resize from "./Resize.svelte"
-  import { avaliableDimensions, doItMouseDownEvent } from "@/utils"
 
   export let title: string
   export let windowId: string = undefined!
@@ -118,7 +119,7 @@
   	const oldZIndex: number = ws.find((w: IndividualWindowType) => w.windowId === windowId)?.zIndex as number
 
   	return ws.map((w: IndividualWindowType) => {
-  		if (w.windowId === windowId) return ({ ...w, isFocused: true, zIndex: ws.length })
+  		if (w.windowId === windowId) return ({ ...w, isFocused: true, zIndex: ws.length + INITIAL_WINDOW_Z_INDEX })
   		if ((w.zIndex as number) > oldZIndex) return ({ ...w, zIndex: (w.zIndex as number) - 1 })
 
   		return w
