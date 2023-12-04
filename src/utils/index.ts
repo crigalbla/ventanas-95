@@ -47,13 +47,13 @@ export const unfreezeCurrentCursor = () => {
 	body.style.pointerEvents = ""
 }
 
-export const avaliableDimensions = () => {
+export const availableDimensions = () => {
 	const body = document.querySelector("body") as HTMLElement
 	const navigationBar = document.getElementById("navigation-bar") as HTMLElement
-	const avaliableWidth = body.offsetWidth
-	const avaliableHeight = body.offsetHeight - navigationBar.offsetHeight
+	const availableWidth = body?.offsetWidth
+	const availableHeight = body?.offsetHeight - navigationBar?.offsetHeight
 
-	return { avaliableWidth, avaliableHeight }
+	return { availableWidth, availableHeight }
 }
 
 export const doItMouseDownEvent = ({
@@ -85,25 +85,6 @@ export const doItMouseDownEvent = ({
 	if (typeof document !== "undefined") document.addEventListener("mousedown", doIt)
 
 	return { removeEvent: () => document.removeEventListener("mousedown", doIt) }
-}
-
-// TODO fix
-export const doItDblClickEvent = ({
-	searchElement,
-	callBackInside
-}: {
-	searchElement: string,
-	callBackInside: () => void
-}) => {
-	const doIt = (event: Event) => {
-		const myElement = document.querySelector(searchElement)
-
-		console.log({ myElement, target: event.target })
-		if (myElement?.contains(event.target as Node)) callBackInside()
-	}
-	if (typeof document !== "undefined") document.addEventListener("dblclick", doIt)
-
-	return { removeEvent: () => document.removeEventListener("dblclick", doIt) }
 }
 
 export const getCurrentTime = () => {

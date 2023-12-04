@@ -3,7 +3,7 @@
 
   import { user, removeWindow, windows, updateWindowParams, loginWindowId } from "@/stores"
   import type { IndividualWindowType, UserType, WindowsType } from "@/stores"
-  import { avaliableDimensions, doItMouseDownEvent } from "@/utils"
+  import { availableDimensions, doItMouseDownEvent } from "@/utils"
   import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
   import { t } from "@/i18n"
 
@@ -44,10 +44,10 @@
 
   const doIfIsFullScreen = () => {
   	if (isFullScreen) {
-  		const { avaliableWidth, avaliableHeight } = avaliableDimensions()
+  		const { availableWidth, availableHeight } = availableDimensions()
   		updateWindowParams(windowId, {
-  			width: avaliableWidth,
-  			height: avaliableHeight,
+  			width: availableWidth,
+  			height: availableHeight,
   			top: 0,
   			left: 0,
   			canBeDraggabled: false,
@@ -92,14 +92,14 @@
   	    isFullScreen: false
   		})
   	} else {
-  		const { avaliableWidth, avaliableHeight } = avaliableDimensions()
+  		const { availableWidth, availableHeight } = availableDimensions()
   		updateWindowParams(windowId, {
   			oldWidth: width,
   			oldHeight: height,
   			oldTop: top,
   			oldLeft: left,
-  			width: avaliableWidth,
-  			height: avaliableHeight,
+  			width: availableWidth,
+  			height: availableHeight,
   			top: 0,
   			left: 0,
   			canBeDraggabled: false,

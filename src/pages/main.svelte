@@ -5,7 +5,7 @@
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
-  import { waitingCursor } from "@/utils"
+  import { availableDimensions, waitingCursor } from "@/utils"
 
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 
@@ -107,6 +107,17 @@
   		top: DESKTOP_ICON_MARGIN,
   		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH
   	})
+  	setTimeout(() => {
+  		const { availableHeight, availableWidth } = availableDimensions()
+  		createDesktopIcon({
+  			desktopIconId: "di-notepad",
+  			icon: "notepad",
+  			text: "desktopIcon.about",
+  			isFocused: false,
+  			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
+  			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH
+  		})
+  	}, 1)
   }
 </script>
 

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { t } from "@/i18n"
-  import { doItDblClickEvent, doItMouseDownEvent } from "@/utils"
-  import { updateDesktopIconParams } from "@/stores"
+  import { doItMouseDownEvent } from "@/utils"
+  import { desktopIcons, updateDesktopIconParams, type DesktopIconType, type IndividualDesktopIconType } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH } from "@/constants"
   import Draggable from "./Draggable.svelte"
 
@@ -16,34 +16,37 @@
 
   let desktopIconRef: HTMLElement
 
-  const onClickInDesktopIcon = () => updateDesktopIconParams(desktopIconId, { isFocused: true })
-  const onDbClickInDesktopIcon = () => console.log("dobleClick")
-  const onClickOutSide = () => updateDesktopIconParams(desktopIconId, { isFocused: false })
+  const onMouseDownDesktopIcon = () => desktopIcons.update((dis: DesktopIconType) => {
+  	const oldZIndex: number = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
+
+  	return dis.map((di: IndividualDesktopIconType) => {
+  		if (di.desktopIconId === desktopIconId) return ({ ...di, isFocused: true, zIndex: dis.length + 1 })
+  		if ((di.zIndex as number) > oldZIndex) return ({ ...di, zIndex: (di.zIndex as number) - 1 })
+
+  		return di
+  	})
+  })
+  const onMouseDownOutside = () => updateDesktopIconParams(desktopIconId, { isFocused: false })
+  const onDbClickInDesktopIcon = () => window.alert("dobleClick")
 
   onMount(() => {
   	const { removeEvent: removeMouseDownEvent } = doItMouseDownEvent({
   		searchElement: `#${desktopIconId}`,
-  		callBackMouseDownOutside: onClickOutSide,
-  		callBackInside: onClickInDesktopIcon
+  		callBackMouseDownOutside: onMouseDownOutside
   	})
 
-  	const { removeEvent: removeDbClickEvent } = doItDblClickEvent({
-  		searchElement: `#${desktopIconId}`,
-  		callBackInside: onDbClickInDesktopIcon
-  	})
-
-  	return () => {
-  		removeMouseDownEvent()
-  		removeDbClickEvent()
-  	}
+  	return removeMouseDownEvent
   })
 </script>
 
-<Draggable id={desktopIconId} dblclick={onDbClickInDesktopIcon} {top} {left}>
+<Draggable id={desktopIconId} {top} {left}>
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="desktop-icon flex flex-col items-center text-center absolute"
     id={desktopIconId}
     style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{DESKTOP_ICON_HEIGHT}"
+    on:mousedown={onMouseDownDesktopIcon}
+    on:dblclick={onDbClickInDesktopIcon}
     bind:this={desktopIconRef}
   >
     <img

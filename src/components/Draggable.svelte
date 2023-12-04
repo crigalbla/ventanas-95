@@ -1,14 +1,12 @@
 <script lang="ts">
   import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix } from "@/stores"
-  import type { MouseEventHandler } from "svelte/elements"
 
 	export let left: number
 	export let top: number
 	export let fake = false
 	export let canBeDraggabled = true
 	export let id: string
-	export let dblclick: MouseEventHandler<EventTarget> | undefined = undefined
 
 	let moving = false
 	let fakeDraggable: HTMLElement
@@ -28,7 +26,6 @@
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
 
-	  freezeCurrentCursor(e)
 		moving = true
 		outOfScreenLeft = 0
 		outOfScreenTop = 0
@@ -48,6 +45,7 @@
 
 	const onMouseMove = (e: MouseEvent) => {
 		if (moving) {
+			freezeCurrentCursor(e)
 			if (!mouseOutOfScreen(e)) {
 				if (fake && fakeDraggable) {
 					fakeDraggable.classList.remove("display-none")
@@ -69,7 +67,6 @@
 {#if canBeDraggabled}
 	<section
 		on:mousedown={onMouseDown}
-		on:dblclick={dblclick}
 		role="tab"
 		tabindex="0"
 	>
