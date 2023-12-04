@@ -33,7 +33,7 @@ export type IndividualWindowType = {
   oldLeft?: number
   closeCallBack?: () => void
 }
-export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId" | "zIndex">
+export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId">
 export type UpdatableWindowParams = Omit<Partial<IndividualWindowType>, "windowId">
 export type WindowsType = IndividualWindowType[]
 
@@ -43,9 +43,9 @@ export const windowIdPrefix = "w"
 
 export const windows = writable(state)
 
-export const createWindow = ({ windowId = generateId(windowIdPrefix), isFocused, ...rest }: CreateWindowParams) => {
+export const createWindow = ({ windowId = generateId(windowIdPrefix), zIndex, isFocused, ...rest }: CreateWindowParams) => {
 	windows.update((ws: WindowsType) =>
-		[...ws, { windowId, zIndex: ws.length + INITIAL_WINDOW_Z_INDEX, isFocused: isFocused ?? true, ...rest }]
+		[...ws, { windowId, zIndex: zIndex ?? ws.length + INITIAL_WINDOW_Z_INDEX, isFocused: isFocused ?? true, ...rest }]
 	)
 }
 

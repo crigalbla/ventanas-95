@@ -271,7 +271,7 @@
 	}
 
 	.fake-resize {
-		border: 1px dotted black;
+		border: 2px dotted black;
 		position: absolute;
 		top: calc(var(--fakeTop) * 1px);
     left: calc(var(--fakeLeft) * 1px);
