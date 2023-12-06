@@ -86,6 +86,10 @@ examples examples examples examples examples examples examples examples examples
 		border-color: #f5f5f5 #0b1717 #0b1717 #f5f5f5;
   }
 
+  ::-webkit-scrollbar-corner {
+    background-color: #c0c0c0;
+  }
+
   ::-webkit-scrollbar-button:single-button {
     width: var(--scrollbarWidth);
     height: var(--scrollbarWidth);
@@ -100,10 +104,6 @@ examples examples examples examples examples examples examples examples examples
     background-position: center 4px;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='rgb(0, 0, 0)'><polygon points='50,00 0,50 100,50'/></svg>")
   }
-
-  /* ::-webkit-scrollbar-button:single-button:horizontal:decrement:active {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='rgb(50, 0, 50)'><polygon points='50,00 0,50 100,50'/></svg>")
-  } */
 
   ::-webkit-scrollbar-button:vertical:end:increment {
     background-position: center 4px;
