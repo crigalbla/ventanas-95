@@ -69,11 +69,11 @@
 
   	const removeHelpCursor = () => {
   		modifyCursor()
-  		helpButton?.classList.remove("border-color-down")
+  		helpButton?.classList.remove("border-color-shadow-down")
   		windowDiv.removeEventListener("click", removeHelpCursor)
   	}
 
-  	helpButton?.classList.add("border-color-down")
+  	helpButton?.classList.add("border-color-shadow-down")
   	modifyCursor("url('/cursors/help.cur'), help", "none")
   	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
   }
@@ -153,8 +153,8 @@
   })
 </script>
 
-<div
-  class="background-silver border-color-up window-sizes absolute"
+<section
+  class="background-silver border-color-shadow-up window-sizes absolute"
   class:window-center={typeof left === "undefined" && typeof top === "undefined"}
   class:window-position={typeof left === "number" || typeof top === "number"}
   class:window-max-width={maxWidth}
@@ -175,7 +175,7 @@
             {#if icon}
               <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
             {/if}
-            <span class="text-white ml-1">{$t(title)}</span>
+            <span class="text-ellipsis overflow-hidden text-white ml-1">{$t(title)}</span>
           </div>
           <div class="flex self-center gap-1 ml-4">
             {#if hasQuestionButton}
@@ -200,7 +200,7 @@
       <slot />
     </div>
   </Resize>
-</div>
+</section>
 
 <style>
   .window-center {

@@ -13,6 +13,7 @@
   export let zIndex: number = 0
   export let top: number = 0
   export let left: number = 0
+  export let onDblClick: () => void
 
   let desktopIconRef: HTMLElement
 
@@ -27,7 +28,6 @@
   	})
   })
   const onMouseDownOutside = () => updateDesktopIconParams(desktopIconId, { isFocused: false })
-  const onDbClickInDesktopIcon = () => window.alert("dobleClick")
 
   onMount(() => {
   	const { removeEvent: removeMouseDownEvent } = doItMouseDownEvent({
@@ -41,12 +41,12 @@
 
 <Draggable id={desktopIconId} {top} {left}>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div
+  <section
     class="desktop-icon flex flex-col items-center text-center absolute"
     id={desktopIconId}
     style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{DESKTOP_ICON_HEIGHT}"
     on:mousedown={onMouseDownDesktopIcon}
-    on:dblclick={onDbClickInDesktopIcon}
+    on:dblclick={onDblClick}
     bind:this={desktopIconRef}
   >
     <img
@@ -60,7 +60,7 @@
       class="text text-white text-ellipsis overflow-hidden text-sm leading-none"
       class:focused={isFocused}
     >{$t(text)}</span>
-  </div>
+  </section>
 </Draggable>
 
 <style>

@@ -27,7 +27,11 @@ const translations: Translations = {
 		"desktopIcon.myPc": "Mi PC",
 		"desktopIcon.recycleBin": "Papelera de reciclaje",
 		"desktopIcon.newFolder": "Nueva carpeta",
-		"desktopIcon.about": "Sobre mi"
+		"desktopIcon.about": "Sobre mi",
+		"notepadBody.file": "Archivo",
+		"notepadBody.edition": "Edición",
+		"notepadBody.search": "Buscar",
+		"notepadBody.help": "Ayuda"
 	},
 	en: {
 		accept: "OK",
@@ -51,7 +55,11 @@ const translations: Translations = {
 		"desktopIcon.myPc": "My PC",
 		"desktopIcon.recycleBin": "Recycle bin",
 		"desktopIcon.newFolder": "New folder",
-		"desktopIcon.about": "About"
+		"desktopIcon.about": "About",
+		"notepadBody.file": "File",
+		"notepadBody.edition": "Edition",
+		"notepadBody.search": "Search",
+		"notepadBody.help": "Help"
 	}
 }
 

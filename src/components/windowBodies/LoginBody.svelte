@@ -18,7 +18,7 @@
   }
 </script>
 
-<div class="background-silver login-body-height flex justify-center gap-4 p-4">
+<section class="background-silver login-body-height flex justify-center gap-4 p-4">
   <img class="h-16 w-16" src="icons/connection-2-computers.png" alt="connection-2-computers" draggable="false"/>
   <div class="flex gap-4 flex-col">
     <p>{$t("login.description")}</p>
@@ -37,7 +37,7 @@
     <Button className="px-4" on:click={onClickButtons}>{$t("accept")}</Button>
     <Button className="px-4" on:click={onClickButtons}>{$t("cancel")}</Button>
   </div>
-</div>
+</section>
 
 <style>
   .login-body-height {

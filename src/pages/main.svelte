@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { createDesktopIcon, createLoginWindow, createWindow, desktopIcons, loginWindowId, user, windows } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH } from "@/constants"
+  import { createInitialDesktopIcons, createLoginWindow, createWindow, desktopIcons, loginWindowId, user, windows } from "@/stores"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
-  import { availableDimensions, waitingCursor } from "@/utils"
+  import { waitingCursor } from "@/utils"
 
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 
@@ -83,48 +82,14 @@
   		canBeHidden: true,
   		canBeMaximizedOrMinimized: true
   	})
-  	createDesktopIcon({
-  		desktopIconId: "di-my-pc",
-  		icon: "my-computer-280px",
-  		text: "desktopIcon.myPc",
-  		isFocused: false,
-  		top: DESKTOP_ICON_MARGIN,
-  		left: DESKTOP_ICON_MARGIN
-  	})
-  	createDesktopIcon({
-  		desktopIconId: "di-recycle-bin",
-  		icon: "recycle-bin",
-  		text: "desktopIcon.recycleBin",
-  		isFocused: false,
-  		top: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_HEIGHT,
-  		left: DESKTOP_ICON_MARGIN
-  	})
-  	createDesktopIcon({
-  		desktopIconId: "di-new-folder",
-  		icon: "open-folder",
-  		text: "desktopIcon.newFolder",
-  		isFocused: false,
-  		top: DESKTOP_ICON_MARGIN,
-  		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH
-  	})
-  	setTimeout(() => {
-  		const { availableHeight, availableWidth } = availableDimensions()
-  		createDesktopIcon({
-  			desktopIconId: "di-notepad",
-  			icon: "notepad",
-  			text: "desktopIcon.about",
-  			isFocused: false,
-  			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
-  			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH
-  		})
-  	}, 1)
+  	createInitialDesktopIcons()
   }
 </script>
 
 {#if $user?.isLoggedIn} <!-- HOME SCREEN! User can use Ventanas 95 -->
-  {#each $windows as window}
+  {#each $windows as { body, ...window }}
     <Window {...window}>
-      <svelte:component this={window.body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
+      <svelte:component this={body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
     </Window>
   {/each}
 	{#each $desktopIcons as icon}

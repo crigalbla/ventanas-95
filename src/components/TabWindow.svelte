@@ -35,12 +35,12 @@
 </script>
 
 <Button
-  className={`${!isFocused ? "border-color-soft-up" : "border-color-soft-down background-granulated font-extrabold"} h-5/6 w-1/3 px-1`}
+  className={`${!isFocused ? "border-color-up" : "border-color-down background-granulated font-extrabold"} h-5/6 w-1/3 px-1`}
   id={`${windowId}-tab`}
   on:click={onClickTabWindow}
 >
   {#if icon}
     <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
   {/if}
-  <span class="ml-1">{$t(title)}</span>
+  <span class="text-ellipsis overflow-hidden h-6 ml-1">{$t(title)}</span>
 </Button>

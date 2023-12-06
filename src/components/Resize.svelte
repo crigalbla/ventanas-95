@@ -192,7 +192,6 @@
 
 <style>
 	.redizable-box {
-		background: #e5e5e5;
 		display: flex;
 		justify-content: center;
 		align-items: center;
