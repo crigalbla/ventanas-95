@@ -34,8 +34,8 @@
     </div>
   </div>
   <div class="flex gap-2 flex-col">
-    <Button className="px-4" on:click={onClickButtons}>{$t("accept")}</Button>
-    <Button className="px-4" on:click={onClickButtons}>{$t("cancel")}</Button>
+    <Button className="justify-center px-4" on:click={onClickButtons}>{$t("accept")}</Button>
+    <Button className="justify-center px-4" on:click={onClickButtons}>{$t("cancel")}</Button>
   </div>
 </section>
 
