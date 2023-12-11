@@ -12,6 +12,7 @@
   import Resize from "./Resize.svelte"
 
   export let title: string
+  export let subTitle: string = undefined!
   export let windowId: string = undefined!
   export let icon: string = undefined!
   export let hasQuestionButton: boolean = false
@@ -176,6 +177,9 @@
               <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
             {/if}
             <span class="text-ellipsis overflow-hidden text-white ml-1">{$t(title)}</span>
+            {#if subTitle}
+              <span class="text-ellipsis overflow-hidden text-white ml-1">{" - " + $t(subTitle)}</span>
+            {/if}
           </div>
           <div class="flex self-center gap-1 ml-4">
             {#if hasQuestionButton}

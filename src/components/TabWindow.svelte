@@ -5,6 +5,7 @@
   import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
 
   export let title: string
+  export let subTitle: string = undefined!
   export let windowId: string
   export let icon: string = undefined!
   export let isMinimized: boolean
@@ -43,4 +44,7 @@
     <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
   {/if}
   <span class="text-ellipsis overflow-hidden h-6 ml-1">{$t(title)}</span>
+  {#if subTitle}
+    <span class="ext-ellipsis overflow-hidden h-6 ml-1">{" - " + $t(subTitle)}</span>
+  {/if}
 </Button>

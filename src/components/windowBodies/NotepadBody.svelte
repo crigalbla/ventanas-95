@@ -142,6 +142,10 @@ examples examples examples examples examples examples examples examples examples
     background-repeat: no-repeat;
   }
 
+  ::-webkit-scrollbar-button:single-button:active {
+    border-color: #0b1717 #f5f5f5 #f5f5f5 #0b1717;
+  }
+
   ::-webkit-scrollbar-button:vertical:start:decrement {
     background-position: center 4px;
     background-image: var(--verStaDecTriangle);

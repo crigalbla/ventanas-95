@@ -6,6 +6,7 @@ import { generateId } from "@/utils"
 export type IndividualWindowType = {
   title: string
   windowId: string
+  subTitle?: string
   body?: ComponentType
   icon?: string
   hasQuestionButton?: boolean

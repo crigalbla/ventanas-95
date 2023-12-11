@@ -78,6 +78,7 @@ export const createInitialDesktopIcons = () => {
 			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH,
 			onDblClick: () => createWindow({
 				title: "desktopIcon.about",
+				subTitle: "subTitle.notepad",
 				icon: "notepad",
 				initialWidth: 300,
 				initialHeight: 150,

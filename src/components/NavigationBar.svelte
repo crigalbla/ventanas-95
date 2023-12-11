@@ -116,6 +116,7 @@
     {#each $windows.filter(w => w.canLoseFocus !== false) as window}
       <TabWindow
         title={window.title}
+        subTitle={window.subTitle}
         windowId={window.windowId}
         icon={window.icon}
         isMinimized={window.isMinimized ?? false}

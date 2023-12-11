@@ -31,7 +31,8 @@ const translations: Translations = {
 		"notepadBody.file": "Archivo",
 		"notepadBody.edition": "Edición",
 		"notepadBody.search": "Buscar",
-		"notepadBody.help": "Ayuda"
+		"notepadBody.help": "Ayuda",
+		"subTitle.notepad": "Bloc de notas"
 	},
 	en: {
 		accept: "OK",
@@ -59,7 +60,8 @@ const translations: Translations = {
 		"notepadBody.file": "File",
 		"notepadBody.edition": "Edition",
 		"notepadBody.search": "Search",
-		"notepadBody.help": "Help"
+		"notepadBody.help": "Help",
+		"subTitle.notepad": "Notepad"
 	}
 }
 
