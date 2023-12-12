@@ -3,6 +3,7 @@ import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH } from "@/
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
 import { createWindow } from "./windows"
+import { aboutNotepadText } from "./data"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -12,6 +13,7 @@ export type IndividualDesktopIconType = {
   zIndex?: number,
   top?: number,
   left?: number,
+	properties?: unknown
   onDblClick: () => void
 }
 export type CreateDesktopIconParams = { desktopIconId?: string } & Omit<IndividualDesktopIconType, "desktopIconId" | "zIndex">
@@ -69,17 +71,22 @@ export const createInitialDesktopIcons = () => {
 	})
 	setTimeout(() => {
 		const { availableHeight, availableWidth } = availableDimensions()
+		const desktopIconId = "di-about-notepad"
 		createDesktopIcon({
-			desktopIconId: "di-notepad",
+			desktopIconId,
 			icon: "notepad",
 			text: "desktopIcon.about",
 			isFocused: false,
+			properties: {
+				text: aboutNotepadText
+			},
 			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
 			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH,
 			onDblClick: () => createWindow({
 				title: "desktopIcon.about",
 				subTitle: "subTitle.notepad",
 				icon: "notepad",
+				desktopIconId,
 				initialWidth: 300,
 				initialHeight: 150,
 				canBeHidden: true,

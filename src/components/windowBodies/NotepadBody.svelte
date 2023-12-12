@@ -2,18 +2,27 @@
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
   import { onMount } from "svelte"
+  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams } from "@/stores"
 
-  export let text: string = `
-lorem
-examples examples examples examples examples examples examples examples examples lorem ipsum
-          lorem ipsum
-`
+  type PropertiesType = {
+    text: string
+  }
 
+  export let windowId: string
+
+  // TODO fix bug text when window is minimized or maximized
+  const desktopIconId: string = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
+  let text: string = ($desktopIcons.find((di) => di.desktopIconId === desktopIconId)?.properties as PropertiesType).text
   let textareaRef: HTMLElement
   let verStaDecTriangle = ""
   let verEndIncTriangle = ""
   let horStaDecTriangle = ""
   let horEndIncTriangle = ""
+
+  const changeCloseCallBack = () => {
+  	updateWindowParams(windowId, { closeCallBack: () => updateDesktopIconParams(desktopIconId, { properties: { text } }) })
+  }
+  changeCloseCallBack()
 
   const getTriangle = (points: string, fill: string = "rgba(0, 0, 0, 1)"): string =>
   	`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="${fill}"><polygon points="${points}"/></svg>`
@@ -44,11 +53,11 @@ examples examples examples examples examples examples examples examples examples
 </script>
 
 <section class="notepad">
-  <div class="header mx-1">
-    <Button className="mx-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.file")}</Button>
-    <Button className="mx-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.edition")}</Button>
-    <Button className="mx-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.search")}</Button>
-    <Button className="mx-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.help")}</Button>
+  <div class="header mx-2">
+    <Button className="mr-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.file")}</Button>
+    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.edition")}</Button>
+    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.search")}</Button>
+    <Button className="ml-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.help")}</Button>
   </div>
   <div class="body border-color-soft-down">
     <textarea
@@ -110,59 +119,5 @@ examples examples examples examples examples examples examples examples examples
 
   textarea:focus {
     outline: none;
-  }
-
-  ::-webkit-scrollbar {
-    width: var(--scrollbarWidth);
-    height: var(--scrollbarWidth);
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #c0c0c0;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect x="0" y="0" width="5" height="5" fill="rgba(255, 255, 255, 0.4)" /><line x1="1" y1="5" x2="5" y2="0" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1" /></svg>');
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #c0c0c0;
-    border: solid 2px;
-		border-color: #f5f5f5 #0b1717 #0b1717 #f5f5f5;
-  }
-
-  ::-webkit-scrollbar-corner {
-    background-color: #c0c0c0;
-  }
-
-  ::-webkit-scrollbar-button:single-button {
-    width: var(--scrollbarWidth); /* from :root */
-    height: var(--scrollbarWidth); /* from :root */
-    background: #c0c0c0;
-    border: solid 2px;
-		border-color: #f5f5f5 #0b1717 #0b1717 #f5f5f5;
-    background-size: 8px;
-    background-repeat: no-repeat;
-  }
-
-  ::-webkit-scrollbar-button:single-button:active {
-    border-color: #0b1717 #f5f5f5 #f5f5f5 #0b1717;
-  }
-
-  ::-webkit-scrollbar-button:vertical:start:decrement {
-    background-position: center 4px;
-    background-image: var(--verStaDecTriangle);
-  }
-
-  ::-webkit-scrollbar-button:vertical:end:increment {
-    background-position: center 4px;
-    background-image: var(--verEndIncTriangle);
-  }
-
-  ::-webkit-scrollbar-button:horizontal:start:decrement {
-    background-position: 4px 3px;
-    background-image: var(--horStaDecTriangle);
-  }
-
-  ::-webkit-scrollbar-button:horizontal:end:increment {
-    background-position: 5px 3px;
-    background-image: var(--horEndIncTriangle);
   }
 </style>
