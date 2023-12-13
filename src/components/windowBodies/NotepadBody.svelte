@@ -2,7 +2,7 @@
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
   import { onMount } from "svelte"
-  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams } from "@/stores"
+  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams, type IndividualDesktopIconType } from "@/stores"
 
   type PropertiesType = {
     text: string
@@ -10,17 +10,26 @@
 
   export let windowId: string
 
-  // TODO fix bug text when window is minimized or maximized
-  const desktopIconId: string = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
-  let text: string = ($desktopIcons.find((di) => di.desktopIconId === desktopIconId)?.properties as PropertiesType).text
-  let textareaRef: HTMLElement
+  // TODO fix focus and text bug when there are some notepad windows
+  const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
+  const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
+  const properties = desktopIcon.properties as PropertiesType
+  let textareaRef: HTMLTextAreaElement
+  let text = ""
   let verStaDecTriangle = ""
   let verEndIncTriangle = ""
   let horStaDecTriangle = ""
   let horEndIncTriangle = ""
 
+  // TODO fix this bug in this method when there are some notepad windows
   const changeCloseCallBack = () => {
-  	updateWindowParams(windowId, { closeCallBack: () => updateDesktopIconParams(desktopIconId, { properties: { text } }) })
+  	updateWindowParams(windowId, {
+  		closeCallBack: () => {
+  			console.log(windowId)
+  			updateDesktopIconParams(desktopIconId, { properties: { text } })
+  			window.localStorage.removeItem(windowId)
+  		}
+  	})
   }
   changeCloseCallBack()
 
@@ -31,7 +40,7 @@
 
   onMount(() => {
   	const textAreaWasResized = () => {
-  		if (textareaRef.scrollHeight > textareaRef.clientHeight) {
+  		if (textareaRef?.scrollHeight > textareaRef?.clientHeight) {
   			verStaDecTriangle = getTriangle("50,00 0,50 100,50")
   			verEndIncTriangle = getTriangle("0,0 100,0 50,50")
   		} else {
@@ -39,7 +48,7 @@
   			verEndIncTriangle = getTriangle("0,0 100,0 50,50", "rgba(0, 0, 0, 0.3)")
   		}
 
-  		if (textareaRef.scrollWidth > textareaRef.clientWidth) {
+  		if (textareaRef?.scrollWidth > textareaRef?.clientWidth) {
   			horStaDecTriangle = getTriangle("0,50 50,100 50,0")
   			horEndIncTriangle = getTriangle("0,0 0,100 50,50")
   		} else {
@@ -49,6 +58,14 @@
   	}
 
   	new ResizeObserver(textAreaWasResized).observe(textareaRef)
+
+  	const localText = window.localStorage.getItem(windowId) as string
+  	if (localText) {
+  		text = localText
+  	} else {
+  		window.localStorage.setItem(windowId, text)
+  		text = properties.text
+  	}
   })
 </script>
 
@@ -67,6 +84,7 @@
         --verEndIncTriangle: url('{verEndIncTriangle}');
         --horStaDecTriangle: url('{horStaDecTriangle}');
         --horEndIncTriangle: url('{horEndIncTriangle}');"
+      on:input={(event) => window.localStorage.setItem(windowId, event.target?.value)}
       bind:value={text}
       bind:this={textareaRef}
     />
