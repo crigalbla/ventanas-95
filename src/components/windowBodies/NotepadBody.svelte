@@ -25,7 +25,6 @@
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
   		closeCallBack: () => {
-  			console.log(windowId)
   			updateDesktopIconParams(desktopIconId, { properties: { text } })
   			window.localStorage.removeItem(windowId)
   		}

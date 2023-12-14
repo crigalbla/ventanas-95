@@ -41,6 +41,7 @@
 
 <Draggable id={desktopIconId} {top} {left}>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- NOTE: doble tap with touchpadn does not work with on:dblclick -->
   <section
     class="desktop-icon flex flex-col items-center text-center absolute"
     id={desktopIconId}
