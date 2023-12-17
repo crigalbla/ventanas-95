@@ -10,22 +10,19 @@
 
   export let windowId: string
 
-  // TODO fix focus and text bug when there are some notepad windows
   const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
   const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   const properties = desktopIcon.properties as PropertiesType
   let textareaRef: HTMLTextAreaElement
-  let text = ""
   let verStaDecTriangle = ""
   let verEndIncTriangle = ""
   let horStaDecTriangle = ""
   let horEndIncTriangle = ""
 
-  // TODO fix this bug in this method when there are some notepad windows
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
   		closeCallBack: () => {
-  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text } })
+  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text: textareaRef.value } })
   			window.localStorage.removeItem(windowId)
   		}
   	})
@@ -58,18 +55,7 @@
   		}
   	}
 
-  	const fillText = () => {
-  		const localText = window.localStorage.getItem(windowId) as string
-  		if (localText) {
-  			text = localText
-  		} else {
-  			text = properties.text
-  			window.localStorage.setItem(windowId, text)
-  		}
-  	}
-
   	new ResizeObserver(textAreaWasResized).observe(textareaRef)
-  	fillText()
   })
 </script>
 
@@ -88,8 +74,8 @@
         --verEndIncTriangle: url('{verEndIncTriangle}');
         --horStaDecTriangle: url('{horStaDecTriangle}');
         --horEndIncTriangle: url('{horEndIncTriangle}');"
+      value={window.localStorage.getItem(windowId) || properties.text || ""}
       on:input={onInput}
-      bind:value={text}
       bind:this={textareaRef}
     />
   </div>
