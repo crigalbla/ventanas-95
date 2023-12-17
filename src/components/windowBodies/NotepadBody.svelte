@@ -25,7 +25,7 @@
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
   		closeCallBack: () => {
-  			updateDesktopIconParams(desktopIconId, { properties: { text } })
+  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text } })
   			window.localStorage.removeItem(windowId)
   		}
   	})
@@ -36,6 +36,8 @@
   	`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="${fill}"><polygon points="${points}"/></svg>`
 
   const onClickHeaderButton = () => console.log("onClickHeaderButton")
+
+  const onInput = (event: Event) => window.localStorage.setItem(windowId, (event.target as HTMLTextAreaElement).value)
 
   onMount(() => {
   	const textAreaWasResized = () => {
@@ -56,15 +58,18 @@
   		}
   	}
 
-  	new ResizeObserver(textAreaWasResized).observe(textareaRef)
-
-  	const localText = window.localStorage.getItem(windowId) as string
-  	if (localText) {
-  		text = localText
-  	} else {
-  		window.localStorage.setItem(windowId, text)
-  		text = properties.text
+  	const fillText = () => {
+  		const localText = window.localStorage.getItem(windowId) as string
+  		if (localText) {
+  			text = localText
+  		} else {
+  			text = properties.text
+  			window.localStorage.setItem(windowId, text)
+  		}
   	}
+
+  	new ResizeObserver(textAreaWasResized).observe(textareaRef)
+  	fillText()
   })
 </script>
 
@@ -83,7 +88,7 @@
         --verEndIncTriangle: url('{verEndIncTriangle}');
         --horStaDecTriangle: url('{horStaDecTriangle}');
         --horEndIncTriangle: url('{horEndIncTriangle}');"
-      on:input={(event) => window.localStorage.setItem(windowId, event.target?.value)}
+      on:input={onInput}
       bind:value={text}
       bind:this={textareaRef}
     />

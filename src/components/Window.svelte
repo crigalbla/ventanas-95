@@ -127,7 +127,9 @@
   	})
   })
 
-  const onUnFocus = () => updateWindowParams(windowId, { isFocused: false })
+  const onUnFocus = () => {
+  	if (isFocused) updateWindowParams(windowId, { isFocused: false })
+  }
 
   onMount(() => {
   	updateWindowParams(windowId, {

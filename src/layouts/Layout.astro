@@ -28,8 +28,11 @@ const { title } = Astro.props;
 </html>
 
 <script type="module">
-	document.querySelector("body")?.addEventListener("contextmenu", (e) => {
+	window.addEventListener("contextmenu", (e) => {
 		// e.preventDefault();
+	});
+	window.addEventListener('beforeunload', () => {
+		localStorage.clear();
 	});
 </script>
 

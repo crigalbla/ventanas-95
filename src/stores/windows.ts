@@ -47,7 +47,7 @@ export const windows = writable(state)
 
 export const createWindow = ({ windowId = generateId(windowIdPrefix), zIndex, isFocused, ...rest }: CreateWindowParams) => {
 	windows.update((ws: WindowsType) =>
-		[...ws, { windowId, zIndex: zIndex ?? ws.length + INITIAL_WINDOW_Z_INDEX, isFocused: isFocused ?? true, ...rest }]
+		[...ws, { windowId, zIndex: zIndex ?? INITIAL_WINDOW_Z_INDEX + ws.length + 1, isFocused: isFocused ?? true, ...rest }]
 	)
 }
 
