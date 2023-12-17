@@ -52,15 +52,10 @@ export const createWindow = ({ windowId = generateId(windowIdPrefix), zIndex, is
 }
 
 export const updateWindowParams = (windowId: string, params: UpdatableWindowParams) => {
-	console.log("entraaa", windowId)
-	windows.update((ws: WindowsType) => {
-		const a = ws.map((w: IndividualWindowType) =>
+	windows.update((ws: WindowsType) =>
+		ws.map((w: IndividualWindowType) =>
 			w.windowId === windowId ? { ...w, ...params } : w
-		)
-		console.log({ windows: a })
-		return a
-	}
-	)
+		))
 }
 
 export const removeWindow = (windowId: string) => windows.update((ws: WindowsType) => ws.filter(w => w.windowId !== windowId))

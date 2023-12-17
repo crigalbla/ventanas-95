@@ -6,6 +6,7 @@
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH } from "@/constants"
   import Draggable from "./Draggable.svelte"
 
+  // Fix bug in windows when some of then are opened by a desktopIcon
   export let desktopIconId: string
   export let icon: string
   export let text: string
