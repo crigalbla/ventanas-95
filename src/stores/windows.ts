@@ -2,6 +2,7 @@ import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
 import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
 import { generateId } from "@/utils"
+import { user, type UserType } from "./user"
 
 export type IndividualWindowType = {
   title: string
@@ -67,5 +68,6 @@ export const createLoginWindow = () => createWindow({
 	windowId: loginWindowId,
 	hasQuestionButton: true,
 	canLoseFocus: false,
-	initialWidth: 530
+	initialWidth: 530,
+	closeCallBack: () => user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
 })

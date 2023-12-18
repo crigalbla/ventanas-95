@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { user, removeWindow, windows, updateWindowParams, loginWindowId } from "@/stores"
-  import type { IndividualWindowType, UserType, WindowsType } from "@/stores"
-  import { availableDimensions, doItMouseDownEvent } from "@/utils"
+  import { removeWindow, windows, updateWindowParams } from "@/stores"
+  import type { IndividualWindowType, WindowsType } from "@/stores"
+  import { availableDimensions } from "@/utils"
   import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
   import { t } from "@/i18n"
 
@@ -20,7 +20,6 @@
   export let canBeMaximizedOrMinimized: boolean = false
   export let canBeResized: boolean = true
   export let canBeDraggabled: boolean = true
-  export let canLoseFocus: boolean = true
   export let isMinimized: boolean = false
   export let isFullScreen: boolean = false
   export let isFocused: boolean = true
@@ -113,7 +112,6 @@
   const onCloseButtonClick = () => {
   	closeCallBack && closeCallBack()
   	removeWindow(windowId)
-  	if (windowId === loginWindowId) user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
 
   const onFocus = () => windows.update((ws: WindowsType) => {
@@ -127,10 +125,6 @@
   	})
   })
 
-  const onUnFocus = () => {
-  	if (isFocused) updateWindowParams(windowId, { isFocused: false })
-  }
-
   onMount(() => {
   	updateWindowParams(windowId, {
   		width: windowDiv.offsetWidth,
@@ -143,19 +137,10 @@
   		const rect = windowDiv.getBoundingClientRect()
   		updateWindowParams(windowId, { top: rect.top, left: rect.left })
   	}
-
-  	if (canLoseFocus) {
-  		const { removeEvent } = doItMouseDownEvent({
-  			searchElement: `#${windowId}`,
-  			callBackMouseDownOutside: onUnFocus,
-  			callBackInside: onFocus,
-  			avoidCallBacksIfThisElement: `#${windowId}-tab`
-  		})
-  		return removeEvent
-  	}
   })
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <section
   class="background-silver border-color-shadow-up window-sizes absolute"
   class:window-center={typeof left === "undefined" && typeof top === "undefined"}
@@ -165,6 +150,7 @@
   id={windowId}
   style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth || ""}; --height:{height || initialHeight || ""};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
+  on:mousedown={onFocus}
   bind:this={windowDiv}
 >
   <Resize fake {canBeResized} {minWidth} {minHeight} {windowId} {top} {left} {width} {height}>

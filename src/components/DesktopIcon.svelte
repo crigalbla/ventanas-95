@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte"
   import { t } from "@/i18n"
-  import { doItMouseDownEvent } from "@/utils"
-  import { desktopIcons, updateDesktopIconParams, type DesktopIconType, type IndividualDesktopIconType } from "@/stores"
+  import { desktopIcons, type DesktopIconType, type IndividualDesktopIconType } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH } from "@/constants"
   import Draggable from "./Draggable.svelte"
 
@@ -27,16 +25,6 @@
 
   		return di
   	})
-  })
-  const onMouseDownOutside = () => updateDesktopIconParams(desktopIconId, { isFocused: false })
-
-  onMount(() => {
-  	const { removeEvent: removeMouseDownEvent } = doItMouseDownEvent({
-  		searchElement: `#${desktopIconId}`,
-  		callBackMouseDownOutside: onMouseDownOutside
-  	})
-
-  	return removeMouseDownEvent
   })
 </script>
 
