@@ -46,9 +46,17 @@ export const windowIdPrefix = "w"
 
 export const windows = writable(state)
 
-export const createWindow = ({ windowId = generateId(windowIdPrefix), zIndex, isFocused, ...rest }: CreateWindowParams) => {
+export const createWindow = ({ windowId = generateId(windowIdPrefix), zIndex, isFocused, canLoseFocus, canBeDraggabled, canBeResized, ...rest }: CreateWindowParams) => {
 	windows.update((ws: WindowsType) =>
-		[...ws, { windowId, zIndex: zIndex ?? INITIAL_WINDOW_Z_INDEX + ws.length + 1, isFocused: isFocused ?? true, ...rest }]
+		[...ws, {
+			windowId,
+			zIndex: zIndex ?? INITIAL_WINDOW_Z_INDEX + ws.length + 1,
+			isFocused: isFocused ?? true,
+			canLoseFocus: canLoseFocus ?? true,
+			canBeDraggabled: canBeDraggabled ?? true,
+			canBeResized: canBeResized ?? true,
+			...rest
+		}]
 	)
 }
 
@@ -68,6 +76,8 @@ export const createLoginWindow = () => createWindow({
 	windowId: loginWindowId,
 	hasQuestionButton: true,
 	canLoseFocus: false,
+	canBeDraggabled: false,
+	canBeResized: false,
 	initialWidth: 530,
 	closeCallBack: () => user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
 })

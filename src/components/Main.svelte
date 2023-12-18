@@ -48,7 +48,6 @@
   		left: 400,
   		isFocused: false,
   		canBeHidden: true,
-  		canLoseFocus: true,
   		canBeMaximizedOrMinimized: true
   	})
   	createWindow({
@@ -60,7 +59,6 @@
   		left: 420,
   		isFocused: false,
   		canBeHidden: true,
-  		canLoseFocus: true,
   		canBeMaximizedOrMinimized: true
   	})
   	createWindow({
@@ -72,7 +70,6 @@
   		left: 440,
   		isFocused: false,
   		canBeHidden: true,
-  		canLoseFocus: true,
   		canBeMaximizedOrMinimized: true
   	})
   	createWindow({
@@ -84,7 +81,6 @@
   		left: 460,
   		isFocused: false,
   		canBeHidden: true,
-  		canLoseFocus: true,
   		canBeMaximizedOrMinimized: true
   	})
   	createInitialDesktopIcons()
@@ -120,12 +116,12 @@
 </script>
 
 {#if $user?.isLoggedIn} <!-- HOME SCREEN! User can use Ventanas 95 -->
-  {#each $windows as { body, ...window }}
+  {#each $windows as { body, canLoseFocus, desktopIconId, ...window }}
     <Window {...window}>
       <svelte:component this={body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
     </Window>
   {/each}
-	{#each $desktopIcons as icon}
+	{#each $desktopIcons as { properties, ...icon }}
 		<DesktopIcon {...icon} />
 	{/each}
   <NavigationBar />

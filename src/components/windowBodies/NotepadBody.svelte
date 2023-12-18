@@ -10,6 +10,7 @@
 
   export let windowId: string
 
+  // TODO fix text error when there are some NotepadBody windows opened
   const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
   const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   const properties = desktopIcon.properties as PropertiesType
@@ -22,7 +23,7 @@
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
   		closeCallBack: () => {
-  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text: textareaRef.value } })
+  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text: window.localStorage.getItem(windowId) || properties.text || "" } })
   			window.localStorage.removeItem(windowId)
   		}
   	})
