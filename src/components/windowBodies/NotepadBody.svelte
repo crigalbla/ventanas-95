@@ -1,7 +1,7 @@
 <script lang="ts">
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
-  import { onMount } from "svelte"
+  import { afterUpdate, onMount } from "svelte"
   import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams, type IndividualDesktopIconType } from "@/stores"
 
   type PropertiesType = {
@@ -10,11 +10,12 @@
 
   export let windowId: string
 
-  // TODO fix text error when there are some NotepadBody windows opened
+  // TODO: add window when it wants close whiout save
   const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
   const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   const properties = desktopIcon.properties as PropertiesType
   let textareaRef: HTMLTextAreaElement
+  let text = ""
   let verStaDecTriangle = ""
   let verEndIncTriangle = ""
   let horStaDecTriangle = ""
@@ -23,7 +24,8 @@
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
   		closeCallBack: () => {
-  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text: window.localStorage.getItem(windowId) || properties.text || "" } })
+  			const textModified = window.localStorage.getItem(windowId)
+  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text: textModified || properties.text } })
   			window.localStorage.removeItem(windowId)
   		}
   	})
@@ -36,6 +38,10 @@
   const onClickHeaderButton = () => console.log("onClickHeaderButton")
 
   const onInput = (event: Event) => window.localStorage.setItem(windowId, (event.target as HTMLTextAreaElement).value)
+
+  const updateText = () => {
+  	text = window.localStorage.getItem(windowId) || properties.text || ""
+  }
 
   onMount(() => {
   	const textAreaWasResized = () => {
@@ -57,6 +63,11 @@
   	}
 
   	new ResizeObserver(textAreaWasResized).observe(textareaRef)
+  	updateText()
+  })
+
+  afterUpdate(() => {
+  	updateText()
   })
 </script>
 
@@ -75,7 +86,7 @@
         --verEndIncTriangle: url('{verEndIncTriangle}');
         --horStaDecTriangle: url('{horStaDecTriangle}');
         --horEndIncTriangle: url('{horEndIncTriangle}');"
-      value={window.localStorage.getItem(windowId) || properties.text || ""}
+      value={text}
       on:input={onInput}
       bind:this={textareaRef}
     />
