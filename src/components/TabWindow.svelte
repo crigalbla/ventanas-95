@@ -21,7 +21,7 @@
   					return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length + INITIAL_WINDOW_Z_INDEX })
   				} else {
   					if (isFocused) {
-  						return ({ ...w, isMinimized: true, isFocused: false })
+  						return ({ ...w, isMinimized: true, isFocused: !w.canLoseFocus || false })
   					} else {
   						return ({ ...w, isMinimized: false, isFocused: true, zIndex: ws.length + INITIAL_WINDOW_Z_INDEX })
   					}
@@ -29,7 +29,7 @@
   			}
   			if ((w.zIndex as number) > oldZIndex) return ({ ...w, zIndex: (w.zIndex as number) - 1 })
 
-  			return ({ ...w, isFocused: false })
+  			return ({ ...w, isFocused: !w.canLoseFocus || false })
   		})
   	})
   }

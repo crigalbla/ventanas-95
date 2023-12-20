@@ -33,7 +33,7 @@ const translations: Translations = {
 		"notepadBody.search": "Buscar",
 		"notepadBody.help": "Ayuda",
 		"subTitle.notepad": "Bloc de notas",
-		"saveChangesBody.title": "El texto del archivo {{file}} ha cambiado",
+		"saveChangesBody.title": "El texto del archivo {{file}} ha cambiado.",
 		"saveChangesBody.question": "¿Deseas guardar los cambios?"
 	},
 	en: {
@@ -64,7 +64,7 @@ const translations: Translations = {
 		"notepadBody.search": "Search",
 		"notepadBody.help": "Help",
 		"subTitle.notepad": "Notepad",
-		"saveChangesBody.title": "The text of the {file} file has changed",
+		"saveChangesBody.title": "The text of the {file} file has changed.",
 		"saveChangesBody.question": "Do you want save the changes?"
 	}
 }
