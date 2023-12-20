@@ -4,17 +4,25 @@
   import { desktopIcons, removeWindow, windows, type IndividualDesktopIconType } from "@/stores"
 
   export let windowId: string
+  export let closeCallBack: (props?: { shouldSaveChanges?: boolean, shouldCloseNotepadWindow?: boolean }) => void
 
   const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
   const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
 
-  const onClickCancelAnswer = () => removeWindow(windowId)
+  const onClickCancelAnswer = () => {
+  	removeWindow(windowId)
+  	closeCallBack()
+  }
 
-  // TODO hacer que no guarde
-  const onClickNoAnswer = () => removeWindow(windowId)
+  const onClickNoAnswer = () => {
+  	removeWindow(windowId)
+  	closeCallBack({ shouldSaveChanges: false, shouldCloseNotepadWindow: true })
+  }
 
-  // TODO hacer que guarde
-  const onClickYesAnswer = () => removeWindow(windowId)
+  const onClickYesAnswer = () => {
+  	removeWindow(windowId)
+  	closeCallBack({ shouldSaveChanges: true, shouldCloseNotepadWindow: true })
+  }
 </script>
 
 <section class="flex m-5 mr-11">

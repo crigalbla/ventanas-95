@@ -2,7 +2,7 @@
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
   import { afterUpdate, onMount } from "svelte"
-  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams, type IndividualDesktopIconType, createWindow } from "@/stores"
+  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams, type IndividualDesktopIconType, createWindow, removeWindow } from "@/stores"
   import SaveChangesBody from "./SaveChangesBody.svelte"
 
   type PropertiesType = {
@@ -11,11 +11,11 @@
 
   export let windowId: string
 
-  // TODO: add window when it wants close whiout save
   const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
   const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   const properties = desktopIcon.properties as PropertiesType
   let textareaRef: HTMLTextAreaElement
+  let saveChangeWindowIsActive = false
   let text = ""
   let verStaDecTriangle = ""
   let verEndIncTriangle = ""
@@ -25,24 +25,38 @@
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
   		closeCallBack: () => {
-  			console.log(window.localStorage.getItem(windowId))
-  			if (!window.localStorage.getItem(windowId) || properties.text === window.localStorage.getItem(windowId)) {
+  			const textInLocalStorage = window.localStorage.getItem(windowId)
+  			if (!textInLocalStorage || properties.text === textInLocalStorage) {
   				window.localStorage.removeItem(windowId)
 
   				return { preventCloseWindow: false }
   			}
-  			createWindow({
-  				title: $t("subTitle.notepad"),
-  				canBeResized: false,
-  				desktopIconId,
-  				body: SaveChangesBody
-  			})
+  			if (!saveChangeWindowIsActive) createSaveChangesWindow()
 
   			return { preventCloseWindow: true }
   		}
   	})
   }
-  changeCloseCallBack()
+
+  const createSaveChangesWindow = () => {
+  	saveChangeWindowIsActive = true
+  	createWindow({
+  		title: $t("subTitle.notepad"),
+  		canBeResized: false,
+  		canLoseFocus: false,
+  		desktopIconId,
+  		closeCallBack: (props) => {
+  			const typedProps = props as { shouldSaveChanges?: boolean, shouldCloseNotepadWindow?: boolean } | undefined
+  			if (typedProps?.shouldSaveChanges as boolean) saveChanges()
+  			if (typedProps?.shouldCloseNotepadWindow) {
+  				window.localStorage.removeItem(windowId)
+  				removeWindow(windowId)
+  			}
+  			saveChangeWindowIsActive = false
+  		},
+  		body: SaveChangesBody
+  	})
+  }
 
   const saveChanges = () => {
   	const textModified = window.localStorage.getItem(windowId)
@@ -80,10 +94,10 @@
   	}
 
   	new ResizeObserver(textAreaWasResized).observe(textareaRef)
-  	updateText()
   })
 
   afterUpdate(() => {
+  	changeCloseCallBack()
   	updateText()
   })
 </script>

@@ -34,7 +34,7 @@ export type IndividualWindowType = {
   oldHeight?: number
   oldTop?: number
   oldLeft?: number
-  closeCallBack?: () => void | { preventCloseWindow: boolean }
+  closeCallBack?: (props?: unknown) => void | { preventCloseWindow: boolean }
 }
 export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId">
 export type UpdatableWindowParams = Omit<Partial<IndividualWindowType>, "windowId">
@@ -76,7 +76,7 @@ export const createLoginWindow = () => createWindow({
 	windowId: loginWindowId,
 	hasQuestionButton: true,
 	canLoseFocus: false,
-	canBeDraggabled: false,
+	canBeDraggabled: true,
 	canBeResized: false,
 	initialWidth: 530,
 	closeCallBack: () => user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
