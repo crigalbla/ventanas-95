@@ -2,7 +2,8 @@
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
   import { afterUpdate, onMount } from "svelte"
-  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams, type IndividualDesktopIconType } from "@/stores"
+  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams, type IndividualDesktopIconType, createWindow } from "@/stores"
+  import SaveChangesBody from "./SaveChangesBody.svelte"
 
   type PropertiesType = {
     text: string
@@ -24,13 +25,29 @@
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
   		closeCallBack: () => {
-  			const textModified = window.localStorage.getItem(windowId)
-  			updateDesktopIconParams(desktopIconId, { properties: { ...properties, text: textModified || properties.text } })
-  			window.localStorage.removeItem(windowId)
+  			console.log(window.localStorage.getItem(windowId))
+  			if (!window.localStorage.getItem(windowId) || properties.text === window.localStorage.getItem(windowId)) {
+  				window.localStorage.removeItem(windowId)
+
+  				return { preventCloseWindow: false }
+  			}
+  			createWindow({
+  				title: $t("subTitle.notepad"),
+  				canBeResized: false,
+  				desktopIconId,
+  				body: SaveChangesBody
+  			})
+
+  			return { preventCloseWindow: true }
   		}
   	})
   }
   changeCloseCallBack()
+
+  const saveChanges = () => {
+  	const textModified = window.localStorage.getItem(windowId)
+  	updateDesktopIconParams(desktopIconId, { properties: { ...properties, text: textModified || properties.text } })
+  }
 
   const getTriangle = (points: string, fill: string = "rgba(0, 0, 0, 1)"): string =>
   	`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="${fill}"><polygon points="${points}"/></svg>`

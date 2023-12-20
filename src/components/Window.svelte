@@ -37,7 +37,7 @@
   export let oldHeight: number = undefined!
   export let oldTop: number = undefined!
   export let oldLeft: number = undefined!
-  export let closeCallBack: () => void = undefined!
+  export let closeCallBack: () => void | { preventCloseWindow: boolean } = undefined!
 
   let windowDiv: HTMLElement = undefined!
   const headerHeight = 24
@@ -110,8 +110,10 @@
   }
 
   const onCloseButtonClick = () => {
-  	closeCallBack && closeCallBack()
-  	removeWindow(windowId)
+  	const responseCloseCallBack = closeCallBack?.() || { preventCloseWindow: false }
+  	if (!responseCloseCallBack.preventCloseWindow) {
+  		removeWindow(windowId)
+  	}
   }
 
   const onFocus = () => windows.update((ws: WindowsType) => {

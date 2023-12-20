@@ -34,7 +34,7 @@ export type IndividualWindowType = {
   oldHeight?: number
   oldTop?: number
   oldLeft?: number
-  closeCallBack?: () => void
+  closeCallBack?: () => void | { preventCloseWindow: boolean }
 }
 export type CreateWindowParams = { windowId?: string } & Omit<IndividualWindowType, "windowId">
 export type UpdatableWindowParams = Omit<Partial<IndividualWindowType>, "windowId">

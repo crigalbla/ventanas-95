@@ -8,7 +8,7 @@ import { aboutNotepadText } from "./data"
 export type IndividualDesktopIconType = {
   desktopIconId: string,
   icon: string,
-  text: string,
+  name: string,
   isFocused?: boolean,
   zIndex?: number,
   top?: number,
@@ -45,7 +45,7 @@ export const createInitialDesktopIcons = () => {
 	createDesktopIcon({
 		desktopIconId: "di-my-pc",
 		icon: "my-computer-280px",
-		text: "desktopIcon.myPc",
+		name: "desktopIcon.myPc",
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: DESKTOP_ICON_MARGIN,
@@ -54,7 +54,7 @@ export const createInitialDesktopIcons = () => {
 	createDesktopIcon({
 		desktopIconId: "di-recycle-bin",
 		icon: "recycle-bin",
-		text: "desktopIcon.recycleBin",
+		name: "desktopIcon.recycleBin",
 		isFocused: false,
 		top: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_HEIGHT,
 		left: DESKTOP_ICON_MARGIN,
@@ -63,7 +63,7 @@ export const createInitialDesktopIcons = () => {
 	createDesktopIcon({
 		desktopIconId: "di-new-folder",
 		icon: "open-folder",
-		text: "desktopIcon.newFolder",
+		name: "desktopIcon.newFolder",
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH,
@@ -75,7 +75,7 @@ export const createInitialDesktopIcons = () => {
 		createDesktopIcon({
 			desktopIconId,
 			icon: "notepad",
-			text: "desktopIcon.about",
+			name: "desktopIcon.about",
 			isFocused: false,
 			properties: {
 				text: aboutNotepadText

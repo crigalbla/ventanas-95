@@ -6,7 +6,7 @@
 
   export let desktopIconId: string
   export let icon: string
-  export let text: string
+  export let name: string
   export let isFocused: boolean = false
   export let zIndex: number = 0
   export let top: number = 0
@@ -48,7 +48,7 @@
     <span
       class="text text-white text-ellipsis overflow-hidden text-sm leading-none"
       class:focused={isFocused}
-    >{$t(text)}</span>
+    >{$t(name)}</span>
   </section>
 </Draggable>
 
