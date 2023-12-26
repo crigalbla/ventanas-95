@@ -42,7 +42,10 @@
 		const target = event.target as EventTarget & { className: string }
 		if (target?.className.includes("desktop-screen")) {
 			rightClickMenu.set({
-				sections: [["aaa", "bbb", "cccccc"], ["dd", "eeeeee"], ["f"]],
+				sections: [
+					[{ text: "Pegar", isDisabled: true }],
+					[{ text: "Nuevooooo", sections: [["Carpeta"], ["Documento de texto"]] }]
+				],
 				top: event.clientY,
 				left: event.clientX
 			})

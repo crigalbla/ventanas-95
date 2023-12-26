@@ -1,6 +1,10 @@
 import { writable } from "svelte/store"
 
-export type SectionInRightClickMenuType = string[]
+export type SectionInRightClickMenuType = {
+  text: string,
+  isDisabled?: boolean,
+  sections?: string[][]
+}[]
 
 export type RightClickMenuType = {
   sections: SectionInRightClickMenuType[],
