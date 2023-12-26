@@ -1,10 +1,12 @@
+import { NAVIGATION_BAR_ID } from "@/constants"
+
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
 }
 
 export const mouseOutOfScreen = (e: MouseEvent) => {
 	const { clientX, clientY } = e
-	const navigationBar = document.getElementById("navigation-bar") as HTMLElement
+	const navigationBar = document.getElementById(NAVIGATION_BAR_ID) as HTMLElement
 	const windowWidth = window.innerWidth
 	const windowHeight = window.innerHeight - (navigationBar?.offsetHeight || 0)
 	if (clientX < 0 || clientX > windowWidth || clientY < 0 || clientY > windowHeight) return true
@@ -23,9 +25,11 @@ export const waitingCursor = (miliseconds: number = 2000) => {
 
 	freezeWaitCursor()
 	document.addEventListener("click", freezeWaitCursor)
+	document.addEventListener("contextmenu", freezeWaitCursor)
 
 	setTimeout(() => {
 		document.removeEventListener("click", freezeWaitCursor)
+		document.removeEventListener("contextmenu", freezeWaitCursor)
 		unfreezeCurrentCursor()
 	}, miliseconds)
 }
@@ -49,7 +53,7 @@ export const unfreezeCurrentCursor = () => {
 
 export const availableDimensions = () => {
 	const body = document.querySelector("body") as HTMLElement
-	const navigationBar = document.getElementById("navigation-bar") as HTMLElement
+	const navigationBar = document.getElementById(NAVIGATION_BAR_ID) as HTMLElement
 	const availableWidth = body?.offsetWidth
 	const availableHeight = body?.offsetHeight - navigationBar?.offsetHeight
 

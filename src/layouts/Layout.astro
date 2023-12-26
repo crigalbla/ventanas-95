@@ -29,7 +29,7 @@ const { title } = Astro.props;
 
 <script type="module">
 	window.addEventListener("contextmenu", (e) => {
-		// e.preventDefault();
+		e.preventDefault();
 	});
 	window.addEventListener('beforeunload', () => {
 		localStorage.clear();

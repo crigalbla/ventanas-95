@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { createInitialDesktopIcons, createLoginWindow, createWindow, desktopIcons, loginWindowId, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
+  import { createInitialDesktopIcons, createLoginWindow, createWindow, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
+  import { NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID } from "@/constants"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
   import { waitingCursor } from "@/utils"
   import { onMount } from "svelte"
+  import RightClickMenu from "./RightClickMenu.svelte"
 
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 
@@ -35,6 +37,17 @@
 
   	return { destroy }
   }
+
+	const onContextMenu = (event: MouseEvent) => {
+		const target = event.target as EventTarget & { className: string }
+		if (target?.className.includes("desktop-screen")) {
+			rightClickMenu.set({
+				sections: [["aaa", "bbb", "cccccc"], ["dd", "eeeeee"], ["f"]],
+				top: event.clientY,
+				left: event.clientX
+			})
+		}
+	}
 
   $: if ($user?.isLoggedIn) {
   	playStartingAudio()
@@ -89,6 +102,9 @@
 	onMount(() => {
 		const mouseDownEvent = (event: Event) => {
 			const target = event.target as Node
+			const rightClickMenu = document.querySelector(`#${RIGHT_CLICK_MENU_ID}`)
+
+			if (!rightClickMenu?.contains(target)) removeRightClickMenu()
 
 			$windows.forEach((w) => {
 				const windowsHTML = document.querySelector(`#${w.windowId}`)
@@ -116,15 +132,25 @@
 </script>
 
 {#if $user?.isLoggedIn} <!-- HOME SCREEN! User can use Ventanas 95 -->
-  {#each $windows as { body, canLoseFocus, desktopIconId, ...window }}
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<section
+		class="desktop-screen"
+		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
+		on:contextmenu={onContextMenu}
+	>
+		{#each $windows as { body, canLoseFocus, desktopIconId, ...window }}
     <Window {...window}>
       <svelte:component this={body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
     </Window>
-  {/each}
-	{#each $desktopIcons as { properties, ...icon }}
-		<DesktopIcon {...icon} />
-	{/each}
+		{/each}
+		{#each $desktopIcons as { properties, ...icon }}
+			<DesktopIcon {...icon} />
+		{/each}
+	</section>
   <NavigationBar />
+	{#if $rightClickMenu}
+		<RightClickMenu {...$rightClickMenu} />
+	{/if}
 {:else}
   {#if loginWindow} <!-- INITIAL SCREEN! User has to log in -->
     <Window {...loginWindow}>
@@ -134,3 +160,10 @@
     <section class="w-full h-full bg-black absolute" use:wakeUp />
   {/if}
 {/if}
+
+<style>
+	.desktop-screen {
+		width: 100vw;
+		height: calc(100vh - calc(var(--navigation-bar-height) * 1px));
+	}
+</style>

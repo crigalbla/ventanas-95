@@ -8,6 +8,7 @@
   import TurnOffBody from "./windowBodies/TurnOffBody.svelte"
   import TabWindow from "./TabWindow.svelte"
   import { onMount } from "svelte"
+  import { NAVIGATION_BAR_HEIGHT, NAVIGATION_BAR_ID } from "@/constants"
 
   type MenuOptions = "closeSession" | "suspend" | "turnOff"
 
@@ -31,12 +32,12 @@
   			createWindow({
   				title: "navigationBar.closeVentanas95Session",
   				windowId: "closeSession",
-  				zIndex: 1000,
+  				zIndex: 1002,
   				canBeResized: false,
   				canBeDraggabled: false,
   				canLoseFocus: false,
   				body: CloseSessionBody,
-  				closeCallBack: () => showCurtain = !showCurtain
+  				closeCallBack: () => { showCurtain = !showCurtain }
   			})
   		}, 700)
   	} else if (option === "suspend") {
@@ -52,12 +53,12 @@
   			createWindow({
   				title: "navigationBar.closeVentanas95",
   				windowId: "turnOff",
-  				zIndex: 1000,
+  				zIndex: 1002,
   				canBeResized: false,
   				canBeDraggabled: false,
   				canLoseFocus: false,
   				body: TurnOffBody,
-  				closeCallBack: () => showCurtain = !showCurtain
+  				closeCallBack: () => { showCurtain = !showCurtain }
   			})
   		}, 700)
   	}
@@ -77,8 +78,9 @@
 
 <Curtain show={showCurtain} />
 <section
-  class="background-silver border-top-white z-index-998 w-full h-11 absolute bottom-0 flex items-center justify-between px-1"
-  id="navigation-bar"
+  class="background-silver border-top-white navigation-bar w-full absolute bottom-0 flex items-center justify-between px-1"
+  style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
+  id={NAVIGATION_BAR_ID}
 >
   <div class:display-none={hideStartMenu} class="background-silver border-color-up w-64 fixed bottom-10 flex" id="start-menu">
     <div class="background-dark-silver text-color-silver vertical-text tracking-wide text-5xl pr-1 py-3">
@@ -131,9 +133,11 @@
 </section>
 
 <style>
-  .z-index-998 {
-    z-index: 998;
+  .navigation-bar {
+    height: calc(var(--navigation-bar-height) * 1px);
+    z-index: 1000;
   }
+
   .vertical-text {
     writing-mode: vertical-rl;
     white-space: nowrap;

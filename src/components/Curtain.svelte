@@ -7,7 +7,7 @@
 <style>
   .curtain {
     position: absolute;
-    z-index: 999;
+    z-index: 1001;
     top: -100%;
     left: 0;
     width: 100%;
