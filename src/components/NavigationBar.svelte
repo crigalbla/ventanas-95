@@ -128,7 +128,7 @@
   </div>
   <div class="background-silver border-color-soft-down flex items-center justify-between ml-1 pl-1 pr-2 h-5/6 w-28">
     <img class="h-8 w-8" src="icons/speaker-220px.png" alt="speaker" draggable="false"/>
-    {currentTime}
+    <span class="h-5">{currentTime}</span>
   </div>
 </section>
 

@@ -65,8 +65,12 @@
     height: 15px;
     background-size: 10px;
     background-repeat: no-repeat;
-    background-position: 5px 2px;
+    background-position: 5px 1px;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(0, 0, 0, 1)"><polygon points="0,0 0,100 50,50"/></svg>');
+  }
+
+  .option-disabled .triangle {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(0, 0, 0, 0.3)"><polygon points="0,0 0,100 50,50"/></svg>');
   }
 
   .option-button:hover:not(.option-disabled) .triangle {

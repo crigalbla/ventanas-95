@@ -81,3 +81,50 @@ export const createLoginWindow = () => createWindow({
 	initialWidth: 530,
 	closeCallBack: () => user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
 })
+
+export const createInitialWindows = () => {
+	createWindow({
+		title: "1",
+		icon: "window",
+		initialWidth: 300,
+		initialHeight: 100,
+		top: 200,
+		left: 400,
+		isFocused: false,
+		canBeHidden: true,
+		canBeMaximizedOrMinimized: true
+	})
+	createWindow({
+		title: "2",
+		icon: "window",
+		initialWidth: 300,
+		initialHeight: 100,
+		top: 220,
+		left: 420,
+		isFocused: false,
+		canBeHidden: true,
+		canBeMaximizedOrMinimized: true
+	})
+	createWindow({
+		title: "3",
+		icon: "window",
+		initialWidth: 300,
+		initialHeight: 100,
+		top: 240,
+		left: 440,
+		isFocused: false,
+		canBeHidden: true,
+		canBeMaximizedOrMinimized: true
+	})
+	createWindow({
+		title: "4",
+		icon: "window",
+		initialWidth: 300,
+		initialHeight: 100,
+		top: 260,
+		left: 460,
+		isFocused: false,
+		canBeHidden: true,
+		canBeMaximizedOrMinimized: true
+	})
+}
