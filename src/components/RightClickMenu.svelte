@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { SectionInRightClickMenuType } from "@/stores"
   import { RIGHT_CLICK_MENU_ID } from "@/constants"
-  import Button from "./Button.svelte"
   import { t } from "@/i18n"
 
   export let sections: SectionInRightClickMenuType[]
@@ -16,16 +15,16 @@
 >
   {#each sections as options, i}
     {#each options as option}
-    <Button
-      className={`${option.isDisabled ? "w-full px-6 text-gray-500" : "w-full px-6"}`}
-      hasHover={!option.isDisabled}
-      removeButtonStyles on:click={() => !option.isDisabled && console.log($t(option.text))}
+    <button
+      class="option-button"
+      class:option-disabled={option.isDisabled}
+      on:click={() => !option.isDisabled && console.log($t(option.text))}
     >
       <span>{$t(option.text)}</span>
       {#if option.sections?.length}
-        <span class="triangle"/>
+        <span class="triangle" />
       {/if}
-    </Button>
+    </button>
     {/each}
     {#if sections.length - 1 !== i}
       <div class="separator border-color-soft-down" />
@@ -34,6 +33,24 @@
 </section>
 
 <style>
+  .option-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0px 24px;
+    border: none;
+    outline: none;
+  }
+
+  .option-button:hover:not(.option-disabled) {
+    color: white;
+    background-color: #0000aa;
+  }
+
+  .option-disabled {
+    color: rgb(107 114 128)
+  }
+
   .right-click-menu {
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
@@ -52,8 +69,7 @@
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(0, 0, 0, 1)"><polygon points="0,0 0,100 50,50"/></svg>');
   }
 
-  /* TODO fix this change background-image */
-  .background-silver:hover .triangle {
+  .option-button:hover:not(.option-disabled) .triangle {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(255, 255, 255, 1)"><polygon points="0,0 0,100 50,50"/></svg>');
   }
 
