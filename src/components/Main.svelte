@@ -5,11 +5,12 @@
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
-  import { waitingCursor } from "@/utils"
+  import { isDifferenceGreaterThan2Seconds, waitingCursor } from "@/utils"
   import { onMount } from "svelte"
   import RightClickMenu from "./RightClickMenu.svelte"
 
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
+	let userLoggedAt: Date
 
   createLoginWindow()
 
@@ -40,7 +41,8 @@
 
 	const onContextMenu = (event: MouseEvent) => {
 		const target = event.target as EventTarget & { className: string }
-		if (target?.className.includes("desktop-screen")) {
+		// isDifferenceGreaterThan2Seconds is necessary dou to body.style.pointerEvents is empty in this moment
+		if (target?.className.includes("desktop-screen") && isDifferenceGreaterThan2Seconds(userLoggedAt, new Date())) {
 			rightClickMenu.set({
 				sections: [
 					[
@@ -62,6 +64,7 @@
   	waitingCursor()
   	createInitialWindows()
   	createInitialDesktopIcons()
+  	userLoggedAt = new Date()
   }
 
 	onMount(() => {

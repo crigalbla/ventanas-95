@@ -2,23 +2,50 @@
   import type { SectionInRightClickMenuType } from "@/stores"
   import { RIGHT_CLICK_MENU_ID } from "@/constants"
   import { t } from "@/i18n"
+  import { onMount } from "svelte"
 
   export let sections: SectionInRightClickMenuType[]
   export let top: number
   export let left: number
+
+  let isMenuReady = false
+  let menuRef: HTMLElement
+
+  const onClick = (option: { text: string, isDisabled?: boolean }) => {
+  	if (!option.isDisabled && isMenuReady) {
+  		console.log($t(option.text))
+  	}
+  }
+
+  onMount(() => {
+  	const checkIfMenuFitsOnScreen = () => {
+  		const rect = menuRef.getBoundingClientRect()
+  		const isOutsideX = rect.right > window.innerWidth
+  		const isOutsideY = rect.bottom > window.innerHeight
+
+  		if (isOutsideX) left = left - rect.width
+  		if (isOutsideY) top = window.innerHeight - rect.height
+
+  		isMenuReady = true
+  	}
+
+  	checkIfMenuFitsOnScreen()
+  })
 </script>
 
 <section
   class="background-silver border-color-shadow-up right-click-menu absolute"
+  class:not-ready={!isMenuReady}
   id={RIGHT_CLICK_MENU_ID}
   style="--left:{left}; --top:{top};"
+  bind:this={menuRef}
 >
   {#each sections as options, i}
     {#each options as option}
     <button
       class="option-button"
       class:option-disabled={option.isDisabled}
-      on:click={() => !option.isDisabled && console.log($t(option.text))}
+      on:click={() => onClick(option)}
     >
       <span>{$t(option.text)}</span>
       {#if option.sections?.length}
@@ -33,6 +60,10 @@
 </section>
 
 <style>
+  .not-ready {
+    opacity: 0;
+  }
+
   .option-button {
     display: flex;
     align-items: center;
