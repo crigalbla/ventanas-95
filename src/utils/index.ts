@@ -114,10 +114,9 @@ export const isDifferenceGreaterThan2Seconds = (date1: Date, date2: Date): boole
 }
 
 export const isMobileOrTablet = () => {
-	if (typeof navigator !== "undefined") {
-		const userAgent = navigator.userAgent.toLowerCase()
+	if (typeof document !== "undefined") {
 		const hasMouse = "onmousemove" in document
 
-		return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i.test(userAgent) && !hasMouse
+		return !hasMouse
 	}
 }
