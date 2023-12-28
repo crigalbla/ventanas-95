@@ -6,5 +6,5 @@ import { isMobileOrTablet } from "@/utils";
 ---
 
 <Layout title="Ventanas 95">
-	{!isMobileOrTablet() ? <MainTouchableDevice client:visible /> : <Main client:visible />}
+	{isMobileOrTablet() ? <MainTouchableDevice client:visible /> : <Main client:visible />}
 </Layout>
