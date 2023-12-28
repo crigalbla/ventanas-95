@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
-  import { NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID } from "@/constants"
+  import { NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
@@ -51,7 +51,11 @@
 						{ text: "Text3", isDisabled: true }, // TODO remove
 						{ text: "Pegar", isDisabled: true }
 					],
-					[{ text: "Nuevooooo", sections: [["Carpeta"], ["Documento de texto"]] }]
+					[{ text: "Nuevooooo", sections: [["Carpeta"], ["Documento de texto"]] }],
+					[
+						{ text: "Text4", sections: [["section1", "section2", "section3", "section4", "section5"]] }, // TODO remove
+						{ text: "Text5", isDisabled: true }
+					]
 				],
 				top: event.clientY,
 				left: event.clientX
@@ -71,8 +75,9 @@
 		const mouseDownEvent = (event: Event) => {
 			const target = event.target as Node
 			const rightClickMenu = document.querySelector(`#${RIGHT_CLICK_MENU_ID}`)
+			const subRightClickMenu = document.querySelector(`#${SUB_RIGHT_CLICK_MENU_ID}`)
 
-			if (!rightClickMenu?.contains(target)) removeRightClickMenu()
+			if (!rightClickMenu?.contains(target) && !subRightClickMenu?.contains(target)) removeRightClickMenu()
 
 			$windows.forEach((w) => {
 				const windowsHTML = document.querySelector(`#${w.windowId}`)
