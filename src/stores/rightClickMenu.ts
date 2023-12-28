@@ -65,13 +65,13 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 							createDesktopIcon({
 								desktopIconId,
 								icon: "notepad",
-								name: "desktopIcon.newTestDocument",
+								name: "desktopIcon.newTextDocument",
 								isFocused: false,
 								properties: { text: "" },
 								top: event.clientY,
 								left: event.clientX,
 								onDblClick: () => createWindow({
-									title: "desktopIcon.newTestDocument",
+									title: "desktopIcon.newTextDocument",
 									subTitle: "subTitle.notepad",
 									icon: "notepad",
 									desktopIconId,
