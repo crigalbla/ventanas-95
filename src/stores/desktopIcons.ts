@@ -77,9 +77,7 @@ export const createInitialDesktopIcons = () => {
 			icon: "notepad",
 			name: "desktopIcon.about",
 			isFocused: false,
-			properties: {
-				text: aboutNotepadText
-			},
+			properties: { text: aboutNotepadText },
 			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
 			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH,
 			onDblClick: () => createWindow({

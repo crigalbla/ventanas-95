@@ -27,6 +27,7 @@ const translations: Translations = {
 		"desktopIcon.myPc": "Mi PC",
 		"desktopIcon.recycleBin": "Papelera de reciclaje",
 		"desktopIcon.newFolder": "Nueva carpeta",
+		"desktopIcon.newTextDocument": "Nuevo documento de texto",
 		"desktopIcon.about": "Sobre mi",
 		"notepadBody.file": "Archivo",
 		"notepadBody.edition": "Edición",
@@ -34,7 +35,10 @@ const translations: Translations = {
 		"notepadBody.help": "Ayuda",
 		"subTitle.notepad": "Bloc de notas",
 		"saveChangesBody.title": "El texto del archivo {{file}} ha cambiado.",
-		"saveChangesBody.question": "¿Deseas guardar los cambios?"
+		"saveChangesBody.question": "¿Deseas guardar los cambios?",
+		"rightClickMenu.new": "Nuevo",
+		"rightClickMenu.folder": "Carpeta",
+		"rightClickMenu.textDocument": "Documento de texto"
 	},
 	en: {
 		accept: "OK",
@@ -58,6 +62,7 @@ const translations: Translations = {
 		"desktopIcon.myPc": "My PC",
 		"desktopIcon.recycleBin": "Recycle bin",
 		"desktopIcon.newFolder": "New folder",
+		"desktopIcon.newTextDocument": "New text document",
 		"desktopIcon.about": "About",
 		"notepadBody.file": "File",
 		"notepadBody.edition": "Edition",
@@ -65,7 +70,10 @@ const translations: Translations = {
 		"notepadBody.help": "Help",
 		"subTitle.notepad": "Notepad",
 		"saveChangesBody.title": "The text of the {file} file has changed.",
-		"saveChangesBody.question": "Do you want save the changes?"
+		"saveChangesBody.question": "Do you want save the changes?",
+		"rightClickMenu.new": "New",
+		"rightClickMenu.folder": "Folder",
+		"rightClickMenu.textDocument": "Text document"
 	}
 }
 

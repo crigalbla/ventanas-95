@@ -1,10 +1,8 @@
 <script lang="ts">
-  import type { SectionInRightClickMenuType } from "@/stores"
+  import { removeRightClickMenu, type OptionInRightClickMenuType, type SectionInRightClickMenuType, type SubOptionInRightClickMenuType } from "@/stores"
   import { RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
   import { afterUpdate, onMount } from "svelte"
   import { t } from "@/i18n"
-
-  type SubOption= { text: string, isDisabled?: boolean, sections?: string[][] }
 
   export let sections: SectionInRightClickMenuType[]
   export let top: number
@@ -18,9 +16,9 @@
   let subMenuRef: HTMLElement
   let topSubMenu: number
   let leftSubMenu: number
-  let subOption: SubOption
+  let subOption: OptionInRightClickMenuType
 
-  const getHeightUntilThisOption = (option: SubOption): number => {
+  const getHeightUntilThisOption = (option: OptionInRightClickMenuType): number => {
   	let totalOptionsUntilThis = 0
   	let totalSectionsUntilThis = 0
 
@@ -38,13 +36,15 @@
   	return (buttonHeight * totalOptionsUntilThis) + (separatorHeight * totalSectionsUntilThis)
   }
 
-  const onClick = (option: SubOption) => {
+  const onClick = (option: OptionInRightClickMenuType | SubOptionInRightClickMenuType) => {
   	if (!option.isDisabled) {
-  		console.log($t(option.text))
+  		option.onClick?.()
+
+  		if (!(option as OptionInRightClickMenuType)?.sections) removeRightClickMenu()
   	}
   }
 
-  const onMouseOver = (option: SubOption) => {
+  const onMouseOver = (option: OptionInRightClickMenuType) => {
   	isSubMenuReady = false
   	if (!option.isDisabled && option.sections?.length) {
   		subOption = option
@@ -134,9 +134,9 @@
       {#each options as option}
         <button
           class="option-button"
-          on:click={() => onClick({ text: option })}
+          on:click={() => onClick(option)}
         >
-          <span>{$t(option)}</span>
+          <span>{$t(option.text)}</span>
         </button>
       {/each}
       {#if subOption.sections.length - 1 !== i}

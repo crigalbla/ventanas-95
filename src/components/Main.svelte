@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
+  import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, createRightClickMenuInDesktopScreen, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
   import { NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
@@ -43,23 +43,7 @@
 		const target = event.target as EventTarget & { className: string }
 		// isDifferenceGreaterThan2Seconds is necessary dou to body.style.pointerEvents is empty in this moment
 		if (target?.className.includes("desktop-screen") && isDifferenceGreaterThan2Seconds(userLoggedAt, new Date())) {
-			rightClickMenu.set({
-				sections: [
-					[
-						{ text: "Text1", isDisabled: true, sections: [["section1"]] }, // TODO remove
-						{ text: "Text2" }, // TODO remove
-						{ text: "Text3", isDisabled: true }, // TODO remove
-						{ text: "Pegar", isDisabled: true }
-					],
-					[{ text: "Nuevooooo", sections: [["Carpeta"], ["Documento de texto"]] }],
-					[
-						{ text: "Text4", sections: [["section1", "section2", "section3", "section4", "section5"]] }, // TODO remove
-						{ text: "Text5", isDisabled: true }
-					]
-				],
-				top: event.clientY,
-				left: event.clientX
-			})
+			createRightClickMenuInDesktopScreen(event)
 		}
 	}
 
