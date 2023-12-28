@@ -1,10 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro"
-import Main from "@/components/Main.svelte";
-import MainTouchableDevice from "@/components/MainTouchableDevice.svelte";
-import { isMobileOrTablet } from "@/utils";
+import Switch from "@/components/Switch.svelte";
 ---
 
 <Layout title="Ventanas 95">
-	{isMobileOrTablet() ? <MainTouchableDevice client:visible /> : <Main client:visible />}
+	<Switch client:visible />
 </Layout>

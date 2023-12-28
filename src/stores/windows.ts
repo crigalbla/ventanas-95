@@ -87,6 +87,7 @@ export const createIsTouchableDeviceWindow = () => createWindow({
 	canLoseFocus: false,
 	canBeDraggabled: true,
 	canBeResized: false,
+	minWidth: 300,
 	maxWidth: 450
 })
 
