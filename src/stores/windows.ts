@@ -82,6 +82,14 @@ export const createLoginWindow = () => createWindow({
 	closeCallBack: () => user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
 })
 
+export const createIsTouchableDeviceWindow = () => createWindow({
+	title: "ohNo",
+	canLoseFocus: false,
+	canBeDraggabled: true,
+	canBeResized: false,
+	maxWidth: 450
+})
+
 export const createInitialWindows = () => {
 	createWindow({
 		title: "1",

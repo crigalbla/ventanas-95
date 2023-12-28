@@ -96,9 +96,9 @@
 		on:contextmenu={onContextMenu}
 	>
 		{#each $windows as { body, canLoseFocus, desktopIconId, ...window }}
-    <Window {...window}>
-      <svelte:component this={body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
-    </Window>
+			<Window {...window}>
+				<svelte:component this={body} closeCallBack={window.closeCallBack} windowId={window.windowId} />
+			</Window>
 		{/each}
 		{#each $desktopIcons as { properties, ...icon }}
 			<DesktopIcon {...icon} />

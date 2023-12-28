@@ -215,4 +215,8 @@
 		min-width: calc(var(--minWidth) * 1px);
     z-index: var(--zIndex);
   }
+
+  .window-max-width {
+    max-width: calc(var(--maxWidth) * 1px);
+  }
 </style>
