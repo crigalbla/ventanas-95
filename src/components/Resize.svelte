@@ -17,7 +17,7 @@
 	let fakeTop = 0
 	let fakeLeft = 0
 	let resizing = false
-	let fakeResize
+	let fakeResizeRef
 
 	const resize = (element) => {
 	  const resizerTop = element.querySelector(".resizer.top")
@@ -77,7 +77,6 @@
 	    cursorPosition = null
 
 			if (fake) {
-				fakeResize.classList.add("display-none")
 				updateWindowParams(windowId, {
 					left: left + fakeLeft,
 					top: top + fakeTop,
@@ -95,7 +94,6 @@
 	  const onMouseMove = (event) => {
 	    if (!active || !resizing || mouseOutOfScreen(event)) return
 
-			fakeResize.classList.remove("display-none")
 	    const direction = active.direction
 	    let delta
 
@@ -180,8 +178,8 @@
 		<div class="resizer bottom-left" />
 		{#if fake && resizing}
 			<div
-				class="fake-resize display-none"
-				bind:this={fakeResize}
+				class="fake-resize"
+				bind:this={fakeResizeRef}
 				style="--fakeWidth:{fakeWidth || width}; --fakeHeight:{fakeHeight || height}; --fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}"
 			/>
 		{/if}

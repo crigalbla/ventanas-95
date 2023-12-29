@@ -52,7 +52,7 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 						onClick: () => createDesktopIcon({
 							icon: "open-folder",
 							name: "desktopIcon.newFolder",
-							isFocused: false,
+							isFocused: true,
 							top: event.clientY,
 							left: event.clientX,
 							onDblClick: () => window.alert("devolop in progress")
@@ -66,7 +66,7 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 								desktopIconId,
 								icon: "notepad",
 								name: "desktopIcon.newTextDocument",
-								isFocused: false,
+								isFocused: true,
 								properties: { text: "" },
 								top: event.clientY,
 								left: event.clientX,

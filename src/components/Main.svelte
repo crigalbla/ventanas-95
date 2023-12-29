@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, createRightClickMenuInDesktopScreen, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
-  import { NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
+  import { DESKTOP_SCREEN_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
@@ -92,6 +92,7 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<section
 		class="desktop-screen"
+		id={DESKTOP_SCREEN_ID}
 		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
 		on:contextmenu={onContextMenu}
 	>
