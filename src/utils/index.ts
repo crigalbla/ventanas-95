@@ -4,7 +4,7 @@ type CustomMouseEvent = MouseEvent & {
   toElement: Element
 }
 
-export const mouseOutOfScreen = (e: MouseEvent) => {
+export const isMouseOutOfScreen = (e: MouseEvent) => {
 	const { clientX, clientY } = e
 	const navigationBar = document.getElementById(NAVIGATION_BAR_ID) as HTMLElement
 	const windowWidth = window.innerWidth

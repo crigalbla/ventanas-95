@@ -1,5 +1,5 @@
 <script>
-  import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
+  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 	import { updateWindowParams } from "@/stores"
 
 	export let width
@@ -46,7 +46,7 @@
 
 	  const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]
 
-	  let active = null; let initialRect = null; let cursorPosition = null
+	  let active = null; let initialRect = null; let initialCursorPosition = null
 
 	  const onMouseDown = (event) => {
 			freezeCurrentCursor(event)
@@ -64,7 +64,7 @@
 	      top: rect.top - parent.top,
 	      bottom: parent.bottom - rect.bottom
 	    }
-	    cursorPosition = { x: event.pageX, y: event.pageY }
+	    initialCursorPosition = { x: event.pageX, y: event.pageY }
 	  }
 
 	  const onMouseUp = () => {
@@ -74,7 +74,7 @@
 			resizing = false
 	    active = null
 	    initialRect = null
-	    cursorPosition = null
+	    initialCursorPosition = null
 
 			if (fake) {
 				updateWindowParams(windowId, {
@@ -92,13 +92,13 @@
 	  }
 
 	  const onMouseMove = (event) => {
-	    if (!active || !resizing || mouseOutOfScreen(event)) return
+	    if (!active || !resizing || isMouseOutOfScreen(event)) return
 
 	    const direction = active.direction
 	    let delta
 
 	    if (direction.match("east")) {
-				delta = event.pageX - cursorPosition.x
+				delta = event.pageX - initialCursorPosition.x
 	      const newWidth = initialRect.width + delta
 	      if (minWidth < newWidth) {
 					if (fake) {
@@ -110,7 +110,7 @@
 	    }
 
 	    if (direction.match("west")) {
-	      delta = cursorPosition.x - event.pageX
+	      delta = initialCursorPosition.x - event.pageX
 	      const newWidth = initialRect.width + delta
 	      if (minWidth < newWidth) {
 					if (fake) {
@@ -123,7 +123,7 @@
 	    }
 
 	    if (direction.match("north")) {
-	      delta = cursorPosition.y - event.pageY
+	      delta = initialCursorPosition.y - event.pageY
 	      const newHeight = initialRect.height + delta
 	      if (minHeight < newHeight) {
 					if (fake) {
@@ -136,7 +136,7 @@
 	    }
 
 	    if (direction.match("south")) {
-	      delta = event.pageY - cursorPosition.y
+	      delta = event.pageY - initialCursorPosition.y
 	      const newHeight = initialRect.height + delta
 	      if (minHeight < newHeight) {
 					if (fake) {
@@ -158,7 +158,7 @@
 
 	  return () => {
 	    window.removeEventListener("mousemove", onMouseMove)
-	    window.removeEventListener("mousemove", onMouseDown)
+	    window.removeEventListener("mouseup", onMouseUp)
 
 	    resizers.forEach(resizer => element.removeChild(resizer))
 	  }

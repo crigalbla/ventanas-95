@@ -1,40 +1,91 @@
 <script lang="ts">
+  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
   import { DESKTOP_SCREEN_ID } from "@/constants"
   import { onMount } from "svelte"
 
-  export let width: number
-  export let height: number
-  export let top: number
-  export let left: number
-
-  const isShowed = false
+  let width: number
+  let height: number
+  let top: number
+  let left: number
+  let isShowed = false
+  let isMouseDown = false
+  let initialCursorPosition: { x: number, y: number }
 
   onMount(() => {
-  	const desktopScreen = document.querySelector(`#${DESKTOP_SCREEN_ID}`) as HTMLElement
-  	const mouseDownEvent = (event: MouseEvent) => {
-  		// TODO
+  	const createEvents = () => {
+  		const desktopScreen = document.querySelector(`#${DESKTOP_SCREEN_ID}`) as HTMLElement
+  		const isMouseInDesktopScreen = (event: MouseEvent) => desktopScreen === event.target
+
+  		const onMouseDown = (event: MouseEvent) => {
+  			if (isMouseInDesktopScreen(event)) {
+  				isMouseDown = true
+  				top = event.pageY
+  				left = event.pageX
+  				initialCursorPosition = { x: event.pageX, y: event.pageY }
+  			}
+  		}
+
+  		const onMouseUp = () => {
+  			if (isMouseDown) {
+  				unfreezeCurrentCursor()
+  				isMouseDown = false
+  				isShowed = false
+  				height = 0
+  				width = 0
+  			}
+  		}
+
+  		const onMouseMove = (event: MouseEvent) => {
+  			if (isMouseDown && !isMouseOutOfScreen(event)) {
+  				freezeCurrentCursor(event)
+  				isShowed = height > 2 || width > 2
+
+  				if (initialCursorPosition.y > event.pageY) {
+  					height = initialCursorPosition.y - event.pageY
+  					top = event.pageY
+  				} else {
+  					height = event.pageY - top
+  				}
+
+  				if (initialCursorPosition.x > event.pageX) {
+  					width = initialCursorPosition.x - event.pageX
+  					left = event.pageX
+  				} else {
+  					width = event.pageX - left
+  				}
+  			}
+  		}
+
+  		window.addEventListener("mousedown", onMouseDown)
+  		window.addEventListener("mousemove", onMouseMove)
+  		window.addEventListener("mouseup", onMouseUp)
+
+  		return () => {
+  			window.removeEventListener("mousedown", onMouseDown)
+  			window.removeEventListener("mousemove", onMouseMove)
+  			window.removeEventListener("mouseup", onMouseUp)
+  		}
   	}
 
-  	desktopScreen.addEventListener("mousedown", mouseDownEvent)
-
-  	return () => desktopScreen.removeEventListener("mousedown", mouseDownEvent)
+  	createEvents()
   })
 </script>
 
 {#if isShowed}
   <section
-    class="incos-selector"
+    class="icons-selector"
     style="--width:{width}; --height:{height}; --top:{top}; --left:{left}"
   />
 {/if}
 
 <style>
-  .incos-selector {
-    border: 2px dotted black;
+  .icons-selector {
+    border: 1px dotted black;
 		position: absolute;
 		top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
 		width: calc(var(--width) * 1px);
     height: calc(var(--height) * 1px);
+    z-index: 499;
   }
 </style>

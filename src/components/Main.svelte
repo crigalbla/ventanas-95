@@ -8,6 +8,7 @@
   import { isDifferenceGreaterThan2Seconds, waitingCursor } from "@/utils"
   import { onMount } from "svelte"
   import RightClickMenu from "./RightClickMenu.svelte"
+  import IconsSelector from "./IconsSelector.svelte"
 
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	let userLoggedAt: Date
@@ -105,6 +106,7 @@
 			<DesktopIcon {...icon} />
 		{/each}
 	</section>
+	<IconsSelector />
   <NavigationBar />
 	{#if $rightClickMenu}
 		<RightClickMenu {...$rightClickMenu} />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { freezeCurrentCursor, mouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
+  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix } from "@/stores"
 
 	export let left: number
@@ -46,7 +46,7 @@
 	const onMouseMove = (e: MouseEvent) => {
 		if (moving) {
 			freezeCurrentCursor(e)
-			if (!mouseOutOfScreen(e)) {
+			if (!isMouseOutOfScreen(e)) {
 				if (fake && fakeDraggable) {
 					fakeDraggable.classList.remove("display-none")
 					fakeLeft += e.movementX + outOfScreenLeft
