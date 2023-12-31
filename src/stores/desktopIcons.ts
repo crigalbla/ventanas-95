@@ -18,28 +18,28 @@ export type IndividualDesktopIconType = {
 }
 export type CreateDesktopIconParams = { desktopIconId?: string } & Omit<IndividualDesktopIconType, "desktopIconId" | "zIndex">
 export type UpdatableDesktopIconParams = Omit<Partial<IndividualDesktopIconType>, "desktopIconId">
-export type DesktopIconType = IndividualDesktopIconType[]
+export type DesktopIconsType = IndividualDesktopIconType[]
 
-const state: DesktopIconType = []
+const state: DesktopIconsType = []
 
 export const desktopIconIdPrefix = "di"
 
 export const desktopIcons = writable(state)
 
 export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), isFocused, ...rest }: CreateDesktopIconParams) => {
-	desktopIcons.update((dis: DesktopIconType) =>
+	desktopIcons.update((dis: DesktopIconsType) =>
 		[...dis, { desktopIconId, zIndex: dis.length + 1, isFocused: isFocused ?? true, ...rest }]
 	)
 }
 
 export const updateDesktopIconParams = (desktopIconId: string, params: UpdatableDesktopIconParams) => {
-	desktopIcons.update((dis: DesktopIconType) =>
+	desktopIcons.update((dis: DesktopIconsType) =>
 		dis.map((di: IndividualDesktopIconType) =>
 			di.desktopIconId === desktopIconId ? { ...di, ...params } : di
 		))
 }
 
-export const removeDesktopIcon = (desktopIconId: string) => desktopIcons.update((dis: DesktopIconType) => dis.filter(di => di.desktopIconId !== desktopIconId))
+export const removeDesktopIcon = (desktopIconId: string) => desktopIcons.update((dis: DesktopIconsType) => dis.filter(di => di.desktopIconId !== desktopIconId))
 
 export const createInitialDesktopIcons = () => {
 	createDesktopIcon({

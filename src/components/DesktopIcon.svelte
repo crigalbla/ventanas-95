@@ -1,6 +1,6 @@
 <script lang="ts">
   import { t } from "@/i18n"
-  import { desktopIcons, type DesktopIconType, type IndividualDesktopIconType } from "@/stores"
+  import { desktopIcons, type DesktopIconsType, type IndividualDesktopIconType } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH } from "@/constants"
   import Draggable from "./Draggable.svelte"
 
@@ -15,7 +15,7 @@
 
   let desktopIconRef: HTMLElement
 
-  const onMouseDownDesktopIcon = () => desktopIcons.update((dis: DesktopIconType) => {
+  const onMouseDownDesktopIcon = () => desktopIcons.update((dis: DesktopIconsType) => {
   	const oldZIndex: number = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
 
   	return dis.map((di: IndividualDesktopIconType) => {
