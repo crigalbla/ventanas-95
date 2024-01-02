@@ -10,3 +10,6 @@ export const RIGHT_CLICK_MENU_ID = "right-click-menu"
 export const SUB_RIGHT_CLICK_MENU_ID = "sub-right-click-menu"
 export const NAVIGATION_BAR_ID = "navigation-bar"
 export const DESKTOP_SCREEN_ID = "desktop-screen"
+
+export const DI_MY_PC = "di-my-pc"
+export const DI_RECYCLE_BIN = "di-recycle-bin"

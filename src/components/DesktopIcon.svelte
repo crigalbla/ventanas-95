@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createRightClickMenuInDesktopIcon, desktopIcons, removeDesktopIcon, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH } from "@/constants"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
 
@@ -45,13 +45,28 @@
 
   const onKeyDown = (event: KeyboardEvent) => event.key === "Enter" && updateDesktopIconParams(desktopIconId, { isEditingName: false })
 
-  const onContextMenu = (event: MouseEvent) =>
-  	createRightClickMenuInDesktopIcon(
+  const onContextMenu = (event: MouseEvent) => {
+  	let customSection
+  	const isMyPc = desktopIconId === DI_MY_PC
+  	const isRecycleBin = desktopIconId === DI_RECYCLE_BIN
+  	if (isRecycleBin) {
+  		customSection = {
+  			position: 1,
+  			section: [{ text: "rightClickMenu.cleanRecycleBin" }]
+  		}
+  	}
+
+  	createRightClickMenuInDesktopIcon({
   		event,
+  		canBeEdited: !isRecycleBin,
+  		canBeCutAndCopy: !isMyPc && !isRecycleBin,
+  		canBeDeleted: !isMyPc && !isRecycleBin,
+  		customSection,
   		onDblClick,
-  		() => removeDesktopIcon(desktopIconId),
-  		() => updateDesktopIconParams(desktopIconId, { isEditingName: true })
-  	)
+  		removeDesktopIcon: () => removeDesktopIcon(desktopIconId),
+  		changeToEditingName: () => updateDesktopIconParams(desktopIconId, { isEditingName: true })
+  	})
+  }
 </script>
 
 <Draggable id={desktopIconId} canBeDraggabled={!isEditingName} {top} {left}>

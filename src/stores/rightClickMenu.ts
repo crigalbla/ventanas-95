@@ -90,25 +90,50 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 	left: event.clientX
 })
 
-export const createRightClickMenuInDesktopIcon = (
+export const createRightClickMenuInDesktopIcon = ({
+	event,
+	canBeEdited,
+	canBeCutAndCopy,
+	canBeDeleted,
+	customSection,
+	onDblClick,
+	removeDesktopIcon,
+	changeToEditingName
+}: {
 	event: MouseEvent,
+	canBeEdited: boolean,
+	canBeCutAndCopy: boolean,
+	canBeDeleted: boolean,
+	customSection?: { position: number, section: SectionInRightClickMenuType },
 	onDblClick: () => void,
 	removeDesktopIcon: () => void,
 	changeToEditingName: () => void
-) => rightClickMenu.set({
-	sections: [
+}) => {
+	const sections: SectionInRightClickMenuType[] = [
 		[
 			{ text: "rightClickMenu.open", isBold: true, onClick: onDblClick }
-		],
-		[
-			{ text: "rightClickMenu.cut", isDisabled: true },
-			{ text: "rightClickMenu.copy", isDisabled: true }
-		],
-		[
-			{ text: "rightClickMenu.remove", onClick: removeDesktopIcon },
-			{ text: "rightClickMenu.changeName", onClick: changeToEditingName }
 		]
-	],
-	top: event.clientY,
-	left: event.clientX
-})
+	]
+	const cut = { text: "rightClickMenu.cut", isDisabled: true }
+	const copy = { text: "rightClickMenu.copy", isDisabled: true }
+	const remove = { text: "rightClickMenu.remove", onClick: removeDesktopIcon }
+	const changeName = { text: "rightClickMenu.changeName", onClick: changeToEditingName }
+
+	if (canBeCutAndCopy) sections.push([cut, copy])
+
+	if (canBeDeleted && canBeEdited) {
+		sections.push([remove, changeName])
+	} else if (canBeDeleted) {
+		sections.push([remove])
+	} else if (canBeEdited) {
+		sections.push([changeName])
+	}
+
+	if (customSection) sections.splice(customSection.position, 0, customSection.section)
+
+	rightClickMenu.set({
+		sections,
+		top: event.clientY,
+		left: event.clientX
+	})
+}

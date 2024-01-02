@@ -48,7 +48,8 @@ const translations: Translations = {
 		"rightClickMenu.cut": "Cortar",
 		"rightClickMenu.copy": "Copiar",
 		"rightClickMenu.remove": "Eliminar",
-		"rightClickMenu.changeName": "Cambiar nombre"
+		"rightClickMenu.changeName": "Cambiar nombre",
+		"rightClickMenu.cleanRecycleBin": "Vaciar Papelera de reciclaje"
 	},
 	en: {
 		accept: "OK",
@@ -93,7 +94,8 @@ const translations: Translations = {
 		"rightClickMenu.cut": "Cut",
 		"rightClickMenu.copy": "Copy",
 		"rightClickMenu.remove": "Remove",
-		"rightClickMenu.changeName": "Change name"
+		"rightClickMenu.changeName": "Change name",
+		"rightClickMenu.cleanRecycleBin": "Clean Recycle bin"
 	}
 }
 

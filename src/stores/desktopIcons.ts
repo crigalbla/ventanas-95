@@ -1,9 +1,9 @@
-import { writable } from "svelte/store"
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
-import { createWindow } from "./windows"
 import { aboutNotepadText } from "./data"
+import { createWindow } from "./windows"
+import { writable } from "svelte/store"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -44,7 +44,7 @@ export const removeDesktopIcon = (desktopIconId: string) => desktopIcons.update(
 
 export const createInitialDesktopIcons = () => {
 	createDesktopIcon({
-		desktopIconId: "di-my-pc",
+		desktopIconId: DI_MY_PC,
 		icon: "my-computer-280px",
 		name: "desktopIcon.myPc",
 		isFocused: false,
@@ -53,7 +53,7 @@ export const createInitialDesktopIcons = () => {
 		onDblClick: () => window.alert("my-pc")
 	})
 	createDesktopIcon({
-		desktopIconId: "di-recycle-bin",
+		desktopIconId: DI_RECYCLE_BIN,
 		icon: "recycle-bin",
 		name: "desktopIcon.recycleBin",
 		isFocused: false,
