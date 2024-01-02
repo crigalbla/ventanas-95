@@ -77,7 +77,7 @@
 			$desktopIcons.forEach((di) => {
 				const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
 
-				// The target is not the desktopIcon and is focused
+				// The target is not the desktopIcon
 				if (!desktopIconHTML?.contains(target)) {
 					if (di.isFocused) {
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
