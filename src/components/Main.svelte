@@ -42,7 +42,7 @@
 
 	const onContextMenu = (event: MouseEvent) => {
 		const target = event.target as EventTarget & { className: string }
-		// isDifferenceGreaterThan2Seconds is necessary dou to body.style.pointerEvents is empty in this moment
+		// isDifferenceGreaterThan2Seconds is necessary due to body.style.pointerEvents is empty in this moment
 		if (target?.className.includes("desktop-screen") && isDifferenceGreaterThan2Seconds(userLoggedAt, new Date())) {
 			createRightClickMenuInDesktopScreen(event)
 		}
@@ -75,11 +75,15 @@
 			})
 
 			$desktopIcons.forEach((di) => {
-				const windowsHTML = document.querySelector(`#${di.desktopIconId}`)
+				const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
 
 				// The target is not the desktopIcon and is focused
-				if (!windowsHTML?.contains(target) && di.isFocused) {
-					updateDesktopIconParams(di.desktopIconId, { isFocused: false })
+				if (!desktopIconHTML?.contains(target)) {
+					if (di.isFocused) {
+						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
+					} else if (di.isEditingName) {
+						updateDesktopIconParams(di.desktopIconId, { isEditingName: false })
+					}
 				}
 			})
 		}

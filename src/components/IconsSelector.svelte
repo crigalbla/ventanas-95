@@ -1,7 +1,7 @@
 <script lang="ts">
   import { desktopIcons, type DesktopIconsType, type IndividualDesktopIconType } from "@/stores"
   import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_SCREEN_ID } from "@/constants"
+  import { DESKTOP_SCREEN_ID } from "@/constants"
   import { onMount } from "svelte"
 
   let width: number

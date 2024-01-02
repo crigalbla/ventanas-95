@@ -15,6 +15,7 @@ export type SubSectionInRightClickMenuType = SubOptionInRightClickMenuType[]
 export type OptionInRightClickMenuType = {
   text: string,
   isDisabled?: boolean,
+	isBold?: boolean,
   icon?: string,
   sections?: SubSectionInRightClickMenuType[]
   onClick?: () => void
@@ -38,10 +39,7 @@ export const removeRightClickMenu = () => rightClickMenu.set(undefined!)
 export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightClickMenu.set({
 	sections: [
 		[
-			{ text: "Test1", isDisabled: true, sections: [[{ text: "section1" }]] },
-			{ text: "Test2" },
-			{ text: "Test3", isDisabled: true },
-			{ text: "Pegar", isDisabled: true }
+			{ text: "rightClickMenu.paste", isDisabled: true }
 		],
 		[
 			{
@@ -86,10 +84,29 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 					}]
 				]
 			}
+		]
+	],
+	top: event.clientY,
+	left: event.clientX
+})
+
+export const createRightClickMenuInDesktopIcon = (
+	event: MouseEvent,
+	onDblClick: () => void,
+	removeDesktopIcon: () => void,
+	changeToEditingName: () => void
+) => rightClickMenu.set({
+	sections: [
+		[
+			{ text: "rightClickMenu.open", isBold: true, onClick: onDblClick }
 		],
 		[
-			{ text: "Test4", sections: [[{ text: "Test section1" }, { text: "Test section2" }, { text: "Test section3" }, { text: "Test section4" }, { text: "Test section5" }]] },
-			{ text: "Test5", isDisabled: true }
+			{ text: "rightClickMenu.cut", isDisabled: true },
+			{ text: "rightClickMenu.copy", isDisabled: true }
+		],
+		[
+			{ text: "rightClickMenu.remove", onClick: removeDesktopIcon },
+			{ text: "rightClickMenu.changeName", onClick: changeToEditingName }
 		]
 	],
 	top: event.clientY,

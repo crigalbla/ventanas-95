@@ -109,7 +109,7 @@
       on:click={() => onClick(option)}
       on:mouseover={() => onMouseOver(option)}
     >
-      <span class="pointer-events-none">{$t(option.text)}</span>
+      <span class="pointer-events-none" class:font-extrabold={option.isBold}>{$t(option.text)}</span>
       {#if option.sections?.length}
         <span class="pointer-events-none triangle" />
       {/if}
@@ -176,6 +176,7 @@
   .right-click-menu {
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
+    width: max-content;
     z-index: 1000;
     padding: 2px 1px;
   }

@@ -1,13 +1,14 @@
 <script lang="ts">
   import { t } from "@/i18n"
-  import { desktopIcons, type DesktopIconsType, type IndividualDesktopIconType } from "@/stores"
+  import { createRightClickMenuInDesktopIcon, desktopIcons, removeDesktopIcon, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH } from "@/constants"
   import Draggable from "./Draggable.svelte"
 
   export let desktopIconId: string
   export let icon: string
   export let name: string
-  export let isFocused: boolean = false
+  export let isFocused = false
+  export let isEditingName = false
   export let zIndex: number = 0
   export let top: number = 0
   export let left: number = 0
@@ -25,9 +26,19 @@
   		return di
   	})
   })
+
+  const onInput = (event: Event) => updateDesktopIconParams(desktopIconId, { name: (event.target as HTMLTextAreaElement).value })
+
+  const onContextMenu = (event: MouseEvent) =>
+  	createRightClickMenuInDesktopIcon(
+  		event,
+  		onDblClick,
+  		() => removeDesktopIcon(desktopIconId),
+  		() => updateDesktopIconParams(desktopIconId, { isEditingName: true })
+  	)
 </script>
 
-<Draggable id={desktopIconId} {top} {left}>
+<Draggable id={desktopIconId} canBeDraggabled={!isEditingName} {top} {left}>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- NOTE: doble tap with touchpadn does not work with on:dblclick -->
   <section
@@ -35,20 +46,25 @@
     id={desktopIconId}
     style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{DESKTOP_ICON_HEIGHT}"
     on:mousedown={onMouseDownDesktopIcon}
-    on:dblclick={onDblClick}
+    on:contextmenu={onContextMenu}
+    on:dblclick={() => !isEditingName && onDblClick()}
     bind:this={desktopIconRef}
   >
     <img
-      class="h-8 w-8 mb-2"
+      class="h-8 w-8 mb-1"
       class:blue-tone={isFocused}
       src={`icons/${icon}.png`}
       alt={icon}
       draggable="false"
     />
-    <span
-      class="text text-white text-ellipsis overflow-hidden text-sm leading-none"
-      class:focused={isFocused}
-    >{$t(name)}</span>
+    {#if isEditingName}
+      <textarea class="text text-sm text-center" value={$t(name)} on:input={onInput} />
+    {:else}
+      <span
+        class="text text-white text-ellipsis overflow-hidden text-sm leading-none"
+        class:focused={isFocused}
+      >{$t(name)}</span>
+    {/if}
   </section>
 </Draggable>
 
@@ -67,7 +83,21 @@
     padding: 1px 1px 0px 1px;
   }
 
+  textarea {
+    overflow: hidden;
+    border: 1px solid black;
+    box-shadow: none;
+    resize: none;
+    cursor: auto;
+    font-size: 14px;
+  }
+
+  textarea:focus {
+    outline: none;
+  }
+
   .focused {
+    width: calc(2px + var(--width) * 1px);
     margin: 0px;
     border: 1px dotted white;
     background-color: #0000aa;

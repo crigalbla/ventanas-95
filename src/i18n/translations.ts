@@ -40,9 +40,15 @@ const translations: Translations = {
 		"subTitle.notepad": "Bloc de notas",
 		"saveChangesBody.title": "El texto del archivo {{file}} ha cambiado.",
 		"saveChangesBody.question": "¿Deseas guardar los cambios?",
+		"rightClickMenu.paste": "Pegar",
 		"rightClickMenu.new": "Nuevo",
 		"rightClickMenu.folder": "Carpeta",
-		"rightClickMenu.textDocument": "Documento de texto"
+		"rightClickMenu.textDocument": "Documento de texto",
+		"rightClickMenu.open": "Abrir",
+		"rightClickMenu.cut": "Cortar",
+		"rightClickMenu.copy": "Copiar",
+		"rightClickMenu.remove": "Eliminar",
+		"rightClickMenu.changeName": "Cambiar nombre"
 	},
 	en: {
 		accept: "OK",
@@ -79,9 +85,15 @@ const translations: Translations = {
 		"subTitle.notepad": "Notepad",
 		"saveChangesBody.title": "The text of the {file} file has changed.",
 		"saveChangesBody.question": "Do you want save the changes?",
+		"rightClickMenu.paste": "Paste",
 		"rightClickMenu.new": "New",
 		"rightClickMenu.folder": "Folder",
-		"rightClickMenu.textDocument": "Text document"
+		"rightClickMenu.textDocument": "Text document",
+		"rightClickMenu.open": "Open",
+		"rightClickMenu.cut": "Cut",
+		"rightClickMenu.copy": "Copy",
+		"rightClickMenu.remove": "Remove",
+		"rightClickMenu.changeName": "Change name"
 	}
 }
 
