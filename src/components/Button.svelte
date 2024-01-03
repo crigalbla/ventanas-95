@@ -33,4 +33,8 @@
     color: white;
     background-color: #0000aa;
   }
+
+  button:active {
+		border-color: #f5f5f5 #0b1717 #0b1717 #f5f5f5;
+  }
 </style>

@@ -1,5 +1,6 @@
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_NEW_FOLDER, DI_RECYCLE_BIN } from "@/constants"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
+import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
 import { aboutNotepadText } from "./data"
 import { createWindow } from "./windows"
@@ -62,36 +63,52 @@ export const createInitialDesktopIcons = () => {
 		onDblClick: () => window.alert("recycle-bin")
 	})
 	createDesktopIcon({
-		desktopIconId: "di-new-folder",
+		desktopIconId: DI_NEW_FOLDER,
 		icon: "open-folder",
 		name: "desktopIcon.newFolder",
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH,
-		onDblClick: () => window.alert("new-folder")
+		onDblClick: () => {
+			let title = ""
+			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === DI_NEW_FOLDER)?.name as string)
+			createWindow({
+				title,
+				icon: "open-folder",
+				desktopIconId: DI_NEW_FOLDER,
+				initialWidth: 600,
+				initialHeight: 400,
+				canBeHidden: true,
+				canBeMaximizedOrMinimized: true,
+				body: FolderBody
+			})
+		}
 	})
 	setTimeout(() => {
 		const { availableHeight, availableWidth } = availableDimensions()
-		const desktopIconId = "di-about-notepad"
 		createDesktopIcon({
-			desktopIconId,
+			desktopIconId: DI_ABOUT_NOTEPAD,
 			icon: "notepad",
 			name: "desktopIcon.about",
 			isFocused: false,
 			properties: { text: aboutNotepadText },
 			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
 			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH,
-			onDblClick: () => createWindow({
-				title: "desktopIcon.about",
-				subTitle: "subTitle.notepad",
-				icon: "notepad",
-				desktopIconId,
-				initialWidth: 300,
-				initialHeight: 150,
-				canBeHidden: true,
-				canBeMaximizedOrMinimized: true,
-				body: NotepadBody
-			})
+			onDblClick: () => {
+				let title = ""
+				desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === DI_ABOUT_NOTEPAD)?.name as string)
+				createWindow({
+					title,
+					subTitle: "subTitle.notepad",
+					icon: "notepad",
+					desktopIconId: DI_ABOUT_NOTEPAD,
+					initialWidth: 300,
+					initialHeight: 150,
+					canBeHidden: true,
+					canBeMaximizedOrMinimized: true,
+					body: NotepadBody
+				})
+			}
 		})
 	}, 1)
 }

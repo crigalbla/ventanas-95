@@ -43,8 +43,16 @@
   {#if icon}
     <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
   {/if}
-  <span class="text-ellipsis overflow-hidden h-6 ml-1">{$t(title)}</span>
-  {#if subTitle}
-    <span class="ext-ellipsis overflow-hidden h-6 ml-1">{" - " + $t(subTitle)}</span>
-  {/if}
+  <span class="overflow-text h-6 ml-1">
+    {`${$t(title)}${subTitle ? " - " + $t(subTitle) : ""}`}
+  </span>
 </Button>
+
+<style>
+  .overflow-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+  }
+</style>

@@ -166,12 +166,11 @@
             {#if icon}
               <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
             {/if}
-            <span class="text-ellipsis overflow-hidden text-white ml-1">{$t(title)}</span>
-            {#if subTitle}
-              <span class="text-ellipsis overflow-hidden text-white ml-1">{" - " + $t(subTitle)}</span>
-            {/if}
+            <span class="overflow-text text-white ml-1">
+              {`${$t(title)}${subTitle ? " - " + $t(subTitle) : ""}`}
+            </span>
           </div>
-          <div class="flex self-center gap-1 ml-4">
+          <div class="flex self-center gap-1 ml-1">
             {#if hasQuestionButton}
               <WindowButton on:click={onQuestionButtonClick}>?</WindowButton>
             {/if}
@@ -218,5 +217,12 @@
 
   .window-max-width {
     max-width: calc(var(--maxWidth) * 1px);
+  }
+
+  .overflow-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
   }
 </style>

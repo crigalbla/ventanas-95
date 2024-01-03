@@ -1,7 +1,8 @@
-import { writable } from "svelte/store"
-import { createDesktopIcon, createWindow, desktopIconIdPrefix } from "."
-import { generateId } from "@/utils"
+import { createDesktopIcon, createWindow, desktopIconIdPrefix, desktopIcons } from "."
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
+import FolderBody from "@/components/windowBodies/FolderBody.svelte"
+import { writable } from "svelte/store"
+import { generateId } from "@/utils"
 
 export type SubOptionInRightClickMenuType = {
   text: string,
@@ -47,14 +48,31 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 				sections: [
 					[{
 						text: "rightClickMenu.folder",
-						onClick: () => createDesktopIcon({
-							icon: "open-folder",
-							name: "desktopIcon.newFolder",
-							isFocused: true,
-							top: event.clientY,
-							left: event.clientX,
-							onDblClick: () => window.alert("devolop in progress")
-						})
+						onClick: () => {
+							const desktopIconId = generateId(desktopIconIdPrefix)
+							createDesktopIcon({
+								desktopIconId,
+								icon: "open-folder",
+								name: "desktopIcon.newFolder",
+								isFocused: true,
+								top: event.clientY,
+								left: event.clientX,
+								onDblClick: () => {
+									let title = ""
+									desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
+									createWindow({
+										title,
+										icon: "open-folder",
+										desktopIconId,
+										initialWidth: 600,
+										initialHeight: 400,
+										canBeHidden: true,
+										canBeMaximizedOrMinimized: true,
+										body: FolderBody
+									})
+								}
+							})
+						}
 					}],
 					[{
 						text: "rightClickMenu.textDocument",
@@ -68,17 +86,21 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 								properties: { text: "" },
 								top: event.clientY,
 								left: event.clientX,
-								onDblClick: () => createWindow({
-									title: "desktopIcon.newTextDocument",
-									subTitle: "subTitle.notepad",
-									icon: "notepad",
-									desktopIconId,
-									initialWidth: 300,
-									initialHeight: 150,
-									canBeHidden: true,
-									canBeMaximizedOrMinimized: true,
-									body: NotepadBody
-								})
+								onDblClick: () => {
+									let title = ""
+									desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
+									createWindow({
+										title,
+										subTitle: "subTitle.notepad",
+										icon: "notepad",
+										desktopIconId,
+										initialWidth: 300,
+										initialHeight: 150,
+										canBeHidden: true,
+										canBeMaximizedOrMinimized: true,
+										body: NotepadBody
+									})
+								}
 							})
 						}
 					}]
