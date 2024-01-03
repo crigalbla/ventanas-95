@@ -66,7 +66,7 @@
   const getTriangle = (points: string, fill: string = "rgba(0, 0, 0, 1)"): string =>
   	`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="${fill}"><polygon points="${points}"/></svg>`
 
-  const onClickHeaderButton = () => console.log("onClickHeaderButton")
+  const onClickHeaderButton = () => null
 
   const onInput = (event: Event) => window.localStorage.setItem(windowId, (event.target as HTMLTextAreaElement).value)
 
@@ -104,10 +104,10 @@
 
 <section class="notepad">
   <div class="header mx-2">
-    <Button className="mr-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.file")}</Button>
-    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.edition")}</Button>
-    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.search")}</Button>
-    <Button className="ml-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("notepadBody.help")}</Button>
+    <Button className="mr-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("file")}</Button>
+    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("edition")}</Button>
+    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("search")}</Button>
+    <Button className="ml-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("help")}</Button>
   </div>
   <div class="body border-color-soft-down">
     <textarea

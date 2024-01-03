@@ -72,6 +72,7 @@ export const createInitialDesktopIcons = () => {
 		onDblClick: () => {
 			let title = ""
 			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === DI_NEW_FOLDER)?.name as string)
+
 			createWindow({
 				title,
 				icon: "open-folder",
@@ -86,6 +87,7 @@ export const createInitialDesktopIcons = () => {
 	})
 	setTimeout(() => {
 		const { availableHeight, availableWidth } = availableDimensions()
+
 		createDesktopIcon({
 			desktopIconId: DI_ABOUT_NOTEPAD,
 			icon: "notepad",
@@ -97,6 +99,7 @@ export const createInitialDesktopIcons = () => {
 			onDblClick: () => {
 				let title = ""
 				desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === DI_ABOUT_NOTEPAD)?.name as string)
+
 				createWindow({
 					title,
 					subTitle: "subTitle.notepad",

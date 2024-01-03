@@ -37,6 +37,64 @@ export const rightClickMenu = writable(state)
 
 export const removeRightClickMenu = () => rightClickMenu.set(undefined!)
 
+const createNewFolderDesktopIcon = (event: MouseEvent) => {
+	const desktopIconId = generateId(desktopIconIdPrefix)
+
+	createDesktopIcon({
+		desktopIconId,
+		icon: "open-folder",
+		name: "desktopIcon.newFolder",
+		isFocused: true,
+		top: event.clientY,
+		left: event.clientX,
+		onDblClick: () => {
+			let title = ""
+			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
+
+			createWindow({
+				title,
+				icon: "open-folder",
+				desktopIconId,
+				initialWidth: 600,
+				initialHeight: 400,
+				canBeHidden: true,
+				canBeMaximizedOrMinimized: true,
+				body: FolderBody
+			})
+		}
+	})
+}
+
+const createNewTextDocumentDesktopIcon = (event: MouseEvent) => {
+	const desktopIconId = generateId(desktopIconIdPrefix)
+
+	createDesktopIcon({
+		desktopIconId,
+		icon: "notepad",
+		name: "desktopIcon.newTextDocument",
+		isFocused: true,
+		properties: { text: "" },
+		top: event.clientY,
+		left: event.clientX,
+		onDblClick: () => {
+			let title = ""
+			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
+
+			createWindow({
+				title,
+				subTitle: "subTitle.notepad",
+				icon: "notepad",
+				desktopIconId,
+				initialWidth: 300,
+				initialHeight: 150,
+				canBeHidden: true,
+				canBeMaximizedOrMinimized: true,
+				body: NotepadBody
+			})
+		}
+	})
+}
+
 export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightClickMenu.set({
 	sections: [
 		[
@@ -48,61 +106,11 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 				sections: [
 					[{
 						text: "rightClickMenu.folder",
-						onClick: () => {
-							const desktopIconId = generateId(desktopIconIdPrefix)
-							createDesktopIcon({
-								desktopIconId,
-								icon: "open-folder",
-								name: "desktopIcon.newFolder",
-								isFocused: true,
-								top: event.clientY,
-								left: event.clientX,
-								onDblClick: () => {
-									let title = ""
-									desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
-									createWindow({
-										title,
-										icon: "open-folder",
-										desktopIconId,
-										initialWidth: 600,
-										initialHeight: 400,
-										canBeHidden: true,
-										canBeMaximizedOrMinimized: true,
-										body: FolderBody
-									})
-								}
-							})
-						}
+						onClick: () => createNewFolderDesktopIcon(event)
 					}],
 					[{
 						text: "rightClickMenu.textDocument",
-						onClick: () => {
-							const desktopIconId = generateId(desktopIconIdPrefix)
-							createDesktopIcon({
-								desktopIconId,
-								icon: "notepad",
-								name: "desktopIcon.newTextDocument",
-								isFocused: true,
-								properties: { text: "" },
-								top: event.clientY,
-								left: event.clientX,
-								onDblClick: () => {
-									let title = ""
-									desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
-									createWindow({
-										title,
-										subTitle: "subTitle.notepad",
-										icon: "notepad",
-										desktopIconId,
-										initialWidth: 300,
-										initialHeight: 150,
-										canBeHidden: true,
-										canBeMaximizedOrMinimized: true,
-										body: NotepadBody
-									})
-								}
-							})
-						}
+						onClick: () => createNewTextDocumentDesktopIcon(event)
 					}]
 				]
 			}

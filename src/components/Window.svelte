@@ -156,7 +156,7 @@
   bind:this={windowDiv}
 >
   <Resize fake {canBeResized} {minWidth} {minHeight} {windowId} {top} {left} {width} {height}>
-    <div class="h-full w-full">
+    <div class="flex flex-col h-full w-full">
       <Draggable id={windowId} fake {canBeDraggabled} {top} {left}>
         <div class={`${isFocused
         	? "background-window-head"
