@@ -1,12 +1,12 @@
 <script lang="ts">
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
-  import { desktopIcons, removeWindow, windows, type IndividualDesktopIconType } from "@/stores"
+  import { desktopIcons, removeWindow, type IndividualDesktopIconType } from "@/stores"
 
   export let windowId: string
+  export let desktopIconId: string
   export let closeCallBack: (props?: { shouldSaveChanges?: boolean, shouldCloseNotepadWindow?: boolean }) => void
 
-  const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
   const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
 
   const onClickCancelAnswer = () => {

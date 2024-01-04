@@ -31,22 +31,25 @@ export type RightClickMenuType = {
   zIndex?: number
 }
 
+type WindowCoordinatesType = { top: number, left: number }
+
 const state: RightClickMenuType = undefined!
 
 export const rightClickMenu = writable(state)
 
 export const removeRightClickMenu = () => rightClickMenu.set(undefined!)
 
-const createNewFolderDesktopIcon = (event: MouseEvent) => {
+const createNewFolderDesktopIcon = (event: MouseEvent, route: string, windowCoordinates: WindowCoordinatesType) => {
 	const desktopIconId = generateId(desktopIconIdPrefix)
 
 	createDesktopIcon({
 		desktopIconId,
 		icon: "open-folder",
 		name: "desktopIcon.newFolder",
+		route,
 		isFocused: true,
-		top: event.clientY,
-		left: event.clientX,
+		top: event.clientY - windowCoordinates.top,
+		left: event.clientX - windowCoordinates.left,
 		onDblClick: () => {
 			let title = ""
 			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
@@ -65,17 +68,18 @@ const createNewFolderDesktopIcon = (event: MouseEvent) => {
 	})
 }
 
-const createNewTextDocumentDesktopIcon = (event: MouseEvent) => {
+const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, windowCoordinates: WindowCoordinatesType) => {
 	const desktopIconId = generateId(desktopIconIdPrefix)
 
 	createDesktopIcon({
 		desktopIconId,
 		icon: "notepad",
 		name: "desktopIcon.newTextDocument",
+		route,
 		isFocused: true,
 		properties: { text: "" },
-		top: event.clientY,
-		left: event.clientX,
+		top: event.clientY - windowCoordinates.top,
+		left: event.clientX - windowCoordinates.left,
 		onDblClick: () => {
 			let title = ""
 			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
@@ -95,7 +99,7 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent) => {
 	})
 }
 
-export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightClickMenu.set({
+export const createRightClickMenuInScreen = (event: MouseEvent, route: string, windowCoordinates: WindowCoordinatesType = { top: 0, left: 0 }) => rightClickMenu.set({
 	sections: [
 		[
 			{ text: "rightClickMenu.paste", isDisabled: true }
@@ -106,11 +110,11 @@ export const createRightClickMenuInDesktopScreen = (event: MouseEvent) => rightC
 				sections: [
 					[{
 						text: "rightClickMenu.folder",
-						onClick: () => createNewFolderDesktopIcon(event)
+						onClick: () => createNewFolderDesktopIcon(event, route, windowCoordinates)
 					}],
 					[{
 						text: "rightClickMenu.textDocument",
-						onClick: () => createNewTextDocumentDesktopIcon(event)
+						onClick: () => createNewTextDocumentDesktopIcon(event, route, windowCoordinates)
 					}]
 				]
 			}

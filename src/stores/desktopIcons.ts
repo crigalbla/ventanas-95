@@ -1,4 +1,4 @@
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_NEW_FOLDER, DI_RECYCLE_BIN } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE } from "@/constants"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
@@ -10,6 +10,7 @@ export type IndividualDesktopIconType = {
   desktopIconId: string,
   icon: string,
   name: string,
+	route: string,
   isFocused?: boolean,
 	isEditingName?: boolean,
   zIndex?: number,
@@ -48,6 +49,7 @@ export const createInitialDesktopIcons = () => {
 		desktopIconId: DI_MY_PC,
 		icon: "my-computer-280px",
 		name: "desktopIcon.myPc",
+		route: DESKTOP_ROUTE,
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: DESKTOP_ICON_MARGIN,
@@ -57,26 +59,28 @@ export const createInitialDesktopIcons = () => {
 		desktopIconId: DI_RECYCLE_BIN,
 		icon: "recycle-bin",
 		name: "desktopIcon.recycleBin",
+		route: DESKTOP_ROUTE,
 		isFocused: false,
 		top: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_HEIGHT,
 		left: DESKTOP_ICON_MARGIN,
 		onDblClick: () => window.alert("recycle-bin")
 	})
 	createDesktopIcon({
-		desktopIconId: DI_NEW_FOLDER,
+		desktopIconId: DI_FIRST_FOLDER,
 		icon: "open-folder",
-		name: "desktopIcon.newFolder",
+		name: "desktopIcon.myFirstFolder",
+		route: DESKTOP_ROUTE,
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH,
 		onDblClick: () => {
 			let title = ""
-			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === DI_NEW_FOLDER)?.name as string)
+			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === DI_FIRST_FOLDER)?.name as string)
 
 			createWindow({
 				title,
 				icon: "open-folder",
-				desktopIconId: DI_NEW_FOLDER,
+				desktopIconId: DI_FIRST_FOLDER,
 				initialWidth: 600,
 				initialHeight: 400,
 				canBeHidden: true,
@@ -92,6 +96,7 @@ export const createInitialDesktopIcons = () => {
 			desktopIconId: DI_ABOUT_NOTEPAD,
 			icon: "notepad",
 			name: "desktopIcon.about",
+			route: DESKTOP_ROUTE,
 			isFocused: false,
 			properties: { text: aboutNotepadText },
 			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,

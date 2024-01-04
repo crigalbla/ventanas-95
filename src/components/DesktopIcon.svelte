@@ -1,12 +1,13 @@
 <script lang="ts">
   import { createRightClickMenuInDesktopIcon, desktopIcons, removeDesktopIcon, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
 
   export let desktopIconId: string
   export let icon: string
   export let name: string
+  export let route: string
   export let isFocused = false
   export let isEditingName = false
   export let zIndex: number = 0
@@ -98,7 +99,7 @@
         bind:this={textareaRef}
       />
     {:else}
-      <span class="text text-white" class:focused={isFocused} class:overflow-text={!isFocused}>
+      <span class="text" class:focused={isFocused} class:overflow-text={!isFocused} class:text-white={route === DESKTOP_ROUTE}>
         {$t(name)}
       </span>
     {/if}
@@ -149,6 +150,7 @@
     margin: 0px;
     border: 1px dotted white;
     background-color: #0000aa;
+    color: white;
     overflow-wrap: break-word;
   }
 

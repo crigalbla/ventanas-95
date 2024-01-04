@@ -2,7 +2,7 @@
   import { t } from "@/i18n"
   import Button from "../Button.svelte"
   import { afterUpdate, onMount } from "svelte"
-  import { updateDesktopIconParams, windows, desktopIcons, updateWindowParams, type IndividualDesktopIconType, createWindow, removeWindow } from "@/stores"
+  import { updateDesktopIconParams, desktopIcons, updateWindowParams, type IndividualDesktopIconType, createWindow, removeWindow } from "@/stores"
   import SaveChangesBody from "./SaveChangesBody.svelte"
 
   type PropertiesType = {
@@ -10,8 +10,8 @@
   }
 
   export let windowId: string
+  export let desktopIconId: string
 
-  const desktopIconId = $windows.find((w) => w.windowId === windowId)?.desktopIconId as string
   const desktopIcon = $desktopIcons.find((di) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   const properties = desktopIcon.properties as PropertiesType
   let textareaRef: HTMLTextAreaElement

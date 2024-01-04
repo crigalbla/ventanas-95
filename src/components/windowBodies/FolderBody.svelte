@@ -1,18 +1,30 @@
 <script lang="ts">
-  import { windows } from "@/stores"
+  import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
+  import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
 
   export let windowId: string
+  export let desktopIconId: string
 
-  $: window = $windows.find(w => w.windowId === windowId)
+  $: window = $windows.find(w => w.windowId === windowId) as IndividualWindowType
+  $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
+  $: thisRoute = `${desktopIcon.route}\\${$t(desktopIcon.name)}`
+  $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
+  let sectionRef: HTMLElement
 
   const onClickHeaderButton = () => null
 
-  $: console.log(window)
+  const onContextMenu = (event: MouseEvent) => {
+  	console.log(event.target === sectionRef)
+  	// const target = event.target as EventTarget & { className: string }
+  	// if (target?.className.includes("desktop-screen")) {
+  		createRightClickMenuInScreen(event, thisRoute, { top: window?.top as number, left: window?.left as number })
+  	// }
+  }
 </script>
 
-<section class="flex flex-col h-full p-1">
+<section class="flex flex-col h-full p-1" bind:this={sectionRef}>
   <div class="small-border mb-1">
     <div class="small-border-bottom flex h-8 px-1">
       <div class="border-color-soft-up decoration-bar"/>
@@ -28,14 +40,17 @@
       <div class="flex items-center w-full mt-1">
         <span class="mr-2">{$t("direction")}</span>
         <div class="border-color-soft-down background-white flex justify-between items-center h-7 w-full">
-          <span>Search...</span>
+          <span>{thisRoute}</span>
           <div class="border-color-soft-up background-silver triangle"></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="border-color-soft-down background-white flex-1">
-    This is a folderBody
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div class="border-color-soft-down background-white flex-1" on:contextmenu={onContextMenu}>
+    {#each desktopIconsInThisFolder as { properties, ...icon }}
+      <DesktopIcon {...icon} />
+    {/each}
   </div>
 </section>
 

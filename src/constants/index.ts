@@ -13,9 +13,9 @@ export const DESKTOP_SCREEN_ID = "desktop-screen"
 
 export const DI_MY_PC = "di-my-pc"
 export const DI_RECYCLE_BIN = "di-recycle-bin"
-export const DI_NEW_FOLDER = "di-new-folder"
+export const DI_FIRST_FOLDER = "di-first-folder"
 export const DI_ABOUT_NOTEPAD = "di-about-notepad"
 
-const rootRute = "C:\\"
-export const recycleBinRute = `${rootRute}recycle bin`
-export const desktopRute = `${rootRute}desktop`
+const ROOT_ROUTE = "C:\\"
+export const RECYCLE_BIN_ROUTE = `${ROOT_ROUTE}recycle bin`
+export const DESKTOP_ROUTE = `${ROOT_ROUTE}desktop`
