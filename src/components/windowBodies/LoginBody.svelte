@@ -1,15 +1,16 @@
 <script lang="ts">
   import { removeWindow, user } from "@/stores"
   import type { UserType } from "@/stores"
-  import { t } from "@/i18n"
   import Button from "../Button.svelte"
+  import { t } from "@/i18n"
 
   export let windowId: string = undefined!
 
-  const onClickButtons = () => {
+  const onClickButtons = (isUsingName: boolean) => {
   	removeWindow(windowId)
-  	user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
+  	isUsingName && user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
   }
+
   const onKeyUp = (event: Event) => {
   	const target = event.target as HTMLInputElement
   	const value = target.value
@@ -34,8 +35,8 @@
     </div>
   </div>
   <div class="flex gap-2 flex-col">
-    <Button className="justify-center px-4" on:click={onClickButtons}>{$t("accept")}</Button>
-    <Button className="justify-center px-4" on:click={onClickButtons}>{$t("cancel")}</Button>
+    <Button className="justify-center px-4" on:click={() => onClickButtons(true)}>{$t("accept")}</Button>
+    <Button className="justify-center px-4" on:click={() => onClickButtons(false)}>{$t("cancel")}</Button>
   </div>
 </section>
 

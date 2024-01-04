@@ -1,8 +1,15 @@
 <script lang="ts">
+  import { windows } from "@/stores"
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
 
+  export let windowId: string
+
+  $: window = $windows.find(w => w.windowId === windowId)
+
   const onClickHeaderButton = () => null
+
+  $: console.log(window)
 </script>
 
 <section class="flex flex-col h-full p-1">
@@ -20,8 +27,9 @@
       <div class="border-color-soft-up decoration-bar"/>
       <div class="flex items-center w-full mt-1">
         <span class="mr-2">{$t("direction")}</span>
-        <div class="border-color-soft-up background-white w-full">
-          Search...
+        <div class="border-color-soft-down background-white flex justify-between items-center h-7 w-full">
+          <span>Search...</span>
+          <div class="border-color-soft-up background-silver triangle"></div>
         </div>
       </div>
     </div>
@@ -47,5 +55,14 @@
   }
   .background-white {
     background: white;
+  }
+
+  .triangle {
+    width: 20px;
+    height: 24px;
+    background-size: 10px;
+    background-repeat: no-repeat;
+    background-position: 4px 8px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(0, 0, 0, 0.3)"><polygon points="0,0 100,0 50,50"/></svg>');
   }
 </style>

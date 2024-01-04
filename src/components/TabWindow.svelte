@@ -43,7 +43,7 @@
   {#if icon}
     <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
   {/if}
-  <span class="overflow-text h-6 ml-1">
+  <span class="overflow-text text-left h-6 ml-1">
     {`${$t(title)}${subTitle ? " - " + $t(subTitle) : ""}`}
   </span>
 </Button>

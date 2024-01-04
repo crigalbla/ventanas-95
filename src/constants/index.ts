@@ -15,3 +15,7 @@ export const DI_MY_PC = "di-my-pc"
 export const DI_RECYCLE_BIN = "di-recycle-bin"
 export const DI_NEW_FOLDER = "di-new-folder"
 export const DI_ABOUT_NOTEPAD = "di-about-notepad"
+
+const rootRute = "C:\\"
+export const recycleBinRute = `${rootRute}recycle bin`
+export const desktopRute = `${rootRute}desktop`
