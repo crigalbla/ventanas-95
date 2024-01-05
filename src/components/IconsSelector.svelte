@@ -16,35 +16,38 @@
   	const createEvents = () => {
   		const desktopScreen = document.querySelector(`#${DESKTOP_SCREEN_ID}`) as HTMLElement
   		const isMouseInDesktopScreen = (event: MouseEvent) => desktopScreen === event.target
-  		// TODO evitar seleccion no deseada de iconos en carpetas
-  		const updateIconFocus = (target: EventTarget) => desktopIcons.update((dis: DesktopIconsType) =>
-  			dis.map((di: IndividualDesktopIconType) => {
-  				const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
+  		const updateIconFocus = (target: EventTarget) => {
+  			// TODO evitar seleccion no deseada de iconos en carpetas
 
-  				if (!desktopIconHTML) return di
+  			desktopIcons.update((dis: DesktopIconsType) =>
+  				dis.map((di: IndividualDesktopIconType) => {
+  					const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
 
-  				const rect = desktopIconHTML.getBoundingClientRect()
-  				const rectAjusted = {
-  					right: rect.right - 15,
-  					left: rect.left + 15,
-  					bottom: rect.bottom - 15,
-  					top: rect.top + 15
-  				}
+  					if (!desktopIconHTML) return di
 
-  				if (
-  					!(rectAjusted.right < left ||
-              rectAjusted.left > left + width ||
-              rectAjusted.bottom < top ||
-              rectAjusted.top > top + height)
-  				) {
-  					if (di.isFocused) return di
-  					return { ...di, isFocused: true }
-  				} else {
-  					if (di.isFocused) return { ...di, isFocused: false }
-  					return di
-  				}
-  			})
-  		)
+  					const rect = desktopIconHTML.getBoundingClientRect()
+  					const rectAjusted = {
+  						right: rect.right - 15,
+  						left: rect.left + 15,
+  						bottom: rect.bottom - 15,
+  						top: rect.top + 15
+  					}
+
+  					if (
+  						!(rectAjusted.right < left ||
+								rectAjusted.left > left + width ||
+								rectAjusted.bottom < top ||
+								rectAjusted.top > top + height)
+  					) {
+  						if (di.isFocused) return di
+  						return { ...di, isFocused: true }
+  					} else {
+  						if (di.isFocused) return { ...di, isFocused: false }
+  						return di
+  					}
+  				})
+  			)
+  		}
 
   		const onMouseDown = (event: MouseEvent) => {
   			if (isMouseInDesktopScreen(event)) {

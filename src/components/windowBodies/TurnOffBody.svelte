@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { t } from "@/i18n"
-  import Button from "../Button.svelte"
-  import { createLoginWindow, removeWindow, user, windows } from "@/stores"
+  import { createLoginWindow, desktopIcons, removeWindow, user, windows } from "@/stores"
   import { waitingCursor } from "@/utils"
+  import Button from "../Button.svelte"
+  import { t } from "@/i18n"
 
   export let windowId: string
   export let closeCallBack: () => void
@@ -19,6 +19,7 @@
   	setTimeout(() => {
   		user.set({})
   		windows.set([])
+  		desktopIcons.set([])
   		if (radioValue === "restart") createLoginWindow()
   	}, 500)
   }

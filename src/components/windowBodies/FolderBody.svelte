@@ -80,19 +80,11 @@
   }
 
   .triangle {
-    width: 20px;
-    min-width: 20px;
+    width: 21px;
     height: 24px;
     background-size: 10px;
     background-repeat: no-repeat;
     background-position: 4px 8px;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(0, 0, 0, 0.3)"><polygon points="0,0 100,0 50,50"/></svg>');
-  }
-
-  .overflow-text {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
   }
 </style>
