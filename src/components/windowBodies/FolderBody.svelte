@@ -3,6 +3,7 @@
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
+  import { onMount } from "svelte"
 
   export let windowId: string
   export let desktopIconId: string
@@ -12,6 +13,7 @@
   $: thisRoute = `${desktopIcon.route}\\${$t(desktopIcon.name)}`
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
   let sectionRef: HTMLElement
+  let inputSearchRef: HTMLInputElement
 
   const onClickHeaderButton = () => null
 
@@ -20,6 +22,8 @@
   		createRightClickMenuInScreen(event, thisRoute, { top: window?.top as number, left: window?.left as number })
   	}
   }
+
+  onMount(() => inputSearchRef.scrollLeft = inputSearchRef.scrollWidth)
 </script>
 
 <section class="flex flex-col h-full p-1">
@@ -38,7 +42,7 @@
       <div class="flex items-center w-full mt-1">
         <span class="mr-2">{$t("direction")}</span>
         <div class="border-color-soft-down background-white flex justify-between items-center h-7 w-full">
-          <span>{thisRoute}</span>
+          <input class="flex-1 mr-1" value={thisRoute} readonly bind:this={inputSearchRef}/>
           <div class="border-color-soft-up background-silver triangle"></div>
         </div>
       </div>
@@ -70,12 +74,25 @@
     background: white;
   }
 
+  input {
+    border: none;
+    box-shadow: none;
+  }
+
   .triangle {
     width: 20px;
+    min-width: 20px;
     height: 24px;
     background-size: 10px;
     background-repeat: no-repeat;
     background-position: 4px 8px;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(0, 0, 0, 0.3)"><polygon points="0,0 100,0 50,50"/></svg>');
+  }
+
+  .overflow-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
   }
 </style>

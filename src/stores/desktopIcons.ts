@@ -36,10 +36,24 @@ export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPref
 }
 
 export const updateDesktopIconParams = (desktopIconId: string, params: UpdatableDesktopIconParams) => {
-	desktopIcons.update((dis: DesktopIconsType) =>
-		dis.map((di: IndividualDesktopIconType) =>
-			di.desktopIconId === desktopIconId ? { ...di, ...params } : di
-		))
+	desktopIcons.update((dis: DesktopIconsType) => {
+		let oldDesktopIcon: IndividualDesktopIconType
+		let oldRoute: string
+		if (params.name) {
+			oldDesktopIcon = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
+			oldRoute = `${oldDesktopIcon.route}\\${oldDesktopIcon.name}`
+		}
+
+		return dis.map((di: IndividualDesktopIconType) => {
+			// Update routes of files inside of the folder that will change the name
+			if (params.name && di.route === oldRoute && di.desktopIconId !== desktopIconId) {
+				return { ...di, route: di.route.replace(oldRoute, `${oldDesktopIcon.route}\\${params.name}`) }
+			}
+
+			 // Update in normal cases
+			return di.desktopIconId === desktopIconId ? { ...di, ...params } : di
+		})
+	})
 }
 
 export const removeDesktopIcon = (desktopIconId: string) => desktopIcons.update((dis: DesktopIconsType) => dis.filter(di => di.desktopIconId !== desktopIconId))

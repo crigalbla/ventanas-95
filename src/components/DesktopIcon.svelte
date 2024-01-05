@@ -40,7 +40,7 @@
   	const textareaHTML = event.target as HTMLTextAreaElement
   	textareaHTML.style.height = "auto"
   	textareaHTML.style.height = (textareaHTML.scrollHeight) + "px"
-  	const newName = textareaHTML.value
+  	const newName = $t(textareaHTML.value)
   	if (newName.length > 0) updateDesktopIconParams(desktopIconId, { name: newName.trim() })
   }
 
