@@ -16,10 +16,14 @@
   	const createEvents = () => {
   		const desktopScreen = document.querySelector(`#${DESKTOP_SCREEN_ID}`) as HTMLElement
   		const isMouseInDesktopScreen = (event: MouseEvent) => desktopScreen === event.target
-  		const updateIconFocus = () => desktopIcons.update((dis: DesktopIconsType) =>
+  		// TODO evitar seleccion no deseada de iconos en carpetas
+  		const updateIconFocus = (target: EventTarget) => desktopIcons.update((dis: DesktopIconsType) =>
   			dis.map((di: IndividualDesktopIconType) => {
   				const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
-  				const rect = desktopIconHTML?.getBoundingClientRect() as DOMRect
+
+  				if (!desktopIconHTML) return di
+
+  				const rect = desktopIconHTML.getBoundingClientRect()
   				const rectAjusted = {
   					right: rect.right - 15,
   					left: rect.left + 15,
@@ -80,7 +84,7 @@
   					width = event.pageX - left
   				}
 
-  				updateIconFocus()
+  				updateIconFocus(event.target as EventTarget)
   			}
   		}
 

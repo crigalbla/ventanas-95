@@ -99,7 +99,11 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, wind
 	})
 }
 
-export const createRightClickMenuInScreen = (event: MouseEvent, route: string, windowCoordinates: WindowCoordinatesType = { top: 0, left: 0 }) => rightClickMenu.set({
+export const createRightClickMenuInScreen = (
+	event: MouseEvent,
+	route: string,
+	windowCoordinates: WindowCoordinatesType = { top: 0, left: 0 }
+) => rightClickMenu.set({
 	sections: [
 		[
 			{ text: "rightClickMenu.paste", isDisabled: true }

@@ -16,15 +16,13 @@
   const onClickHeaderButton = () => null
 
   const onContextMenu = (event: MouseEvent) => {
-  	console.log(event.target === sectionRef)
-  	// const target = event.target as EventTarget & { className: string }
-  	// if (target?.className.includes("desktop-screen")) {
+  	if (event.target === sectionRef) {
   		createRightClickMenuInScreen(event, thisRoute, { top: window?.top as number, left: window?.left as number })
-  	// }
+  	}
   }
 </script>
 
-<section class="flex flex-col h-full p-1" bind:this={sectionRef}>
+<section class="flex flex-col h-full p-1">
   <div class="small-border mb-1">
     <div class="small-border-bottom flex h-8 px-1">
       <div class="border-color-soft-up decoration-bar"/>
@@ -47,7 +45,7 @@
     </div>
   </div>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div class="border-color-soft-down background-white flex-1" on:contextmenu={onContextMenu}>
+  <div class="border-color-soft-down background-white flex-1" on:contextmenu={onContextMenu} bind:this={sectionRef}>
     {#each desktopIconsInThisFolder as { properties, ...icon }}
       <DesktopIcon {...icon} />
     {/each}
