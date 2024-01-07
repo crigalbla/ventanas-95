@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { desktopIcons, type DesktopIconsType, type IndividualDesktopIconType } from "@/stores"
+	import { desktopIcons, type DesktopIconsType, type IndividualDesktopIconType } from "@/stores"
   import { freezeCurrentCursor, isMouseOutOfThisElement, unfreezeCurrentCursor } from "@/utils"
+  import { DESKTOP_ROUTE } from "@/constants"
   import { onMount } from "svelte"
 
 	export let htmlElement: HTMLElement
 	export let relativeCoordinates = { top: 0, left: 0 }
+	export let folderRoute = DESKTOP_ROUTE
 
   let width: number
   let height: number
@@ -17,38 +19,34 @@
   onMount(() => {
   	const createEvents = () => {
   		const isMouseInThisHTMLElement = (event: MouseEvent) => htmlElement === event.target
-  		const updateIconFocus = (target: EventTarget) => {
-  			// TODO evitar seleccion no deseada de iconos en carpetas
+  		const updateIconFocus = () => desktopIcons.update((dis: DesktopIconsType) =>
+  			dis.map((di: IndividualDesktopIconType) => {
+  				const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
 
-  			desktopIcons.update((dis: DesktopIconsType) =>
-  				dis.map((di: IndividualDesktopIconType) => {
-  					const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
+  				if (!desktopIconHTML || folderRoute !== di.route) return di
 
-  					if (!desktopIconHTML) return di
+  				const rect = desktopIconHTML.getBoundingClientRect()
+  				const rectAjusted = {
+  					right: rect.right - relativeCoordinates.left - 15,
+  					left: rect.left - relativeCoordinates.left + 15,
+  					bottom: rect.bottom - relativeCoordinates.top - 15,
+  					top: rect.top - relativeCoordinates.top + 15
+  				}
 
-  					const rect = desktopIconHTML.getBoundingClientRect()
-  					const rectAjusted = {
-  						right: rect.right - 15,
-  						left: rect.left + 15,
-  						bottom: rect.bottom - 15,
-  						top: rect.top + 15
-  					}
-
-  					if (
-  						!(rectAjusted.right < left ||
-								rectAjusted.left > left + width ||
-								rectAjusted.bottom < top ||
-								rectAjusted.top > top + height)
-  					) {
-  						if (di.isFocused) return di
-  						return { ...di, isFocused: true }
-  					} else {
-  						if (di.isFocused) return { ...di, isFocused: false }
-  						return di
-  					}
-  				})
-  			)
-  		}
+  				if (
+  					!(rectAjusted.right < left ||
+							rectAjusted.left > left + width ||
+							rectAjusted.bottom < top ||
+							rectAjusted.top > top + height)
+  				) {
+  					if (di.isFocused) return di
+  					return { ...di, isFocused: true }
+  				} else {
+  					if (di.isFocused) return { ...di, isFocused: false }
+  					return di
+  				}
+  			})
+  		)
 
   		const onMouseDown = (event: MouseEvent) => {
   			if (isMouseInThisHTMLElement(event)) {
@@ -88,7 +86,7 @@
   					width = event.pageX - left - relativeCoordinates.left
   				}
 
-  				updateIconFocus(event.target as EventTarget)
+  				updateIconFocus()
   			}
   		}
 

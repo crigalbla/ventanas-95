@@ -44,7 +44,7 @@
       <div class="flex items-center w-full mt-1">
         <span class="mr-2">{$t("direction")}</span>
         <div class="border-color-soft-down background-white flex justify-between items-center h-7 w-full">
-          <input class="flex-1 mr-1" value={thisRoute} readonly bind:this={inputSearchRef}/>
+          <input class="flex-1 mr-1" value={thisRoute} readonly bind:this={inputSearchRef} />
           <div class="border-color-soft-up background-silver triangle"></div>
         </div>
       </div>
@@ -56,7 +56,7 @@
       <DesktopIcon {...icon} />
     {/each}
     {#if sectionRef}
-      <IconsSelector htmlElement={sectionRef} relativeCoordinates={windowCoordinates} />
+      <IconsSelector htmlElement={sectionRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />
     {/if}
   </div>
 </section>
