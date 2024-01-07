@@ -1,6 +1,7 @@
 <script lang="ts">
   import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix } from "@/stores"
+  import { DESKTOP_SCREEN_ID } from "@/constants"
 
 	export let left: number
 	export let top: number

@@ -1,8 +1,10 @@
 <script lang="ts">
   import { desktopIcons, type DesktopIconsType, type IndividualDesktopIconType } from "@/stores"
-  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
-  import { DESKTOP_SCREEN_ID } from "@/constants"
+  import { freezeCurrentCursor, isMouseOutOfThisElement, unfreezeCurrentCursor } from "@/utils"
   import { onMount } from "svelte"
+
+	export let htmlElement: HTMLElement
+	export let relativeCoordinates = { top: 0, left: 0 }
 
   let width: number
   let height: number
@@ -14,8 +16,7 @@
 
   onMount(() => {
   	const createEvents = () => {
-  		const desktopScreen = document.querySelector(`#${DESKTOP_SCREEN_ID}`) as HTMLElement
-  		const isMouseInDesktopScreen = (event: MouseEvent) => desktopScreen === event.target
+  		const isMouseInThisHTMLElement = (event: MouseEvent) => htmlElement === event.target
   		const updateIconFocus = (target: EventTarget) => {
   			// TODO evitar seleccion no deseada de iconos en carpetas
 
@@ -50,10 +51,10 @@
   		}
 
   		const onMouseDown = (event: MouseEvent) => {
-  			if (isMouseInDesktopScreen(event)) {
+  			if (isMouseInThisHTMLElement(event)) {
   				isMouseDown = true
-  				top = event.pageY
-  				left = event.pageX
+  				top = event.pageY - relativeCoordinates.top
+  				left = event.pageX - relativeCoordinates.left
   				initialCursorPosition = { x: event.pageX, y: event.pageY }
   			}
   		}
@@ -69,29 +70,29 @@
   		}
 
   		const onMouseMove = (event: MouseEvent) => {
-  			if (isMouseDown && !isMouseOutOfScreen(event)) {
+  			if (isMouseDown && !isMouseOutOfThisElement(event, htmlElement)) {
   				freezeCurrentCursor(event)
   				isShowed = height > 2 || width > 2
 
   				if (initialCursorPosition.y > event.pageY) {
   					height = initialCursorPosition.y - event.pageY
-  					top = event.pageY
+  					top = event.pageY - relativeCoordinates.top
   				} else {
-  					height = event.pageY - top
+  					height = event.pageY - top - relativeCoordinates.top
   				}
 
   				if (initialCursorPosition.x > event.pageX) {
   					width = initialCursorPosition.x - event.pageX
-  					left = event.pageX
+  					left = event.pageX - relativeCoordinates.left
   				} else {
-  					width = event.pageX - left
+  					width = event.pageX - left - relativeCoordinates.left
   				}
 
   				updateIconFocus(event.target as EventTarget)
   			}
   		}
 
-  		window.addEventListener("mousedown", onMouseDown)
+  		htmlElement.addEventListener("mousedown", onMouseDown)
   		window.addEventListener("mousemove", onMouseMove)
   		window.addEventListener("mouseup", onMouseUp)
 

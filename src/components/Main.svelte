@@ -13,6 +13,7 @@
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	let userLoggedAt: Date
+	let desktopScreenRef: HTMLElement
 
   createLoginWindow()
 
@@ -101,6 +102,7 @@
 		id={DESKTOP_SCREEN_ID}
 		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
 		on:contextmenu={onContextMenu}
+		bind:this={desktopScreenRef}
 	>
 		{#each $windows as { body, canLoseFocus, desktopIconId, ...window }}
 			<Window {...window}>
@@ -111,7 +113,9 @@
 			<DesktopIcon {...icon} />
 		{/each}
 	</section>
-	<IconsSelector />
+	{#if desktopScreenRef}
+		<IconsSelector htmlElement={desktopScreenRef} />
+	{/if}
   <NavigationBar />
 	{#if $rightClickMenu}
 		<RightClickMenu {...$rightClickMenu} />

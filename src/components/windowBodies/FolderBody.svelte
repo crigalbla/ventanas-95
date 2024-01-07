@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
+  import IconsSelector from "../IconsSelector.svelte"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
@@ -12,6 +13,7 @@
   $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   $: thisRoute = `${desktopIcon.route}\\${$t(desktopIcon.name)}`
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
+  $: windowCoordinates = { top: window.top as number, left: window.left as number }
   let sectionRef: HTMLElement
   let inputSearchRef: HTMLInputElement
 
@@ -53,6 +55,9 @@
     {#each desktopIconsInThisFolder as { properties, ...icon }}
       <DesktopIcon {...icon} />
     {/each}
+    {#if sectionRef}
+      <IconsSelector htmlElement={sectionRef} relativeCoordinates={windowCoordinates} />
+    {/if}
   </div>
 </section>
 

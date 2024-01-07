@@ -1,17 +1,17 @@
-import { NAVIGATION_BAR_ID } from "@/constants"
+import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID } from "@/constants"
 
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
 }
 
-export const isMouseOutOfScreen = (e: MouseEvent) => {
-	const { clientX, clientY } = e
-	const navigationBar = document.getElementById(NAVIGATION_BAR_ID) as HTMLElement
-	const windowWidth = window.innerWidth
-	const windowHeight = window.innerHeight - (navigationBar?.offsetHeight || 0)
-	if (clientX < 0 || clientX > windowWidth || clientY < 0 || clientY > windowHeight) return true
+export const isMouseOutOfScreen = (e: MouseEvent) => isMouseOutOfThisElement(e, document.getElementById(DESKTOP_SCREEN_ID))
 
-	return false
+export const isMouseOutOfThisElement = (e: MouseEvent, targetElement: HTMLElement): boolean => {
+	const rect = targetElement.getBoundingClientRect()
+	const mouseX = e.clientX
+	const mouseY = e.clientY
+
+	return mouseX < rect.left || mouseX > rect.right || mouseY < rect.top || mouseY > rect.bottom
 }
 
 export const waitingCursor = (miliseconds: number = 2000) => {
