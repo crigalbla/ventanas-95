@@ -17,5 +17,5 @@ export const DI_FIRST_FOLDER = "di-first-folder"
 export const DI_ABOUT_NOTEPAD = "di-about-notepad"
 
 const ROOT_ROUTE = "C:\\"
-export const RECYCLE_BIN_ROUTE = `${ROOT_ROUTE}recycle bin`
-export const DESKTOP_ROUTE = `${ROOT_ROUTE}desktop`
+export const RECYCLE_BIN_ROUTE = `${ROOT_ROUTE}Recycle bin`
+export const DESKTOP_ROUTE = `${ROOT_ROUTE}Desktop`

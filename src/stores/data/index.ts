@@ -1,4 +1,4 @@
-export const aboutNotepadText = `
+export const aboutNotepadTextSpanish = `
 ¡Hola! ¿Qué tal?
 
 Primero que nada, gracias por entrar en mi proyecto.
@@ -16,4 +16,24 @@ https://es.linkedin.com/in/cristian-galan-blanco
           ¡Si ves
             algun bug
               házmelo saber!
+`
+
+export const aboutNotepadTextEnglish = `
+Hello! How are you?
+
+First of all, thank you for visiting my project.
+As you can see, it is based on a famous operating system from 1995, for this I have used and studied the behavior of this operating system.
+I've done it all with Astro and Svelte, it has no backend or data persistence, I hope you like it. You can see the code if you want, it is here:
+----------------------------------
+https://github.com/crigalbla/ventanas-95
+----------------------------------
+
+I am Cristian, I have a degree in computer software engineering from the ETSII in Seville, Spain. In September 2023 I had 5 years of experience in the sector. If you want to know more about me, I leave you my linkedIn profile:
+---------------------------------------
+https://es.linkedin.com/in/cristian-galan-blanco
+---------------------------------------
+
+           If you see
+             some bug
+               let me know!
 `

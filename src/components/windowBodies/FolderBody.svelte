@@ -11,7 +11,8 @@
 
   $: window = $windows.find(w => w.windowId === windowId) as IndividualWindowType
   $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
-  $: thisRoute = `${desktopIcon.route}\\${$t(desktopIcon.name)}`
+  $: thisRoute = `${desktopIcon.route}\\${desktopIcon.name}`
+  $: thisRouteTranslated = `${desktopIcon.route}\\${$t(desktopIcon.name)}`
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
   $: windowCoordinates = { top: window.top as number, left: window.left as number }
   let sectionRef: HTMLElement
@@ -44,7 +45,7 @@
       <div class="flex items-center w-full mt-1">
         <span class="mr-2">{$t("direction")}</span>
         <div class="border-color-soft-down background-white flex justify-between items-center h-7 w-full">
-          <input class="flex-1 mr-1" value={thisRoute} readonly bind:this={inputSearchRef} />
+          <input class="flex-1 mr-1" value={thisRouteTranslated} readonly bind:this={inputSearchRef} />
           <div class="border-color-soft-up background-silver triangle"></div>
         </div>
       </div>

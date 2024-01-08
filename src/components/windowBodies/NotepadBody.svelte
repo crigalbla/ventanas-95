@@ -72,6 +72,8 @@
 
   const updateText = () => {
   	text = window.localStorage.getItem(windowId) || properties.text || ""
+
+  	if (text === "desktopIcon.about.text") text = $t(text)
   }
 
   onMount(() => {

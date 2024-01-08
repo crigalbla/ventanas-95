@@ -1,4 +1,4 @@
-import { createDesktopIcon, createWindow, desktopIconIdPrefix, desktopIcons } from "."
+import { createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName } from "."
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { writable } from "svelte/store"
@@ -50,21 +50,16 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, windowCoor
 		isFocused: true,
 		top: event.clientY - windowCoordinates.top,
 		left: event.clientX - windowCoordinates.left,
-		onDblClick: () => {
-			let title = ""
-			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
-
-			createWindow({
-				title,
-				icon: "open-folder",
-				desktopIconId,
-				initialWidth: 600,
-				initialHeight: 400,
-				canBeHidden: true,
-				canBeMaximizedOrMinimized: true,
-				body: FolderBody
-			})
-		}
+		onDblClick: () => createWindow({
+			title: getDesktopIconName(desktopIconId),
+			icon: "open-folder",
+			desktopIconId,
+			initialWidth: 600,
+			initialHeight: 400,
+			canBeHidden: true,
+			canBeMaximizedOrMinimized: true,
+			body: FolderBody
+		})
 	})
 }
 
@@ -80,22 +75,17 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, wind
 		properties: { text: "" },
 		top: event.clientY - windowCoordinates.top,
 		left: event.clientX - windowCoordinates.left,
-		onDblClick: () => {
-			let title = ""
-			desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
-
-			createWindow({
-				title,
-				subTitle: "subTitle.notepad",
-				icon: "notepad",
-				desktopIconId,
-				initialWidth: 300,
-				initialHeight: 150,
-				canBeHidden: true,
-				canBeMaximizedOrMinimized: true,
-				body: NotepadBody
-			})
-		}
+		onDblClick: () => createWindow({
+			title: getDesktopIconName(desktopIconId),
+			subTitle: "subTitle.notepad",
+			icon: "notepad",
+			desktopIconId,
+			initialWidth: 300,
+			initialHeight: 150,
+			canBeHidden: true,
+			canBeMaximizedOrMinimized: true,
+			body: NotepadBody
+		})
 	})
 }
 
