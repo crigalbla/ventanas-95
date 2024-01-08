@@ -5,6 +5,7 @@
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
   import { onMount } from "svelte"
+  import { MY_PC_ICON, RECYCLE_BIN_ICON } from "@/constants"
 
   export let windowId: string
   export let desktopIconId: string
@@ -12,7 +13,20 @@
   $: window = $windows.find(w => w.windowId === windowId) as IndividualWindowType
   $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   $: thisRoute = `${desktopIcon.route}\\${desktopIcon.name}`
-  $: thisRouteTranslated = `${desktopIcon.route}\\${$t(desktopIcon.name)}`
+  $: isRecycleBin = desktopIcon.icon === RECYCLE_BIN_ICON
+  $: isMyPC = desktopIcon.icon === MY_PC_ICON
+
+  const getRouteTranslated = (route: string) => {
+  	const arrayText = route.split("\\")
+
+  	if (isRecycleBin || isMyPC) return $t(arrayText[arrayText.length - 1])
+
+  	const arrayTextTranslated = arrayText.map((str) => $t(str))
+
+  	return arrayTextTranslated.join("\\")
+  }
+
+  $: thisRouteTranslated = $t(desktopIcon.name) && getRouteTranslated(thisRoute) // $t is necessary to rerender when change language
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
   $: windowCoordinates = { top: window.top as number, left: window.left as number }
   let sectionRef: HTMLElement
@@ -45,7 +59,8 @@
       <div class="flex items-center w-full mt-1">
         <span class="mr-2">{$t("direction")}</span>
         <div class="border-color-soft-down background-white flex justify-between items-center h-7 w-full">
-          <input class="flex-1 mr-1" value={thisRouteTranslated} readonly bind:this={inputSearchRef} />
+          <img class="h-5 w-5" src={`icons/${desktopIcon.icon}.png`} alt={desktopIcon.icon} draggable="false"/>
+          <input class="flex-1 mx-1" value={thisRouteTranslated} readonly bind:this={inputSearchRef} />
           <div class="border-color-soft-up background-silver triangle"></div>
         </div>
       </div>
@@ -54,7 +69,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="border-color-soft-down background-white flex-1" on:contextmenu={onContextMenu} bind:this={sectionRef}>
     {#each desktopIconsInThisFolder as { properties, ...icon }}
-      <DesktopIcon {...icon} />
+      <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
     {/each}
     {#if sectionRef}
       <IconsSelector htmlElement={sectionRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />

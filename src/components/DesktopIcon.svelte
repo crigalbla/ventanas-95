@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createRightClickMenuInDesktopIcon, desktopIcons, removeDesktopIcon, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
+  import { createRightClickMenuInDesktopIcon, desktopIcons, moveDesktopIconToNewRoute, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, removeDesktopIcon } from "@/stores"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
 
@@ -44,7 +44,8 @@
   	if (newName.length > 0) updateDesktopIconParams(desktopIconId, { name: newName.trim() })
   }
 
-  const onKeyDown = (event: KeyboardEvent) => event.key === "Enter" && updateDesktopIconParams(desktopIconId, { isEditingName: false })
+  const onKeyDown = (event: KeyboardEvent) =>
+  	event.key === "Enter" && updateDesktopIconParams(desktopIconId, { isEditingName: false })
 
   const onContextMenu = (event: MouseEvent) => {
   	let customSection
@@ -64,7 +65,9 @@
   		canBeDeleted: !isMyPc && !isRecycleBin,
   		customSection,
   		onDblClick,
-  		removeDesktopIcon: () => removeDesktopIcon(desktopIconId),
+  		removeDesktopIcon: () => route !== RECYCLE_BIN_ROUTE
+  			? moveDesktopIconToNewRoute(desktopIconId, RECYCLE_BIN_ROUTE)
+  			: removeDesktopIcon(desktopIconId),
   		changeToEditingName: () => updateDesktopIconParams(desktopIconId, { isEditingName: true })
   	})
   }
@@ -99,7 +102,11 @@
         bind:this={textareaRef}
       />
     {:else}
-      <span class="text" class:focused={isFocused} class:overflow-text={!isFocused} class:text-white={route === DESKTOP_ROUTE}>
+      <span
+        class="text"
+        class:focused={isFocused}
+        class:overflow-text={!isFocused}
+        class:text-white={route === DESKTOP_ROUTE || !route}>
         {$t(name)}
       </span>
     {/if}
