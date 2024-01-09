@@ -112,9 +112,4 @@
 		z-index: 499;
 		opacity: 0.6;
 	}
-
-	.fake-desktop-icon section {
-		background-color: red;
-		color: black
-	}
 </style>

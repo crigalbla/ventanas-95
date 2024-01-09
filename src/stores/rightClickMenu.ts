@@ -1,4 +1,4 @@
-import { createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName } from "."
+import { desktopIcons, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName, type DesktopIconsType, type IndividualDesktopIconType } from "."
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { writable } from "svelte/store"
@@ -49,6 +49,7 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, windowCoor
 		name: "desktopIcon.newFolder",
 		route,
 		isFocused: true,
+		isEditingName: true,
 		top: event.clientY - windowCoordinates.top,
 		left: event.clientX - windowCoordinates.left,
 		onDblClick: () => createWindow({
@@ -73,6 +74,7 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, wind
 		name: "desktopIcon.newTextDocument",
 		route,
 		isFocused: true,
+		isEditingName: true,
 		properties: { text: "" },
 		top: event.clientY - windowCoordinates.top,
 		left: event.clientX - windowCoordinates.left,
