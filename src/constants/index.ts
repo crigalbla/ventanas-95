@@ -17,10 +17,8 @@ export const DI_FIRST_FOLDER = "di-first-folder"
 export const DI_ABOUT_NOTEPAD = "di-about-notepad"
 
 export const RECYCLE_BIN_NAME = "desktopIcon.recycleBin"
+export const MY_PC_NAME = "desktopIcon.myPc"
 
 const ROOT_ROUTE = "C:\\"
 export const DESKTOP_ROUTE = `${ROOT_ROUTE}route.desktop`
 export const RECYCLE_BIN_ROUTE = `${DESKTOP_ROUTE}\\${RECYCLE_BIN_NAME}`
-
-export const RECYCLE_BIN_ICON = "recycle-bin"
-export const MY_PC_ICON = "my-computer-280px"

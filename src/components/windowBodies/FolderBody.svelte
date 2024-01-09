@@ -5,7 +5,7 @@
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
   import { onMount } from "svelte"
-  import { MY_PC_ICON, RECYCLE_BIN_ICON } from "@/constants"
+  import { DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
 
   export let windowId: string
   export let desktopIconId: string
@@ -13,8 +13,8 @@
   $: window = $windows.find(w => w.windowId === windowId) as IndividualWindowType
   $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   $: thisRoute = `${desktopIcon.route}\\${desktopIcon.name}`
-  $: isRecycleBin = desktopIcon.icon === RECYCLE_BIN_ICON
-  $: isMyPC = desktopIcon.icon === MY_PC_ICON
+  $: isRecycleBin = desktopIcon.desktopIconId === DI_RECYCLE_BIN
+  $: isMyPC = desktopIcon.desktopIconId === DI_MY_PC
 
   const getRouteTranslated = (route: string) => {
   	const arrayText = route.split("\\")

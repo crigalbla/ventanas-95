@@ -1,4 +1,4 @@
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, MY_PC_ICON, RECYCLE_BIN_ICON, RECYCLE_BIN_NAME } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME } from "@/constants"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
@@ -12,7 +12,7 @@ export type IndividualDesktopIconType = {
 	route: string,
   isFocused?: boolean,
 	isEditingName?: boolean,
-  zIndex?: number,
+  zIndex?: number, // from 1 to 499
   top?: number,
   left?: number,
 	properties?: unknown
@@ -71,15 +71,15 @@ export const getDesktopIconName = (desktopIconId: string) => {
 export const createInitialDesktopIcons = () => {
 	createDesktopIcon({
 		desktopIconId: DI_MY_PC,
-		icon: MY_PC_ICON,
-		name: "desktopIcon.myPc",
+		icon: "my-computer-280px",
+		name: MY_PC_NAME,
 		route: DESKTOP_ROUTE,
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: DESKTOP_ICON_MARGIN,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(DI_MY_PC),
-			icon: MY_PC_ICON,
+			icon: "my-computer-280px",
 			desktopIconId: DI_MY_PC,
 			initialWidth: 600,
 			initialHeight: 400,
@@ -90,7 +90,7 @@ export const createInitialDesktopIcons = () => {
 	})
 	createDesktopIcon({
 		desktopIconId: DI_RECYCLE_BIN,
-		icon: RECYCLE_BIN_ICON,
+		icon: "recycle-bin",
 		name: RECYCLE_BIN_NAME,
 		route: DESKTOP_ROUTE,
 		isFocused: false,
@@ -98,7 +98,7 @@ export const createInitialDesktopIcons = () => {
 		left: DESKTOP_ICON_MARGIN,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(DI_RECYCLE_BIN),
-			icon: RECYCLE_BIN_ICON,
+			icon: "recycle-bin",
 			desktopIconId: DI_RECYCLE_BIN,
 			initialWidth: 600,
 			initialHeight: 400,

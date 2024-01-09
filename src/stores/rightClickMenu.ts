@@ -3,6 +3,7 @@ import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { writable } from "svelte/store"
 import { generateId } from "@/utils"
+import { RECYCLE_BIN_ROUTE } from "@/constants"
 
 export type SubOptionInRightClickMenuType = {
   text: string,
@@ -98,22 +99,24 @@ export const createRightClickMenuInScreen = (
 		[
 			{ text: "rightClickMenu.paste", isDisabled: true }
 		],
-		[
-			{
-				text: "rightClickMenu.new",
-				sections: [
-					[{
-						text: "rightClickMenu.folder",
-						onClick: () => createNewFolderDesktopIcon(event, route, windowCoordinates)
-					}],
-					[{
-						text: "rightClickMenu.textDocument",
-						onClick: () => createNewTextDocumentDesktopIcon(event, route, windowCoordinates)
-					}]
-				]
-			}
-		]
-	],
+		route !== RECYCLE_BIN_ROUTE
+			? [
+				{
+					text: "rightClickMenu.new",
+					sections: [
+						[{
+							text: "rightClickMenu.folder",
+							onClick: () => createNewFolderDesktopIcon(event, route, windowCoordinates)
+						}],
+						[{
+							text: "rightClickMenu.textDocument",
+							onClick: () => createNewTextDocumentDesktopIcon(event, route, windowCoordinates)
+						}]
+					]
+				}
+			]
+			: []
+	].filter(x => x.length),
 	top: event.clientY,
 	left: event.clientX
 })

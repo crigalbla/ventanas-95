@@ -25,7 +25,7 @@ export type IndividualWindowType = {
   left?: number
   top?: number
   maxWidth?: number
-  zIndex?: number
+  zIndex?: number // from 500 to 999 (only specil windows has numbers above 999)
   width?: number
 	height?: number
   minWidth?: number

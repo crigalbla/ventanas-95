@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createRightClickMenuInDesktopIcon, desktopIcons, moveDesktopIconToNewRoute, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, removeDesktopIcon } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, RECYCLE_BIN_ROUTE } from "@/constants"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
 
@@ -51,6 +51,7 @@
   	let customSection
   	const isMyPc = desktopIconId === DI_MY_PC
   	const isRecycleBin = desktopIconId === DI_RECYCLE_BIN
+  	const isInRecycleBin = route === RECYCLE_BIN_ROUTE
   	if (isRecycleBin) {
   		customSection = {
   			position: 1,
@@ -65,7 +66,7 @@
   		canBeDeleted: !isMyPc && !isRecycleBin,
   		customSection,
   		onDblClick,
-  		removeDesktopIcon: () => route !== RECYCLE_BIN_ROUTE
+  		removeDesktopIcon: () => !isInRecycleBin
   			? moveDesktopIconToNewRoute(desktopIconId, RECYCLE_BIN_ROUTE)
   			: removeDesktopIcon(desktopIconId),
   		changeToEditingName: () => updateDesktopIconParams(desktopIconId, { isEditingName: true })
@@ -73,7 +74,7 @@
   }
 </script>
 
-<Draggable id={desktopIconId} canBeDraggabled={!isEditingName} {top} {left}>
+<Draggable id={desktopIconId} canBeDraggabled={!isEditingName} {top} {left} fake>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- NOTE: doble tap with touchpad does not work with on:dblclick -->
   <section
@@ -155,13 +156,13 @@
   .focused {
     width: calc(2px + var(--width) * 1px);
     margin: 0px;
-    border: 1px dotted white;
-    background-color: #0000aa;
-    color: white;
+    border: var(--none, 1px dotted white);
+    background-color: var(--none, #0000aa);
+    color: var(--color, white);
     overflow-wrap: break-word;
   }
 
   .blue-tone {
-    filter: sepia(1) saturate(25) hue-rotate(180deg) brightness(0.7);
+    filter: var(--none, sepia(1) saturate(25) hue-rotate(180deg) brightness(0.7));
   }
 </style>
