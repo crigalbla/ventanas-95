@@ -121,6 +121,7 @@
         title={window.title}
         subTitle={window.subTitle}
         windowId={window.windowId}
+        desktopIconId={window.desktopIconId}
         icon={window.icon}
         isMinimized={window.isMinimized ?? false}
         isFocused={window.isFocused ?? true}

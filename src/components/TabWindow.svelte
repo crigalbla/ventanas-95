@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { windows, type IndividualWindowType, type WindowsType } from "@/stores"
+  import { windows, type IndividualWindowType, type WindowsType, desktopIcons, type IndividualDesktopIconType } from "@/stores"
   import Button from "./Button.svelte"
   import { t } from "@/i18n"
   import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
@@ -7,9 +7,12 @@
   export let title: string
   export let subTitle: string = undefined!
   export let windowId: string
+  export let desktopIconId: string = undefined!
   export let icon: string = undefined!
   export let isMinimized: boolean
   export let isFocused: boolean
+
+  $: iconFromDesktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.icon
 
   const onClickTabWindow = () => {
   	windows.update((ws: WindowsType) => {
@@ -40,8 +43,13 @@
   id={`${windowId}-tab`}
   on:click={onClickTabWindow}
 >
-  {#if icon}
-    <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
+  {#if icon || iconFromDesktopIcon}
+    <img
+      class="h-5 w-5"
+      src={`icons/${icon || iconFromDesktopIcon}.png`}
+      alt={icon || iconFromDesktopIcon}
+      draggable="false"
+    />
   {/if}
   <span class="overflow-text text-left h-6 ml-1">
     {`${$t(title)}${subTitle ? " - " + $t(subTitle) : ""}`}

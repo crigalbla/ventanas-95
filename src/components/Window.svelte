@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { removeWindow, windows, updateWindowParams } from "@/stores"
-  import type { IndividualWindowType, WindowsType } from "@/stores"
+  import { removeWindow, windows, updateWindowParams, desktopIcons } from "@/stores"
+  import type { IndividualDesktopIconType, IndividualWindowType, WindowsType } from "@/stores"
   import { availableDimensions } from "@/utils"
   import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
   import { t } from "@/i18n"
@@ -14,6 +14,7 @@
   export let title: string
   export let subTitle: string = undefined!
   export let windowId: string = undefined!
+  export let desktopIconId: string = undefined!
   export let icon: string = undefined!
   export let hasQuestionButton: boolean = false
   export let canBeHidden: boolean = false
@@ -39,6 +40,7 @@
   export let oldLeft: number = undefined!
   export let closeCallBack: () => void | { preventCloseWindow: boolean } = undefined!
 
+  $: iconFromDesktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.icon
   let windowDiv: HTMLElement = undefined!
   const headerHeight = 24
 
@@ -163,8 +165,13 @@
         	: "background-dark-silver"
         } window-header-height flex justify-between h-6 px-1 m-px`}>
           <div class="flex items-center">
-            {#if icon}
-              <img class="h-5 w-5" src={`icons/${icon}.png`} alt={icon} draggable="false"/>
+            {#if icon || iconFromDesktopIcon}
+              <img
+                class="h-5 w-5"
+                src={`icons/${icon || iconFromDesktopIcon}.png`}
+                alt={icon || iconFromDesktopIcon}
+                draggable="false"
+              />
             {/if}
             <span class="overflow-text text-white ml-1">
               {`${$t(title)}${subTitle ? " - " + $t(subTitle) : ""}`}

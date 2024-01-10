@@ -2,7 +2,7 @@ export const aboutNotepadTextSpanish = `
 ¡Hola! ¿Qué tal?
 
 Primero que nada, gracias por entrar en mi proyecto.
-Como puedes ver, está basado en un famoso sistema operativo del año 1995, para ello he usado y estudiado el comportamiendo de dicho sistema operativo.
+Como puedes ver, está basado en un famoso sistema operativo del año 1995, para ello he usado y estudiado el comportamiento de dicho sistema operativo.
 Lo he hecho todo con Astro y Svelte, no tienes nada de backend ni ninguna persistencia de datos, espero que te guste. Puedes ver el código si te apetece, está aquí:
 ----------------------------------
 https://github.com/crigalbla/ventanas-95
@@ -14,7 +14,7 @@ https://es.linkedin.com/in/cristian-galan-blanco
 ---------------------------------------
 
           ¡Si ves
-            algun bug
+            algún bug
               házmelo saber!
 `
 

@@ -1,4 +1,4 @@
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
@@ -28,6 +28,20 @@ export const desktopIconIdPrefix = "di"
 
 export const desktopIcons = writable(state)
 
+const updateRecycleBinIcon = () => {
+	desktopIcons.update((dis: DesktopIconsType) => {
+		const isRecycleBinFull = dis.some(di => di.route === RECYCLE_BIN_ROUTE)
+
+		return dis.map((di: IndividualDesktopIconType) => {
+			if (isRecycleBinFull) {
+				if (di.icon === RECYCLE_BIN_ICON) return { ...di, icon: FULL_RECYCLE_BIN_ICON }
+			} else if (di.icon === FULL_RECYCLE_BIN_ICON) return { ...di, icon: RECYCLE_BIN_ICON }
+
+			return di
+		})
+	})
+}
+
 export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), isFocused, ...rest }: CreateDesktopIconParams) => {
 	desktopIcons.update((dis: DesktopIconsType) =>
 		[...dis, { desktopIconId, zIndex: dis.length + 1, isFocused: isFocused ?? true, ...rest }]
@@ -39,7 +53,7 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 		let oldDesktopIcon: IndividualDesktopIconType
 		let oldRoute: string
 		if (params.name) {
-			oldDesktopIcon = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
+			oldDesktopIcon = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
 			oldRoute = `${oldDesktopIcon.route}\\${oldDesktopIcon.name}`
 		}
 
@@ -55,11 +69,15 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 	})
 }
 
-export const removeDesktopIcon = (desktopIconId: string) =>
+export const removeDesktopIcon = (desktopIconId: string) => {
 	desktopIcons.update((dis: DesktopIconsType) => dis.filter(di => di.desktopIconId !== desktopIconId))
+	updateRecycleBinIcon()
+}
 
-export const moveDesktopIconToNewRoute = (desktopIconId: string, newRoute: string) =>
+export const moveDesktopIconToNewRoute = (desktopIconId: string, newRoute: string) => {
 	updateDesktopIconParams(desktopIconId, { route: newRoute, top: 108, left: 12 })
+	updateRecycleBinIcon()
+}
 
 export const getDesktopIconName = (desktopIconId: string) => {
 	let title = ""
@@ -90,7 +108,7 @@ export const createInitialDesktopIcons = () => {
 	})
 	createDesktopIcon({
 		desktopIconId: DI_RECYCLE_BIN,
-		icon: "recycle-bin",
+		icon: RECYCLE_BIN_ICON,
 		name: RECYCLE_BIN_NAME,
 		route: DESKTOP_ROUTE,
 		isFocused: false,
@@ -98,7 +116,6 @@ export const createInitialDesktopIcons = () => {
 		left: DESKTOP_ICON_MARGIN,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(DI_RECYCLE_BIN),
-			icon: "recycle-bin",
 			desktopIconId: DI_RECYCLE_BIN,
 			initialWidth: 600,
 			initialHeight: 400,
