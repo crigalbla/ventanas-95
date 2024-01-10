@@ -97,7 +97,6 @@ export const createInitialDesktopIcons = () => {
 		left: DESKTOP_ICON_MARGIN,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(DI_MY_PC),
-			icon: "my-computer-280px",
 			desktopIconId: DI_MY_PC,
 			initialWidth: 600,
 			initialHeight: 400,
@@ -134,7 +133,6 @@ export const createInitialDesktopIcons = () => {
 		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(DI_FIRST_FOLDER),
-			icon: "open-folder",
 			desktopIconId: DI_FIRST_FOLDER,
 			initialWidth: 600,
 			initialHeight: 400,
@@ -158,7 +156,6 @@ export const createInitialDesktopIcons = () => {
 			onDblClick: () => createWindow({
 				title: getDesktopIconName(DI_ABOUT_NOTEPAD),
 				subTitle: "subTitle.notepad",
-				icon: "notepad",
 				desktopIconId: DI_ABOUT_NOTEPAD,
 				initialWidth: 300,
 				initialHeight: 150,

@@ -84,7 +84,7 @@
 					if (di.isFocused) {
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
 					} else if (di.isEditingName) {
-						updateDesktopIconParams(di.desktopIconId, { isEditingName: false })
+						updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
 					}
 				}
 			})

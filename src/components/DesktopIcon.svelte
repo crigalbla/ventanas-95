@@ -45,7 +45,7 @@
   }
 
   const onKeyDown = (event: KeyboardEvent) =>
-  	event.key === "Enter" && updateDesktopIconParams(desktopIconId, { isEditingName: false })
+  	event.key === "Enter" && updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true })
 
   const onContextMenu = (event: MouseEvent) => {
   	let customSection
