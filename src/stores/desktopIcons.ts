@@ -50,17 +50,21 @@ export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPref
 
 export const updateDesktopIconParams = (desktopIconId: string, params: UpdatableDesktopIconParams) => {
 	desktopIcons.update((dis: DesktopIconsType) => {
+		const isChangingNameOrRoute = Boolean(params.name ?? params.route)
 		let oldDesktopIcon: IndividualDesktopIconType
 		let oldRoute: string
-		if (params.name) {
+		if (isChangingNameOrRoute) {
 			oldDesktopIcon = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
 			oldRoute = `${oldDesktopIcon.route}\\${oldDesktopIcon.name}`
 		}
 
 		return dis.map((di: IndividualDesktopIconType) => {
-			// Update routes of files inside of the folder that will change the name
-			if (params.name && di.route === oldRoute && di.desktopIconId !== desktopIconId) {
-				return { ...di, route: di.route.replace(oldRoute, `${oldDesktopIcon.route}\\${params.name}`) }
+			// Update routes of files inside of the folder that will change the name o will be moved
+			if (isChangingNameOrRoute && di.route.includes(oldRoute) && di.desktopIconId !== desktopIconId) {
+				const newRoute = params.name
+					? `${oldDesktopIcon.route}\\${params.name}`
+					: `${params.route}\\${oldDesktopIcon.name}`
+				return { ...di, route: di.route.replace(oldRoute, newRoute) }
 			}
 
 			 // Update in normal cases
@@ -70,7 +74,17 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 }
 
 export const removeDesktopIcon = (desktopIconId: string) => {
-	desktopIcons.update((dis: DesktopIconsType) => dis.filter(di => di.desktopIconId !== desktopIconId))
+	desktopIcons.update((dis: DesktopIconsType) => {
+		const desktopIconWillBeRemoved = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
+		const routeWillBeRemoved = `${desktopIconWillBeRemoved.route}\\${desktopIconWillBeRemoved.name}`
+
+		return dis.filter(di => di.desktopIconId !== desktopIconId && !di.route.includes(routeWillBeRemoved))
+	})
+	updateRecycleBinIcon()
+}
+
+export const cleanRecycleBin = () => {
+	desktopIcons.update((dis: DesktopIconsType) => dis.filter(di => !di.route.includes(RECYCLE_BIN_ROUTE)))
 	updateRecycleBinIcon()
 }
 

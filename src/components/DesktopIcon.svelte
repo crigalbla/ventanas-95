@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createRightClickMenuInDesktopIcon, desktopIcons, moveDesktopIconToNewRoute, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, removeDesktopIcon } from "@/stores"
+  import { createRightClickMenuInDesktopIcon, desktopIcons, moveDesktopIconToNewRoute, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, removeDesktopIcon, cleanRecycleBin } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, RECYCLE_BIN_ROUTE } from "@/constants"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
@@ -55,7 +55,7 @@
   	if (isRecycleBin) {
   		customSection = {
   			position: 1,
-  			section: [{ text: "rightClickMenu.cleanRecycleBin" }]
+  			section: [{ text: "rightClickMenu.cleanRecycleBin", onClick: cleanRecycleBin }]
   		}
   	}
 
