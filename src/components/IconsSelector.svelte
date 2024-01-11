@@ -4,7 +4,7 @@
   import { DESKTOP_ROUTE } from "@/constants"
   import { onMount } from "svelte"
 
-	export let htmlElement: HTMLElement
+	export let rangeToMoveMouse: HTMLElement
 	export let relativeCoordinates = { top: 0, left: 0 }
 	export let folderRoute = DESKTOP_ROUTE
 
@@ -18,7 +18,7 @@
 
   onMount(() => {
   	const createEvents = () => {
-  		const isMouseInThisHTMLElement = (event: MouseEvent) => htmlElement === event.target
+  		const isMouseInThisHTMLElement = (event: MouseEvent) => rangeToMoveMouse === event.target
   		const updateIconFocus = () => desktopIcons.update((dis: DesktopIconsType) =>
   			dis.map((di: IndividualDesktopIconType) => {
   				const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
@@ -68,7 +68,7 @@
   		}
 
   		const onMouseMove = (event: MouseEvent) => {
-  			if (isMouseDown && !isMouseOutOfThisElement(event, htmlElement)) {
+  			if (isMouseDown && !isMouseOutOfThisElement(event, rangeToMoveMouse)) {
   				freezeCurrentCursor(event)
   				isShowed = height > 2 || width > 2
 
@@ -90,7 +90,7 @@
   			}
   		}
 
-  		htmlElement.addEventListener("mousedown", onMouseDown)
+  		rangeToMoveMouse.addEventListener("mousedown", onMouseDown)
   		window.addEventListener("mousemove", onMouseMove)
   		window.addEventListener("mouseup", onMouseUp)
 

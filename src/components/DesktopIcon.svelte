@@ -10,6 +10,7 @@
   export let route: string
   export let isFocused = false
   export let isEditingName = false
+  export let canBeDropped: boolean = undefined!
   export let zIndex: number = 0
   export let top: number = 0
   export let left: number = 0
@@ -74,7 +75,7 @@
   }
 </script>
 
-<Draggable id={desktopIconId} canBeDraggabled={!isEditingName} {top} {left} fake>
+<Draggable id={desktopIconId} canBeDraggabled={!isEditingName} canBeDropped={canBeDropped} {top} {left} fake>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- NOTE: doble tap with touchpad does not work with on:dblclick -->
   <section
@@ -157,7 +158,8 @@
     width: calc(2px + var(--width) * 1px);
     margin: 0px;
     border: var(--none, 1px dotted white);
-    background-color: var(--none, #0000aa);
+    background-color: var(--background, #0000aa);
+    pointer-events: var(--none, default);;
     color: var(--color, white);
     overflow-wrap: break-word;
   }

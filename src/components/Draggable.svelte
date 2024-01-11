@@ -6,6 +6,7 @@
 	export let top: number
 	export let fake = false
 	export let canBeDraggabled = true
+	export let canBeDropped: boolean = undefined!
 	export let id: string
 
 	const isWindow = id.substring(0, 1) === windowIdPrefix
@@ -18,8 +19,8 @@
 	let outOfScreenTop = 0
 
 	const updateParams = (() => {
-		if (id.includes(desktopIconIdPrefix)) return updateDesktopIconParams
-		if (id.includes(windowIdPrefix)) return updateWindowParams
+		if (isDesktopIcon) return updateDesktopIconParams
+		if (isWindow) return updateWindowParams
 
 		return () => null
 	})()
@@ -84,7 +85,7 @@
 		{:else if isDesktopIcon}
 			<div
 				class="fake-desktop-icon position display-none"
-				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none;"
+				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none; --background:{canBeDropped ? "green" : "red"};"
 				bind:this={fakeDraggable}
 			>
 				<slot />

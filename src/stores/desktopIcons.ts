@@ -10,6 +10,7 @@ export type IndividualDesktopIconType = {
   icon: string,
   name: string,
 	route: string,
+	canBeDropped?: boolean
   isFocused?: boolean,
 	isEditingName?: boolean,
   zIndex?: number, // from 1 to 499
