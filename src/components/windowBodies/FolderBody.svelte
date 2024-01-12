@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType, updateDesktopIconParams } from "@/stores"
+  import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
   import IconsSelector from "../IconsSelector.svelte"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
@@ -40,17 +40,7 @@
   	}
   }
 
-  onMount(() => {
-  	inputSearchRef.scrollLeft = inputSearchRef.scrollWidth
-
-  	// sectionRef.addEventListener("mousemove", (e) => {
-  	// 	const desktopIconsFocused = $desktopIcons.filter(di => di.isFocused)
-  	// 	if (desktopIconsFocused?.length > 0) {
-  	// 		console.log(true)
-  	// 		updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: true })
-  	// 	}
-  	// })
-  })
+  onMount(() => inputSearchRef.scrollLeft = inputSearchRef.scrollWidth)
 </script>
 
 <section class="flex flex-col h-full p-1">
@@ -77,7 +67,7 @@
     </div>
   </div>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div class="border-color-soft-down background-white dis-are-droppable flex-1" on:contextmenu={onContextMenu} bind:this={sectionRef}>
+  <div class="border-color-soft-down background-white dis-are-droppable flex-1" id="test" on:contextmenu={onContextMenu} bind:this={sectionRef}>
     {#each desktopIconsInThisFolder as { properties, ...icon }}
       <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
     {/each}

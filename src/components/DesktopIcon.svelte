@@ -158,8 +158,7 @@
     width: calc(2px + var(--width) * 1px);
     margin: 0px;
     border: var(--none, 1px dotted white);
-    background-color: var(--background, #0000aa);
-    pointer-events: var(--none, default);;
+    background-color: var(--background, #0000aa); /* TODO --none */
     color: var(--color, white);
     overflow-wrap: break-word;
   }

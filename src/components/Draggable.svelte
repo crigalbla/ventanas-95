@@ -35,7 +35,7 @@
 	}
 
   const onMouseUp = () => {
-  	unfreezeCurrentCursor()
+  	isWindow && unfreezeCurrentCursor()
   	moving = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
@@ -48,7 +48,7 @@
 
 	const onMouseMove = (e: MouseEvent) => {
 		if (moving) {
-			freezeCurrentCursor(e)
+			isWindow && freezeCurrentCursor(e)
 			if (!isMouseOutOfScreen(e)) {
 				if (fake && fakeDraggable) {
 					fakeDraggable.classList.remove("display-none")

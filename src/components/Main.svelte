@@ -92,16 +92,17 @@
 		document.addEventListener("mousedown", mouseDownEvent)
 
 		document.addEventListener("mousemove", (event) => {
-			const element = document.elementFromPoint(event.clientX, event.clientY)
+			const elements = document.getElementsByClassName("dis-are-droppable")
   		const desktopIconsFocused = $desktopIcons.filter(di => di.isFocused)
   		if (desktopIconsFocused?.length > 0) {
-				console.log(element)
-				if (element?.classList.contains("dis-are-droppable")) {
-					console.log(true)
-					updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: true })
-				} else {
-					console.log(false)
-					updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: false })
+				for (let i = 0; elements?.length >= i; i++) {
+					const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
+					const rangeWhereCanDrop = elementsUnderMouse.find(element => element.classList.contains("dis-are-droppable"))
+					if (rangeWhereCanDrop) {
+						console.log("element can be dropped")
+					} else {
+						console.log("ELEMENT CAN NOT BE DROPPED")
+					}
 				}
   		}
   	})
