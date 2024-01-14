@@ -81,6 +81,7 @@
   <section
     class="desktop-icon flex flex-col items-center text-center absolute"
     id={desktopIconId}
+    data-route={route}
     style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{maxHeight}"
     on:mousedown={onMouseDownDesktopIcon}
     on:contextmenu={onContextMenu}
@@ -122,6 +123,10 @@
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
     z-index: var(--zIndex);
+  }
+
+  .desktop-icon * {
+    pointer-events: none;
   }
 
   .text {

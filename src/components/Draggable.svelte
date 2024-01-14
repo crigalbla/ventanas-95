@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix } from "@/stores"
+  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
+  import { FAKE_DESKTOP_ICON_ID } from "@/constants"
 
 	export let left: number
 	export let top: number
@@ -11,7 +12,7 @@
 
 	const isWindow = id.substring(0, 1) === windowIdPrefix
 	const isDesktopIcon = id.substring(0, 2) === desktopIconIdPrefix
-	let moving = false
+	let isMouseDown = false
 	let fakeDraggable: HTMLElement
 	let fakeLeft = 0
 	let fakeTop = 0
@@ -29,14 +30,14 @@
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
 
-		moving = true
+		isMouseDown = true
 		outOfScreenLeft = 0
 		outOfScreenTop = 0
 	}
 
   const onMouseUp = () => {
   	isWindow && unfreezeCurrentCursor()
-  	moving = false
+  	isMouseDown = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
   		updateParams(id, { left: left + fakeLeft, top: top + fakeTop })
@@ -47,7 +48,7 @@
   }
 
 	const onMouseMove = (e: MouseEvent) => {
-		if (moving) {
+		if (isMouseDown) {
 			isWindow && freezeCurrentCursor(e)
 			if (!isMouseOutOfScreen(e)) {
 				if (fake && fakeDraggable) {
@@ -75,7 +76,7 @@
 	>
 		<slot />
 	</section>
-	{#if fake && moving}
+	{#if fake && isMouseDown}
 		{#if isWindow}
 			<div
 				class="fake-window position display-none"
@@ -85,6 +86,7 @@
 		{:else if isDesktopIcon}
 			<div
 				class="fake-desktop-icon position display-none"
+				id={FAKE_DESKTOP_ICON_ID}
 				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none; --cursor:{canBeDropped ? "" : "no-drop"};"
 				bind:this={fakeDraggable}
 			>
@@ -111,7 +113,7 @@
 
 	.fake-desktop-icon {
 		cursor: var(--cursor);
-		z-index: 499;
+		z-index: 999;
 		opacity: 0.6;
 	}
 </style>

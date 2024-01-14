@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, createRightClickMenuInScreen, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
-  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, DIS_ARE_DROPPABLE, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
+  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
@@ -43,7 +43,7 @@
   }
 
 	const onContextMenu = (event: MouseEvent) => {
-		const target = event.target as EventTarget & { className: string }
+		const target = event.target as EventTarget & { id: string }
 		// isDifferenceGreaterThan2Seconds is necessary due to body.style.pointerEvents is empty in this moment
 		if (target?.id === DESKTOP_SCREEN_ID && isDifferenceGreaterThan2Seconds(userLoggedAt, new Date())) {
 			createRightClickMenuInScreen(event, DESKTOP_ROUTE)
@@ -59,7 +59,7 @@
   }
 
 	onMount(() => {
-		const mouseDownEvent = (event: Event) => {
+		const mouseDownEvent = (event: MouseEvent) => {
 			const target = event.target as Node
 			const rightClickMenu = document.querySelector(`#${RIGHT_CLICK_MENU_ID}`)
 			const subRightClickMenu = document.querySelector(`#${SUB_RIGHT_CLICK_MENU_ID}`)
@@ -89,30 +89,33 @@
 				}
 			})
 		}
-		document.addEventListener("mousedown", mouseDownEvent)
 
-		document.addEventListener("mousemove", (event) => {
-			const elements = document.getElementsByClassName(DIS_ARE_DROPPABLE)
+		const mouseMove = (event: MouseEvent) => {
 			// TODO complete when there are several desktopIcons
   		const desktopIconsFocused = $desktopIcons.filter(di => di.isFocused)
   		if (desktopIconsFocused?.length > 0) {
-				for (let i = 0; elements?.length >= i; i++) {
-					const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
-					const rangeWhereCanDrop = elementsUnderMouse.find(element => element.classList.contains(DIS_ARE_DROPPABLE))
-					if (rangeWhereCanDrop) {
-						if (!desktopIconsFocused[0].canBeDropped) {
-							updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: true })
-						}
-					} else {
-						if (desktopIconsFocused[0].canBeDropped) {
-							updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: false })
-						}
+				const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
+					?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
+				const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement
+				const routeOfElement = elementUnderDesktopIcon?.dataset.route
+				if (routeOfElement) {
+					if (!desktopIconsFocused[0].canBeDropped) {
+						updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: true })
+					}
+				} else {
+					if (desktopIconsFocused[0].canBeDropped) {
+						updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: false })
 					}
 				}
   		}
-  	})
+  	}
+		document.addEventListener("mousedown", mouseDownEvent)
+		document.addEventListener("mousemove", mouseMove)
 
-		return () => document.removeEventListener("mousedown", mouseDownEvent)
+		return () => {
+			document.removeEventListener("mousedown", mouseDownEvent)
+			document.removeEventListener("mousemove", mouseMove)
+		}
 	})
 </script>
 
@@ -121,6 +124,7 @@
 	<section
 		class="desktop-screen"
 		id={DESKTOP_SCREEN_ID}
+		data-route={DESKTOP_ROUTE}
 		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
 		on:contextmenu={onContextMenu}
 		bind:this={desktopScreenRef}

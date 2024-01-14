@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
-  import { DI_MY_PC, DI_RECYCLE_BIN, DIS_ARE_DROPPABLE } from "@/constants"
+  import { DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
   import IconsSelector from "../IconsSelector.svelte"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
@@ -67,7 +67,12 @@
     </div>
   </div>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div class="border-color-soft-down background-white {DIS_ARE_DROPPABLE} flex-1" on:contextmenu={onContextMenu} bind:this={sectionRef}>
+  <div
+    class="border-color-soft-down background-white flex-1"
+    data-route={thisRoute}
+    on:contextmenu={onContextMenu}
+    bind:this={sectionRef}
+  >
     {#each desktopIconsInThisFolder as { properties, ...icon }}
       <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
     {/each}

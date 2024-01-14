@@ -10,6 +10,7 @@ export const RIGHT_CLICK_MENU_ID = "right-click-menu"
 export const SUB_RIGHT_CLICK_MENU_ID = "sub-right-click-menu"
 export const NAVIGATION_BAR_ID = "navigation-bar"
 export const DESKTOP_SCREEN_ID = "desktop-screen"
+export const FAKE_DESKTOP_ICON_ID = "fake-desktop-icon"
 
 export const DI_MY_PC = "di-my-pc"
 export const DI_RECYCLE_BIN = "di-recycle-bin"
@@ -25,5 +26,3 @@ export const FULL_RECYCLE_BIN_ICON = "full-recycle-bin"
 const ROOT_ROUTE = "C:\\"
 export const DESKTOP_ROUTE = `${ROOT_ROUTE}route.desktop`
 export const RECYCLE_BIN_ROUTE = `${DESKTOP_ROUTE}\\${RECYCLE_BIN_NAME}`
-
-export const DIS_ARE_DROPPABLE = "dis-are-droppable"
