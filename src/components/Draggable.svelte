@@ -18,8 +18,8 @@
 	let outOfScreenLeft = 0
 	let outOfScreenTop = 0
 
-	const updateParams = (() => {
-		if (isDesktopIcon) return updateDesktopIconParams
+	$: updateParams = (() => {
+		if (isDesktopIcon && canBeDropped) return updateDesktopIconParams
 		if (isWindow) return updateWindowParams
 
 		return () => null
@@ -85,7 +85,7 @@
 		{:else if isDesktopIcon}
 			<div
 				class="fake-desktop-icon position display-none"
-				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none; --background:{canBeDropped ? "green" : "red"};"
+				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none; --cursor:{canBeDropped ? "" : "no-drop"};"
 				bind:this={fakeDraggable}
 			>
 				<slot />
@@ -110,6 +110,7 @@
 	}
 
 	.fake-desktop-icon {
+		cursor: var(--cursor);
 		z-index: 499;
 		opacity: 0.6;
 	}
