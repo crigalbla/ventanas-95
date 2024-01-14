@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, createRightClickMenuInScreen, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
+  import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
+  import { isDifferenceGreaterThan2Seconds, isDifferentOfRecycleBinAndMyPC, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
-  import { isDifferenceGreaterThan2Seconds, waitingCursor } from "@/utils"
   import { onMount } from "svelte"
   import RightClickMenu from "./RightClickMenu.svelte"
   import IconsSelector from "./IconsSelector.svelte"
@@ -97,8 +97,16 @@
 				const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
 					?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
 				const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement
-				const routeOfElement = elementUnderDesktopIcon?.dataset.route
-				if (routeOfElement) {
+				const routeOfDestination = elementUnderDesktopIcon?.dataset.route
+				const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
+				const isDestinationAsDesktopIconSelected = elementUnderDesktopIcon.id === desktopIconsFocused[0].desktopIconId
+				const canBeDroppedInFolderOrDesktopIcon = isDestinationAsDesktopIconSelected ||
+					!isDestinationADesktopIcon || isDifferentOfRecycleBinAndMyPC(desktopIconsFocused[0].desktopIconId)
+				const isDestinationRouteDifferentOfOrigin =
+					routeOfDestination !== `${desktopIconsFocused[0].route}\\${desktopIconsFocused[0].name}`
+
+				// TODO avoid move myPC and recycleBin to other folders
+				if (routeOfDestination && canBeDroppedInFolderOrDesktopIcon && isDestinationRouteDifferentOfOrigin) {
 					if (!desktopIconsFocused[0].canBeDropped) {
 						updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: true })
 					}
@@ -109,12 +117,18 @@
 				}
   		}
   	}
+
+		const mouseUp = (event: MouseEvent) => {
+
+		}
 		document.addEventListener("mousedown", mouseDownEvent)
 		document.addEventListener("mousemove", mouseMove)
+		document.addEventListener("mouseup", mouseUp)
 
 		return () => {
 			document.removeEventListener("mousedown", mouseDownEvent)
 			document.removeEventListener("mousemove", mouseMove)
+			document.removeEventListener("mouseup", mouseUp)
 		}
 	})
 </script>

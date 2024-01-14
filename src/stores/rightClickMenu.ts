@@ -3,7 +3,7 @@ import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { writable } from "svelte/store"
 import { generateId } from "@/utils"
-import { RECYCLE_BIN_ROUTE } from "@/constants"
+import { NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
 
 export type SubOptionInRightClickMenuType = {
   text: string,
@@ -74,7 +74,7 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, wind
 
 	createDesktopIcon({
 		desktopIconId,
-		icon: "notepad",
+		icon: NOTEPAD_ICON,
 		name: "desktopIcon.newTextDocument",
 		route,
 		isFocused: false,

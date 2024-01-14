@@ -1,4 +1,4 @@
-import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID } from "@/constants"
+import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID, DI_RECYCLE_BIN, DI_MY_PC } from "@/constants"
 
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
@@ -124,3 +124,5 @@ export const isMobileOrTablet = (): boolean => {
 
 	return false
 }
+
+export const isDifferentOfRecycleBinAndMyPC = (id: string) => id !== DI_RECYCLE_BIN && id !== DI_MY_PC

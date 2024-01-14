@@ -22,6 +22,7 @@ export const MY_PC_NAME = "desktopIcon.myPc"
 
 export const RECYCLE_BIN_ICON = "recycle-bin"
 export const FULL_RECYCLE_BIN_ICON = "full-recycle-bin"
+export const NOTEPAD_ICON = "notepad"
 
 const ROOT_ROUTE = "C:\\"
 export const DESKTOP_ROUTE = `${ROOT_ROUTE}route.desktop`
