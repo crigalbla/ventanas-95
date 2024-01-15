@@ -7,7 +7,7 @@
 	export let top: number
 	export let fake = false
 	export let canBeDraggabled = true
-	export let canBeDropped: boolean = undefined!
+	export let canBeDropped: boolean = true
 	export let id: string
 
 	const isWindow = id.substring(0, 1) === windowIdPrefix
@@ -40,7 +40,7 @@
   	isMouseDown = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
-  		updateParams(id, { left: left + fakeLeft, top: top + fakeTop })
+  		updateParams(id, { left: left + fakeLeft, top: top + fakeTop, isMoving: false })
 
   		fakeLeft = 0
   		fakeTop = 0
@@ -49,6 +49,7 @@
 
 	const onMouseMove = (e: MouseEvent) => {
 		if (isMouseDown) {
+			updateParams(id, { isMoving: true })
 			isWindow && freezeCurrentCursor(e)
 			if (!isMouseOutOfScreen(e)) {
 				if (fake && fakeDraggable) {
@@ -56,7 +57,7 @@
 					fakeLeft += e.movementX + outOfScreenLeft
 					fakeTop += e.movementY + outOfScreenTop
 				} else {
-					updateParams(id, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop })
+					updateParams(id, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop, isMoving: true })
 				}
 				outOfScreenLeft = 0
 				outOfScreenTop = 0

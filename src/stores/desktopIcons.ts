@@ -13,6 +13,7 @@ export type IndividualDesktopIconType = {
 	canBeDropped?: boolean
   isFocused?: boolean,
 	isEditingName?: boolean,
+	isMoving?: boolean,
   zIndex?: number, // from 1 to 499
   top?: number,
   left?: number,

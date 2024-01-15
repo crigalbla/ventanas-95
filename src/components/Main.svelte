@@ -92,27 +92,37 @@
 
 		const mouseMove = (event: MouseEvent) => {
 			// TODO complete when there are several desktopIcons
-  		const desktopIconsFocused = $desktopIcons.filter(di => di.isFocused)
-  		if (desktopIconsFocused?.length > 0) {
+  		const desktopIconsMoving = $desktopIcons.filter(di => di.isMoving)
+			console.log(desktopIconsMoving)
+  		if (desktopIconsMoving?.length > 0) {
 				const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
 					?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
 				const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement
 				const routeOfDestination = elementUnderDesktopIcon?.dataset.route
 				const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
-				const isDestinationAsDesktopIconSelected = elementUnderDesktopIcon.id === desktopIconsFocused[0].desktopIconId
+				const isDestinationAsDesktopIconSelected = elementUnderDesktopIcon.id === desktopIconsMoving[0].desktopIconId
 				const canBeDroppedInFolderOrDesktopIcon = isDestinationAsDesktopIconSelected ||
-					!isDestinationADesktopIcon || isDifferentOfRecycleBinAndMyPC(desktopIconsFocused[0].desktopIconId)
+					!isDestinationADesktopIcon || isDifferentOfRecycleBinAndMyPC(desktopIconsMoving[0].desktopIconId)
 				const isDestinationRouteDifferentOfOrigin =
-					routeOfDestination !== `${desktopIconsFocused[0].route}\\${desktopIconsFocused[0].name}`
+					routeOfDestination !== `${desktopIconsMoving[0].route}\\${desktopIconsMoving[0].name}`
 
-				// TODO avoid move myPC and recycleBin to other folders
+				// Decide if desktopIcon in moving  can be dropped
 				if (routeOfDestination && canBeDroppedInFolderOrDesktopIcon && isDestinationRouteDifferentOfOrigin) {
-					if (!desktopIconsFocused[0].canBeDropped) {
-						updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: true })
+					if (!desktopIconsMoving[0].canBeDropped) {
+						updateDesktopIconParams(desktopIconsMoving[0].desktopIconId, { canBeDropped: true })
+					}
+
+					// Focus or unfocus destination desktopIcon
+					if (isDestinationADesktopIcon) {
+						updateDesktopIconParams(elementUnderDesktopIcon.id, { isFocused: true })
+					} else {
+						desktopIcons.update(dis =>
+							dis.map(di =>
+								di.desktopIconId !== desktopIconsMoving[0].desktopIconId ? { ...di, isFocused: false } : di))
 					}
 				} else {
-					if (desktopIconsFocused[0].canBeDropped) {
-						updateDesktopIconParams(desktopIconsFocused[0].desktopIconId, { canBeDropped: false })
+					if (desktopIconsMoving[0].canBeDropped) {
+						updateDesktopIconParams(desktopIconsMoving[0].desktopIconId, { canBeDropped: false })
 					}
 				}
   		}
