@@ -50,6 +50,60 @@
 		}
 	}
 
+	const dropDesktopIcon = (event: MouseEvent) => {
+		// TODO complete when there are several desktopIcons
+		const movingDesktopIcons = $desktopIcons.filter(di => di.isMoving)
+		if (movingDesktopIcons?.length > 0) {
+			const isMouseMove = event.type === "mousemove"
+			const isMouseUp = event.type === "mouseup"
+			const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
+				?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
+			const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement // [0] is the desktopIcon shadow
+			const destinationRoute = elementUnderDesktopIcon?.dataset.route
+			const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
+			const isMovingFewPixels = elementUnderDesktopIcon.id === movingDesktopIcons[0].desktopIconId
+			const isRecycleBinOrMyPC = !isDifferentOfRecycleBinAndMyPC(movingDesktopIcons[0].desktopIconId)
+			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || !isDestinationADesktopIcon || !isRecycleBinOrMyPC
+			const isDestinationRouteDifferentOfOrigin =
+				destinationRoute !== `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
+			const isRecycleBinOrMyPCMovingToFolder = isRecycleBinOrMyPC && destinationRoute !== movingDesktopIcons[0].route
+
+			// Decide if desktopIcon in moving  can be dropped
+			if (
+				destinationRoute &&
+				canBeDroppedInFolderOrDesktopIcon &&
+				isDestinationRouteDifferentOfOrigin &&
+				!isRecycleBinOrMyPCMovingToFolder
+			) {
+				if (isMouseUp && movingDesktopIcons[0].route !== destinationRoute) {
+					const newCoordinates = destinationRoute === DESKTOP_ROUTE
+						? { top: event.clientY, left: event.clientX } // TODO give the exact coordinates
+						: { top: 108, left: 12 } // TODO
+				  updateDesktopIconParams(
+						movingDesktopIcons[0].desktopIconId,
+						{ ...newCoordinates, route: destinationRoute, isMoving: false }
+					)
+				}
+				if (isMouseMove && !movingDesktopIcons[0].canBeDropped) {
+					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: true })
+				}
+
+				// Focus or unfocus destination desktopIcon
+				if (isMouseMove && isDestinationADesktopIcon) {
+					updateDesktopIconParams(elementUnderDesktopIcon.id, { isFocused: true })
+				} else if (isMouseMove && $desktopIcons.filter(di => di.isFocused).length > 1) {
+					desktopIcons.update(dis =>
+						dis.map(di =>
+							di.desktopIconId !== movingDesktopIcons[0].desktopIconId ? { ...di, isFocused: false } : di))
+				}
+			} else {
+				if (isMouseMove && movingDesktopIcons[0].canBeDropped) {
+					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
+				}
+			}
+		}
+	}
+
   $: if ($user?.isLoggedIn) {
   	playStartingAudio()
   	waitingCursor()
@@ -89,53 +143,9 @@
 				}
 			})
 		}
+		const mouseMove = (event: MouseEvent) => dropDesktopIcon(event)
+		const mouseUp = (event: MouseEvent) => dropDesktopIcon(event)
 
-		const mouseMove = (event: MouseEvent) => {
-			// TODO complete when there are several desktopIcons
-  		const movingDesktopIcons = $desktopIcons.filter(di => di.isMoving)
-  		if (movingDesktopIcons?.length > 0) {
-				const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
-					?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
-				const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement // [0] is the desktopIcon shadow
-				const destinationRoute = elementUnderDesktopIcon?.dataset.route
-				const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
-				const isMovingFewPixels = elementUnderDesktopIcon.id === movingDesktopIcons[0].desktopIconId
-				const isRecycleBinOrMyPC = !isDifferentOfRecycleBinAndMyPC(movingDesktopIcons[0].desktopIconId)
-				const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || !isDestinationADesktopIcon || !isRecycleBinOrMyPC
-				const isDestinationRouteDifferentOfOrigin =
-					destinationRoute !== `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
-				const isRecycleBinOrMyPCMovingToFolder = isRecycleBinOrMyPC && destinationRoute !== movingDesktopIcons[0].route
-
-				// Decide if desktopIcon in moving  can be dropped
-				if (
-					destinationRoute &&
-					canBeDroppedInFolderOrDesktopIcon &&
-					isDestinationRouteDifferentOfOrigin &&
-					!isRecycleBinOrMyPCMovingToFolder
-				) {
-					if (!movingDesktopIcons[0].canBeDropped) {
-						updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: true })
-					}
-
-					// Focus or unfocus destination desktopIcon
-					if (isDestinationADesktopIcon) {
-						updateDesktopIconParams(elementUnderDesktopIcon.id, { isFocused: true })
-					} else if ($desktopIcons.filter(di => di.isFocused).length > 1) {
-						desktopIcons.update(dis =>
-							dis.map(di =>
-								di.desktopIconId !== movingDesktopIcons[0].desktopIconId ? { ...di, isFocused: false } : di))
-					}
-				} else {
-					if (movingDesktopIcons[0].canBeDropped) {
-						updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
-					}
-				}
-  		}
-  	}
-
-		const mouseUp = (event: MouseEvent) => {
-
-		}
 		document.addEventListener("mousedown", mouseDownEvent)
 		document.addEventListener("mousemove", mouseMove)
 		document.addEventListener("mouseup", mouseUp)
