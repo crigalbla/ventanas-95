@@ -45,8 +45,14 @@
   	if (newName.length > 0) updateDesktopIconParams(desktopIconId, { name: newName.trim() })
   }
 
-  const onKeyDown = (event: KeyboardEvent) =>
-  	event.key === "Enter" && updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true })
+  const onKeyDownInDesktopIcon = (event: KeyboardEvent) => event.key === "Enter" && onDblClick()
+
+  const onKeyDownInInput = (event: KeyboardEvent) => {
+  	if (event.key === "Enter") {
+  		updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true })
+  		desktopIconRef.focus()
+  	}
+  }
 
   const onContextMenu = (event: MouseEvent) => {
   	let customSection
@@ -77,14 +83,20 @@
 
 <Draggable id={desktopIconId} canBeDraggabled={!isEditingName} canBeDropped={canBeDropped} {top} {left} fake>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+  <!-- svelte-ignore a11y-autofocus -->
   <!-- NOTE: doble tap with touchpad does not work with on:dblclick -->
+  <!-- NOTE2: tabindex is to allow on:keydown -->
   <section
     class="desktop-icon flex flex-col items-center text-center absolute"
     id={desktopIconId}
     data-route={route}
     style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{maxHeight}"
+    tabindex={0}
+    autofocus={isFocused}
     on:mousedown={onMouseDownDesktopIcon}
     on:contextmenu={onContextMenu}
+    on:keydown={onKeyDownInDesktopIcon}
     on:dblclick={() => !isEditingName && onDblClick()}
     bind:this={desktopIconRef}
   >
@@ -101,7 +113,7 @@
         value={$t(name)}
         maxlength="200"
         on:input={onInput}
-        on:keydown={onKeyDown}
+        on:keydown={onKeyDownInInput}
         bind:this={textareaRef}
       />
     {:else}
@@ -123,6 +135,7 @@
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
     z-index: var(--zIndex);
+    outline: none;
   }
 
   .desktop-icon * {
