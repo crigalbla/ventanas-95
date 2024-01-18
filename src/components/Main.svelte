@@ -82,7 +82,7 @@
 					const ajustmentInY = rectOfShadow.top - event.clientY
 					const newCoordinates = destinationRoute === DESKTOP_ROUTE
 						? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
-						: {}
+						: { top: 108, left: 12 }
 
 					updateDesktopIconParams(
 						movingDesktopIcons[0].desktopIconId,
