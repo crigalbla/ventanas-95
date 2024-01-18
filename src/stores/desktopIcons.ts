@@ -61,7 +61,7 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 		}
 
 		return dis.map((di: IndividualDesktopIconType) => {
-			// Update routes of files inside of the folder that will change the name o will be moved
+			// Update routes of files inside of the folder that will change the name or will be moved
 			if (isChangingNameOrRoute && di.route.includes(oldRoute) && di.desktopIconId !== desktopIconId) {
 				const newRoute = params.name
 					? `${oldDesktopIcon.route}\\${params.name}`
