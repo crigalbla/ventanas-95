@@ -17,10 +17,10 @@
   let textareaRef: HTMLTextAreaElement
   let saveChangeWindowIsActive = false
   let text = ""
-  let verStaDecTriangle = ""
-  let verEndIncTriangle = ""
-  let horStaDecTriangle = ""
-  let horEndIncTriangle = ""
+  let verStaDecTriangleLocal = ""
+  let verEndIncTriangleLocal = ""
+  let horStaDecTriangleLocal = ""
+  let horEndIncTriangleLocal = ""
 
   const changeCloseCallBack = () => {
   	updateWindowParams(windowId, {
@@ -79,19 +79,19 @@
   onMount(() => {
   	const textAreaWasResized = () => {
   		if (textareaRef?.scrollHeight > textareaRef?.clientHeight) {
-  			verStaDecTriangle = getTriangle("50,00 0,50 100,50")
-  			verEndIncTriangle = getTriangle("0,0 100,0 50,50")
+  			verStaDecTriangleLocal = getTriangle("50,00 0,50 100,50")
+  			verEndIncTriangleLocal = getTriangle("0,0 100,0 50,50")
   		} else {
-  			verStaDecTriangle = getTriangle("50,00 0,50 100,50", "rgba(0, 0, 0, 0.3)")
-  			verEndIncTriangle = getTriangle("0,0 100,0 50,50", "rgba(0, 0, 0, 0.3)")
+  			verStaDecTriangleLocal = getTriangle("50,00 0,50 100,50", "rgba(0, 0, 0, 0.3)")
+  			verEndIncTriangleLocal = getTriangle("0,0 100,0 50,50", "rgba(0, 0, 0, 0.3)")
   		}
 
   		if (textareaRef?.scrollWidth > textareaRef?.clientWidth) {
-  			horStaDecTriangle = getTriangle("0,50 50,100 50,0")
-  			horEndIncTriangle = getTriangle("0,0 0,100 50,50")
+  			horStaDecTriangleLocal = getTriangle("0,50 50,100 50,0")
+  			horEndIncTriangleLocal = getTriangle("0,0 0,100 50,50")
   		} else {
-  			horStaDecTriangle = getTriangle("0,50 50,100 50,0", "rgba(0, 0, 0, 0.3)")
-  			horEndIncTriangle = getTriangle("0,0 0,100 50,50", "rgba(0, 0, 0, 0.3)")
+  			horStaDecTriangleLocal = getTriangle("0,50 50,100 50,0", "rgba(0, 0, 0, 0.3)")
+  			horEndIncTriangleLocal = getTriangle("0,0 0,100 50,50", "rgba(0, 0, 0, 0.3)")
   		}
   	}
 
@@ -115,10 +115,10 @@
     <textarea
       wrap="off"
       style="
-        --verStaDecTriangle: url('{verStaDecTriangle}');
-        --verEndIncTriangle: url('{verEndIncTriangle}');
-        --horStaDecTriangle: url('{horStaDecTriangle}');
-        --horEndIncTriangle: url('{horEndIncTriangle}');"
+        --verStaDecTriangleLocal: url('{verStaDecTriangleLocal}');
+        --verEndIncTriangleLocal: url('{verEndIncTriangleLocal}');
+        --horStaDecTriangleLocal: url('{horStaDecTriangleLocal}');
+        --horEndIncTriangleLocal: url('{horEndIncTriangleLocal}');"
       value={text}
       on:input={onInput}
       bind:this={textareaRef}
@@ -172,5 +172,25 @@
 
   textarea:focus {
     outline: none;
+  }
+
+  ::-webkit-scrollbar-button:vertical:start:decrement {
+    background-position: center 4px;
+    background-image: var(--verStaDecTriangleLocal);
+  }
+
+  ::-webkit-scrollbar-button:vertical:end:increment {
+    background-position: center 4px;
+    background-image: var(--verEndIncTriangleLocal);
+  }
+
+  ::-webkit-scrollbar-button:horizontal:start:decrement {
+    background-position: 4px 3px;
+    background-image: var(--horStaDecTriangleLocal);
+  }
+
+  ::-webkit-scrollbar-button:horizontal:end:increment {
+    background-position: 5px 3px;
+    background-image: var(--horEndIncTriangleLocal);
   }
 </style>

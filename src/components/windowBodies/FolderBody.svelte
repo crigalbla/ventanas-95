@@ -68,17 +68,19 @@
   </div>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
-    class="border-color-soft-down background-white flex-1"
+    class="content border-color-soft-down background-white"
     data-route={thisRoute}
     on:contextmenu={onContextMenu}
     bind:this={sectionRef}
   >
-    {#each desktopIconsInThisFolder as { properties, ...icon }}
-      <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
-    {/each}
-    {#if sectionRef}
-      <IconsSelector rangeToMoveMouse={sectionRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />
-    {/if}
+    <div class="content-without-overflow">
+      {#each desktopIconsInThisFolder as { properties, ...icon }}
+        <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
+      {/each}
+      {#if sectionRef}
+        <IconsSelector rangeToMoveMouse={sectionRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />
+      {/if}
+    </div>
   </div>
 </section>
 
@@ -112,5 +114,16 @@
     background-repeat: no-repeat;
     background-position: 4px 8px;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="rgba(0, 0, 0, 0.3)"><polygon points="0,0 100,0 50,50"/></svg>');
+  }
+
+  .content {
+    flex: 1 1 0%;
+    overflow: auto;
+    margin-bottom: 26px;
+  }
+
+  .content-without-overflow {
+    width: 800px;
+    height: 400px;
   }
 </style>

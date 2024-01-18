@@ -11,6 +11,6 @@
 <style>
   .choose-language, option {
     cursor: url('/cursors/arrow.cur'), default;
-    z-index: 9999;
+    z-index: 499;
   }
 </style>
