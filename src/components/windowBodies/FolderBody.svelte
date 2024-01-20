@@ -29,45 +29,17 @@
   $: thisRouteTranslated = $t(desktopIcon.name) && getRouteTranslated(thisRoute) // $t is necessary to rerender when change language
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
   $: windowCoordinates = { top: window.top as number, left: window.left as number }
-  let sectionRef: HTMLElement
-  let sectionWithScroll: HTMLElement
+  let contentRef: HTMLElement
   let inputSearchRef: HTMLInputElement
-  let bodyWidth = "100%"
-  let bodyHeight = "100%"
-  let marginBotton = ""
 
   const onClickHeaderButton = () => null
 
   const onContextMenu = (event: MouseEvent) => {
-  	if (event.target === sectionWithScroll) {
-  		const rect = sectionWithScroll.getBoundingClientRect()
+  	if (event.target === contentRef) {
+  		const rect = contentRef.getBoundingClientRect()
   		createRightClickMenuInScreen(event, thisRoute, { top: rect.top, left: rect.left })
   	}
   }
-
-  const caculateDimensions = () => {
-  	const rect = sectionRef.getBoundingClientRect()
-  	const relativeCoordinatesOfSectionRef = { top: rect.top - (window.top as number), left: rect.left - (window.left as number) }
-  	let newBodyWidth = 0
-  	let newBodyHeight = 0
-
-  	desktopIconsInThisFolder.forEach(diInFolder => {
-  		const possibleNewBodyWidth = (diInFolder.left as number) - relativeCoordinatesOfSectionRef.left + DESKTOP_ICON_WIDTH
-  		const possibleNewBodyHeight = (diInFolder.top as number) - relativeCoordinatesOfSectionRef.top + DESKTOP_ICON_HEIGHT
-
-  		if (newBodyWidth < possibleNewBodyWidth) newBodyWidth = possibleNewBodyWidth
-  		if (newBodyHeight < possibleNewBodyHeight) newBodyHeight = possibleNewBodyHeight
-  	})
-
-  	bodyWidth = "100%"
-  	bodyHeight = "100%"
-  	marginBotton = ""
-  	if (newBodyWidth && newBodyWidth > rect.width) bodyWidth = `${newBodyWidth}px`
-  	if (newBodyHeight && newBodyHeight > rect.height) bodyHeight = `${newBodyHeight}px`
-  	if (bodyHeight !== "100%") marginBotton = "26px"
-  }
-
-  $: if (window && desktopIconsInThisFolder && sectionRef) caculateDimensions()
 
   onMount(() => inputSearchRef.scrollLeft = inputSearchRef.scrollWidth)
 </script>
@@ -99,23 +71,16 @@
   <!-- TODO arreglar boton on:contextmenu -->
   <div
     class="content border-color-soft-down background-white"
-    style="--marginBotton:{marginBotton};"
-    bind:this={sectionRef}
+    data-route={thisRoute}
+    on:contextmenu={onContextMenu}
+    bind:this={contentRef}
   >
-    <div
-      class="content-with-scroll"
-      style="--bodyWidth:{bodyWidth}; --bodyHeight:{bodyHeight};"
-      data-route={thisRoute}
-      on:contextmenu={onContextMenu}
-      bind:this={sectionWithScroll}
-    >
-      {#each desktopIconsInThisFolder as { properties, ...icon }}
-        <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
-      {/each}
-      {#if sectionRef}
-        <IconsSelector rangeToMoveMouse={sectionRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />
-      {/if}
-    </div>
+    {#each desktopIconsInThisFolder as { properties, ...icon }}
+      <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
+    {/each}
+    {#if contentRef}
+      <IconsSelector rangeToMoveMouse={contentRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />
+    {/if}
   </div>
 </section>
 
@@ -155,12 +120,5 @@
   .content {
     flex: 1 1 0%;
     overflow: auto;
-    margin-bottom: var(--marginBotton);
-  }
-
-  .content-with-scroll {
-    padding: 5px;
-    width: var(--bodyWidth);
-    height: var(--bodyHeight);
   }
 </style>
