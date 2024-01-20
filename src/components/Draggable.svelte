@@ -71,6 +71,7 @@
 
 {#if canBeDraggabled}
 	<section
+		class:desktop-icon-only={isDesktopIcon}
 		on:mousedown={onMouseDown}
 		role="tab"
 		tabindex="0"
@@ -80,13 +81,13 @@
 	{#if fake && isMouseDown}
 		{#if isWindow}
 			<div
-				class="fake-window position display-none"
+				class="fake-window position absolute display-none"
 				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft};"
 				bind:this={fakeDraggable}
 			/>
 		{:else if isDesktopIcon}
 			<div
-				class="fake-desktop-icon position display-none"
+				class="fake-desktop-icon position relative display-none"
 				id={FAKE_DESKTOP_ICON_ID}
 				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none; --cursor:{canBeDropped ? "" : "no-drop"};"
 				bind:this={fakeDraggable}
@@ -101,18 +102,24 @@
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
 
 <style>
+	.desktop-icon-only {
+		width: 0px;
+		height: 0px;
+	}
 	.position {
-		position: absolute;
 		top: calc(var(--fakeTop) * 1px);
     left: calc(var(--fakeLeft) * 1px);
 		width: calc(var(--width) * 1px);
     height: calc(var(--height) * 1px);
 	}
+
 	.fake-window {
 		border: 2px dotted black;
 	}
 
 	.fake-desktop-icon {
+		width: 0px;
+		height: 0px;
 		cursor: var(--cursor);
 		z-index: 999;
 		opacity: 0.6;

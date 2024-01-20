@@ -4,8 +4,8 @@
   import IconsSelector from "../IconsSelector.svelte"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
-  import { t } from "@/i18n"
   import { onMount } from "svelte"
+  import { t } from "@/i18n"
 
   export let windowId: string
   export let desktopIconId: string
@@ -30,6 +30,7 @@
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
   $: windowCoordinates = { top: window.top as number, left: window.left as number }
   let sectionRef: HTMLElement
+  let sectionWithScroll: HTMLElement
   let inputSearchRef: HTMLInputElement
   let bodyWidth = "100%"
   let bodyHeight = "100%"
@@ -38,8 +39,9 @@
   const onClickHeaderButton = () => null
 
   const onContextMenu = (event: MouseEvent) => {
-  	if (event.target === sectionRef) {
-  		createRightClickMenuInScreen(event, thisRoute, { top: window?.top as number, left: window?.left as number })
+  	if (event.target === sectionWithScroll) {
+  		const rect = sectionWithScroll.getBoundingClientRect()
+  		createRightClickMenuInScreen(event, thisRoute, { top: rect.top, left: rect.left })
   	}
   }
 
@@ -63,8 +65,6 @@
   	if (newBodyWidth && newBodyWidth > rect.width) bodyWidth = `${newBodyWidth}px`
   	if (newBodyHeight && newBodyHeight > rect.height) bodyHeight = `${newBodyHeight}px`
   	if (bodyHeight !== "100%") marginBotton = "26px"
-
-  	console.log({ marginBotton, bodyWidth, newBodyWidth, bodyHeight, newBodyHeight })
   }
 
   $: if (window && desktopIconsInThisFolder && sectionRef) caculateDimensions()
@@ -96,16 +96,18 @@
     </div>
   </div>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- TODO arreglar boton on:contextmenu -->
   <div
     class="content border-color-soft-down background-white"
     style="--marginBotton:{marginBotton};"
-    on:contextmenu={onContextMenu}
     bind:this={sectionRef}
   >
     <div
-      class="content-without-overflow"
+      class="content-with-scroll"
       style="--bodyWidth:{bodyWidth}; --bodyHeight:{bodyHeight};"
       data-route={thisRoute}
+      on:contextmenu={onContextMenu}
+      bind:this={sectionWithScroll}
     >
       {#each desktopIconsInThisFolder as { properties, ...icon }}
         <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
@@ -156,7 +158,8 @@
     margin-bottom: var(--marginBotton);
   }
 
-  .content-without-overflow {
+  .content-with-scroll {
+    padding: 5px;
     width: var(--bodyWidth);
     height: var(--bodyHeight);
   }

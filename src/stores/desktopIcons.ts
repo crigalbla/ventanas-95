@@ -91,7 +91,7 @@ export const cleanRecycleBin = () => {
 }
 
 export const moveDesktopIconToNewRoute = (desktopIconId: string, newRoute: string) => {
-	updateDesktopIconParams(desktopIconId, { route: newRoute, top: 108, left: 12 })
+	updateDesktopIconParams(desktopIconId, { route: newRoute, top: 0, left: 0 })
 	updateRecycleBinIcon()
 }
 

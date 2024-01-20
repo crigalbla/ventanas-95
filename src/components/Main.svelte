@@ -59,6 +59,7 @@
 			const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
 				?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
 			const elementShadow = elementsUnderMouse[0] as HTMLElement
+			console.log({ elementShadow })
 			const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement
 			const destinationRoute = elementUnderDesktopIcon?.dataset.route
 			const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
@@ -82,7 +83,7 @@
 					const ajustmentInY = rectOfShadow.top - event.clientY
 					const newCoordinates = destinationRoute === DESKTOP_ROUTE
 						? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
-						: { top: 108, left: 12 }
+						: { top: 0, left: 0 }
 
 					updateDesktopIconParams(
 						movingDesktopIcons[0].desktopIconId,

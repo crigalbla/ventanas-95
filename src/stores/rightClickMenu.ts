@@ -32,7 +32,7 @@ export type RightClickMenuType = {
   zIndex?: number
 }
 
-type WindowCoordinatesType = { top: number, left: number }
+type SectionCoordinatesType = { top: number, left: number }
 
 const state: RightClickMenuType = undefined!
 
@@ -40,7 +40,7 @@ export const rightClickMenu = writable(state)
 
 export const removeRightClickMenu = () => rightClickMenu.set(undefined!)
 
-const createNewFolderDesktopIcon = (event: MouseEvent, route: string, windowCoordinates: WindowCoordinatesType) => {
+const createNewFolderDesktopIcon = (event: MouseEvent, route: string, SectionCoordinates: SectionCoordinatesType) => {
 	const desktopIconId = generateId(desktopIconIdPrefix)
 
 	createDesktopIcon({
@@ -50,8 +50,8 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, windowCoor
 		route,
 		isFocused: false,
 		isEditingName: true,
-		top: event.clientY - windowCoordinates.top,
-		left: event.clientX - windowCoordinates.left,
+		top: event.clientY - SectionCoordinates.top,
+		left: event.clientX - SectionCoordinates.left,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(desktopIconId),
 			desktopIconId,
@@ -64,7 +64,7 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, windowCoor
 	})
 }
 
-const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, windowCoordinates: WindowCoordinatesType) => {
+const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, SectionCoordinates: SectionCoordinatesType) => {
 	const desktopIconId = generateId(desktopIconIdPrefix)
 	// TODO avoid duplicate names
 	// const arrayNames = []
@@ -80,8 +80,8 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, wind
 		isFocused: false,
 		isEditingName: true,
 		properties: { text: "" },
-		top: event.clientY - windowCoordinates.top,
-		left: event.clientX - windowCoordinates.left,
+		top: event.clientY - SectionCoordinates.top,
+		left: event.clientX - SectionCoordinates.left,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(desktopIconId),
 			subTitle: "subTitle.notepad",
@@ -98,7 +98,7 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, wind
 export const createRightClickMenuInScreen = (
 	event: MouseEvent,
 	route: string,
-	windowCoordinates: WindowCoordinatesType = { top: 0, left: 0 }
+	SectionCoordinates: SectionCoordinatesType = { top: 0, left: 0 }
 ) => rightClickMenu.set({
 	sections: [
 		[
@@ -111,11 +111,11 @@ export const createRightClickMenuInScreen = (
 					sections: [
 						[{
 							text: "rightClickMenu.folder",
-							onClick: () => createNewFolderDesktopIcon(event, route, windowCoordinates)
+							onClick: () => createNewFolderDesktopIcon(event, route, SectionCoordinates)
 						}],
 						[{
 							text: "rightClickMenu.textDocument",
-							onClick: () => createNewTextDocumentDesktopIcon(event, route, windowCoordinates)
+							onClick: () => createNewTextDocumentDesktopIcon(event, route, SectionCoordinates)
 						}]
 					]
 				}

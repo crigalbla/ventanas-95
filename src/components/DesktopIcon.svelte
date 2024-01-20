@@ -88,10 +88,10 @@
   <!-- NOTE: doble tap with touchpad does not work with on:dblclick -->
   <!-- NOTE2: tabindex is to allow on:keydown -->
   <section
-    class="desktop-icon flex flex-col items-center text-center absolute"
+    class="desktop-icon flex flex-col items-center text-center"
     id={desktopIconId}
     data-route={route}
-    style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{maxHeight}"
+    style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{maxHeight};"
     tabindex={0}
     autofocus={isFocused}
     on:mousedown={onMouseDownDesktopIcon}
@@ -130,6 +130,7 @@
 
 <style>
   .desktop-icon {
+    position: relative;
     width: calc(var(--width) * 1px);
     max-height: calc(var(--max-height) * 1px);
     top: calc(var(--top) * 1px);
