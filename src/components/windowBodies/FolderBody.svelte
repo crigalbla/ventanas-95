@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
-  import { DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
   import IconsSelector from "../IconsSelector.svelte"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
@@ -31,6 +31,9 @@
   $: windowCoordinates = { top: window.top as number, left: window.left as number }
   let sectionRef: HTMLElement
   let inputSearchRef: HTMLInputElement
+  let bodyWidth = "100%"
+  let bodyHeight = "100%"
+  let marginBotton = ""
 
   const onClickHeaderButton = () => null
 
@@ -39,6 +42,32 @@
   		createRightClickMenuInScreen(event, thisRoute, { top: window?.top as number, left: window?.left as number })
   	}
   }
+
+  const caculateDimensions = () => {
+  	const rect = sectionRef.getBoundingClientRect()
+  	const relativeCoordinatesOfSectionRef = { top: rect.top - (window.top as number), left: rect.left - (window.left as number) }
+  	let newBodyWidth = 0
+  	let newBodyHeight = 0
+
+  	desktopIconsInThisFolder.forEach(diInFolder => {
+  		const possibleNewBodyWidth = (diInFolder.left as number) - relativeCoordinatesOfSectionRef.left + DESKTOP_ICON_WIDTH
+  		const possibleNewBodyHeight = (diInFolder.top as number) - relativeCoordinatesOfSectionRef.top + DESKTOP_ICON_HEIGHT
+
+  		if (newBodyWidth < possibleNewBodyWidth) newBodyWidth = possibleNewBodyWidth
+  		if (newBodyHeight < possibleNewBodyHeight) newBodyHeight = possibleNewBodyHeight
+  	})
+
+  	bodyWidth = "100%"
+  	bodyHeight = "100%"
+  	marginBotton = ""
+  	if (newBodyWidth && newBodyWidth > rect.width) bodyWidth = `${newBodyWidth}px`
+  	if (newBodyHeight && newBodyHeight > rect.height) bodyHeight = `${newBodyHeight}px`
+  	if (bodyHeight !== "100%") marginBotton = "26px"
+
+  	console.log({ marginBotton, bodyWidth, newBodyWidth, bodyHeight, newBodyHeight })
+  }
+
+  $: if (window && desktopIconsInThisFolder && sectionRef) caculateDimensions()
 
   onMount(() => inputSearchRef.scrollLeft = inputSearchRef.scrollWidth)
 </script>
@@ -69,11 +98,15 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="content border-color-soft-down background-white"
-    data-route={thisRoute}
+    style="--marginBotton:{marginBotton};"
     on:contextmenu={onContextMenu}
     bind:this={sectionRef}
   >
-    <div class="content-without-overflow">
+    <div
+      class="content-without-overflow"
+      style="--bodyWidth:{bodyWidth}; --bodyHeight:{bodyHeight};"
+      data-route={thisRoute}
+    >
       {#each desktopIconsInThisFolder as { properties, ...icon }}
         <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
       {/each}
@@ -98,6 +131,7 @@
   .decoration-bar {
     margin: 2px 12px 2px -2px;
   }
+
   .background-white {
     background: white;
   }
@@ -119,11 +153,11 @@
   .content {
     flex: 1 1 0%;
     overflow: auto;
-    margin-bottom: 26px;
+    margin-bottom: var(--marginBotton);
   }
 
   .content-without-overflow {
-    width: 800px;
-    height: 400px;
+    width: var(--bodyWidth);
+    height: var(--bodyHeight);
   }
 </style>
