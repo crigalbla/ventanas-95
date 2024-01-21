@@ -4,7 +4,7 @@ type CustomMouseEvent = MouseEvent & {
   toElement: Element
 }
 
-export const isMouseOutOfScreen = (e: MouseEvent) =>
+export const isMouseOutOfDesktopScreen = (e: MouseEvent) =>
 	isMouseOutOfThisElement(e, document.getElementById(DESKTOP_SCREEN_ID) ?? document.body)
 
 export const isMouseOutOfThisElement = (e: MouseEvent, targetElement: HTMLElement): boolean => {

@@ -1,5 +1,5 @@
 <script>
-  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
+  import { freezeCurrentCursor, isMouseOutOfDesktopScreen, unfreezeCurrentCursor } from "@/utils"
 	import { updateWindowParams } from "@/stores"
 
 	export let width
@@ -16,6 +16,8 @@
 	let fakeHeight = height
 	let fakeTop = 0
 	let fakeLeft = 0
+	let outOfScreenLeft = 0
+	let outOfScreenTop = 0
 	let resizing = false
 	let fakeResizeRef
 
@@ -51,6 +53,8 @@
 	  const onMouseDown = (event) => {
 			freezeCurrentCursor(event)
 			resizing = true
+			outOfScreenLeft = 0
+			outOfScreenTop = 0
 
 	    active = event.target
 	    const rect = element.getBoundingClientRect()
@@ -92,59 +96,75 @@
 	  }
 
 	  const onMouseMove = (event) => {
-	    if (!active || !resizing || isMouseOutOfScreen(event)) return
+	    if (!active || !resizing) return
 
 	    const direction = active.direction
 	    let delta
 
 	    if (direction.match("east")) {
-				delta = event.pageX - initialCursorPosition.x
-	      const newWidth = initialRect.width + delta
-	      if (minWidth < newWidth) {
-					if (fake) {
-						fakeWidth = newWidth
-					} else {
-						updateWindowParams(windowId, { width: newWidth })
-					}
-	      }
+				if (!isMouseOutOfDesktopScreen(event)) {
+					delta = event.pageX - initialCursorPosition.x
+					const newWidth = initialRect.width + delta
+					if (minWidth < newWidth) {
+						if (fake) {
+							fakeWidth = newWidth
+						} else {
+							updateWindowParams(windowId, { width: newWidth })
+						}
+	      	}
+				}
 	    }
 
 	    if (direction.match("west")) {
-	      delta = initialCursorPosition.x - event.pageX
-	      const newWidth = initialRect.width + delta
-	      if (minWidth < newWidth) {
-					if (fake) {
-						fakeWidth = newWidth
-						fakeLeft += event.movementX
-					} else {
-						updateWindowParams(windowId, { left: event.pageX, width: newWidth })
-					}
-	      }
+				if (!isMouseOutOfDesktopScreen(event)) {
+					delta = initialCursorPosition.x - event.pageX
+					const newWidth = initialRect.width + delta
+					const newFakeLeft = event.pageX - left + outOfScreenLeft
+					if (minWidth < newWidth) {
+						if (fake) {
+							fakeWidth = newWidth
+							fakeLeft = newFakeLeft
+						} else {
+							updateWindowParams(windowId, { left: event.pageX + outOfScreenLeft, width: newWidth })
+						}
+						outOfScreenLeft = 0
+	      	}
+				} else {
+					outOfScreenLeft += event.movementX
+				}
 	    }
 
 	    if (direction.match("north")) {
-	      delta = initialCursorPosition.y - event.pageY
-	      const newHeight = initialRect.height + delta
-	      if (minHeight < newHeight) {
-					if (fake) {
-						fakeHeight = newHeight
-						fakeTop += event.movementY
-					} else {
-						updateWindowParams(windowId, { top: event.pageY, height: newHeight })
-					}
-	      }
+				if (!isMouseOutOfDesktopScreen(event)) {
+					delta = initialCursorPosition.y - event.pageY
+					const newHeight = initialRect.height + delta
+					const newFakeTop = event.pageY - top + outOfScreenTop
+					if (minHeight < newHeight) {
+						if (fake) {
+							fakeHeight = newHeight
+							fakeTop = newFakeTop
+						} else {
+							updateWindowParams(windowId, { top: event.pageY + outOfScreenTop, height: newHeight })
+						}
+						outOfScreenTop = 0
+	      	}
+				} else {
+					outOfScreenTop += event.movementY
+				}
 	    }
 
 	    if (direction.match("south")) {
-	      delta = event.pageY - initialCursorPosition.y
-	      const newHeight = initialRect.height + delta
-	      if (minHeight < newHeight) {
-					if (fake) {
-						fakeHeight = newHeight
-					} else {
-						updateWindowParams(windowId, { height: newHeight })
-					}
-	      }
+				if (!isMouseOutOfDesktopScreen(event)) {
+					delta = event.pageY - initialCursorPosition.y
+					const newHeight = initialRect.height + delta
+					if (minHeight < newHeight) {
+						if (fake) {
+							fakeHeight = newHeight
+						} else {
+							updateWindowParams(windowId, { height: newHeight })
+						}
+	      	}
+				}
 	    }
 	  }
 

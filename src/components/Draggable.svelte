@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType } from "@/stores"
-  import { freezeCurrentCursor, isMouseOutOfScreen, unfreezeCurrentCursor } from "@/utils"
+  import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, unfreezeCurrentCursor } from "@/utils"
   import { DESKTOP_ROUTE, FAKE_DESKTOP_ICON_ID } from "@/constants"
 
 	export let left: number
@@ -51,9 +51,10 @@
 
 	const onMouseMove = (e: MouseEvent) => {
 		if (isMouseDown) {
+			const isMouseOutOfRange = isDesktopIcon ? isMouseOutOfThisElement(e, document.body) : isMouseOutOfDesktopScreen(e)
 			isDesktopIcon && updateDesktopIconParams(id, { isMoving: true })
 			isWindow && freezeCurrentCursor(e)
-			if (!isMouseOutOfScreen(e)) {
+			if (!isMouseOutOfRange) {
 				if (fake && fakeDraggable) {
 					fakeDraggable.classList.remove("display-none")
 					fakeLeft += e.movementX + outOfScreenLeft
@@ -130,7 +131,7 @@
 
 	.fake-desktop-icon {
 		cursor: var(--cursor);
-		z-index: 999;
+		z-index: 1500;
 		opacity: 0.6;
 	}
 </style>
