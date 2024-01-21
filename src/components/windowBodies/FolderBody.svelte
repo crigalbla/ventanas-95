@@ -68,7 +68,6 @@
     </div>
   </div>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <!-- TODO arreglar boton on:contextmenu -->
   <div
     class="content border-color-soft-down background-white"
     data-route={thisRoute}

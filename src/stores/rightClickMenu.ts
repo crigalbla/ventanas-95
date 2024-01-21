@@ -1,4 +1,4 @@
-import { desktopIcons, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName, type DesktopIconsType, type IndividualDesktopIconType } from "."
+import { createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName } from "."
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { writable } from "svelte/store"

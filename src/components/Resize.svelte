@@ -48,7 +48,7 @@
 
 	  const resizers = [resizerTop, resizerRight, resizerBottom, resizerLeft, resizerTopRight, resizerTopLeft, resizerBottomRight, resizerBottomLeft]
 
-	  let active = null; let initialRect = null; let initialCursorPosition = null
+	  let active = null; let initialRect = null
 
 	  const onMouseDown = (event) => {
 			freezeCurrentCursor(event)
@@ -58,17 +58,13 @@
 
 	    active = event.target
 	    const rect = element.getBoundingClientRect()
-	    const parent = element.parentElement.getBoundingClientRect()
 
 	    initialRect = {
 	      width: rect.width,
 	      height: rect.height,
-	      left: rect.left - parent.left,
-	      right: parent.right - rect.right,
-	      top: rect.top - parent.top,
-	      bottom: parent.bottom - rect.bottom
+	      left: rect.left,
+	      top: rect.top
 	    }
-	    initialCursorPosition = { x: event.pageX, y: event.pageY }
 	  }
 
 	  const onMouseUp = () => {
@@ -78,7 +74,6 @@
 			resizing = false
 	    active = null
 	    initialRect = null
-	    initialCursorPosition = null
 
 			if (fake) {
 				updateWindowParams(windowId, {
@@ -103,8 +98,7 @@
 
 	    if (direction.match("east")) {
 				if (!isMouseOutOfDesktopScreen(event)) {
-					delta = event.pageX - initialCursorPosition.x
-					const newWidth = initialRect.width + delta
+					const newWidth = event.pageX - initialRect.left
 					if (minWidth < newWidth) {
 						if (fake) {
 							fakeWidth = newWidth
@@ -117,7 +111,7 @@
 
 	    if (direction.match("west")) {
 				if (!isMouseOutOfDesktopScreen(event)) {
-					delta = initialCursorPosition.x - event.pageX
+					delta = initialRect.left - event.pageX
 					const newWidth = initialRect.width + delta
 					const newFakeLeft = event.pageX - left + outOfScreenLeft
 					if (minWidth < newWidth) {
@@ -136,7 +130,7 @@
 
 	    if (direction.match("north")) {
 				if (!isMouseOutOfDesktopScreen(event)) {
-					delta = initialCursorPosition.y - event.pageY
+					delta = initialRect.top - event.pageY
 					const newHeight = initialRect.height + delta
 					const newFakeTop = event.pageY - top + outOfScreenTop
 					if (minHeight < newHeight) {
@@ -155,8 +149,7 @@
 
 	    if (direction.match("south")) {
 				if (!isMouseOutOfDesktopScreen(event)) {
-					delta = event.pageY - initialCursorPosition.y
-					const newHeight = initialRect.height + delta
+					const newHeight = event.pageY - initialRect.top
 					if (minHeight < newHeight) {
 						if (fake) {
 							fakeHeight = newHeight

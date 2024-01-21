@@ -91,7 +91,7 @@
 		{:else if isDesktopIcon}
 			<div
 				class="fake-desktop-icon position display-none"
-				class:test={desktopIcon.route !== DESKTOP_ROUTE}
+				class:change-position={desktopIcon.route !== DESKTOP_ROUTE}
 				id={FAKE_DESKTOP_ICON_ID}
 				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none; --cursor:{canBeDropped ? "" : "no-drop"};"
 				bind:this={fakeDraggable}
@@ -106,12 +106,6 @@
 <svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
 
 <style>
-	/* TODO: cambiar el 106 y el 10 */
-	.test {
-		top: calc((var(--fakeTop) + 106) * 1px) !important;
-		left: calc((var(--fakeLeft) + 10) * 1px) !important;
-	}
-
 	.desktop-icon-only {
 		width: 0px;
 		height: 0px;
@@ -133,5 +127,11 @@
 		cursor: var(--cursor);
 		z-index: 1500;
 		opacity: 0.6;
+	}
+
+	/* TODO: cambiar el 106 y el 10 */
+	.change-position {
+		top: calc((var(--fakeTop) + 106) * 1px) !important;
+		left: calc((var(--fakeLeft) + 10) * 1px) !important;
 	}
 </style>
