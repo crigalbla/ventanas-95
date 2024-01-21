@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
+  import { DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
   import IconsSelector from "../IconsSelector.svelte"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
@@ -120,5 +120,6 @@
   .content {
     flex: 1 1 0%;
     overflow: auto;
+    padding: 5px;
   }
 </style>

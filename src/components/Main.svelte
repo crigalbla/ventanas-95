@@ -59,7 +59,6 @@
 			const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
 				?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
 			const elementShadow = elementsUnderMouse[0] as HTMLElement
-			console.log({ elementShadow })
 			const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement
 			const destinationRoute = elementUnderDesktopIcon?.dataset.route
 			const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
@@ -70,7 +69,6 @@
 				destinationRoute !== `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
 			const isRecycleBinOrMyPCMovingToFolder = isRecycleBinOrMyPC && destinationRoute !== movingDesktopIcons[0].route
 
-			// Decide if desktopIcon in moving  can be dropped
 			if (
 				destinationRoute &&
 				canBeDroppedInFolderOrDesktopIcon &&
@@ -96,7 +94,14 @@
 
 				// Focus or unfocus destination desktopIcon
 				if (isMouseMove && isDestinationADesktopIcon) {
-					updateDesktopIconParams(elementUnderDesktopIcon.id, { isFocused: true })
+					desktopIcons.update(dis =>
+						dis.map(di => {
+							if (di.desktopIconId === movingDesktopIcons[0].desktopIconId || di.desktopIconId === elementUnderDesktopIcon.id) {
+								return { ...di, isFocused: true }
+							} else {
+								return { ...di, isFocused: false }
+							}
+						}))
 				} else if (isMouseMove && $desktopIcons.filter(di => di.isFocused).length > 1) {
 					desktopIcons.update(dis =>
 						dis.map(di =>
@@ -105,9 +110,6 @@
 			} else {
 				if (isMouseMove && movingDesktopIcons[0].canBeDropped) {
 					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
-				}
-				if (isMouseUp) {
-					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { isMoving: false })
 				}
 			}
 		}
