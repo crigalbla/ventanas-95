@@ -62,7 +62,7 @@
   	const isInRecycleBin = route === RECYCLE_BIN_ROUTE
   	if (isRecycleBin) {
   		customSection = {
-  			position: 1,
+  			position: 2,
   			section: [{ text: "rightClickMenu.cleanRecycleBin", onClick: cleanRecycleBin }]
   		}
   	}
@@ -70,8 +70,9 @@
   	createRightClickMenuInDesktopIcon({
   		event,
   		canBeEdited: !isRecycleBin,
-  		canBeCutAndCopy: !isMyPc && !isRecycleBin,
+  		canBeCutAndCopied: !isMyPc && !isRecycleBin,
   		canBeDeleted: !isMyPc && !isRecycleBin,
+  		canBePasted: icon !== NOTEPAD_ICON,
   		customSection,
   		onDblClick,
   		removeDesktopIcon: () => !isInRecycleBin

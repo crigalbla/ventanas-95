@@ -109,7 +109,7 @@ const translations: Translations = {
 		"rightClickMenu.cut": "Cut",
 		"rightClickMenu.copy": "Copy",
 		"rightClickMenu.remove": "Remove",
-		"rightClickMenu.changeName": "Change name",
+		"rightClickMenu.changeName": "Rename",
 		"rightClickMenu.cleanRecycleBin": "Clean Recycle bin",
 		"route.desktop": "Desktop"
 	}

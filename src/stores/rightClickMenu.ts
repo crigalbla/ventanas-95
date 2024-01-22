@@ -131,8 +131,9 @@ export const createRightClickMenuInScreen = (
 export const createRightClickMenuInDesktopIcon = ({
 	event,
 	canBeEdited,
-	canBeCutAndCopy,
+	canBeCutAndCopied,
 	canBeDeleted,
+	canBePasted,
 	customSection,
 	onDblClick,
 	removeDesktopIcon,
@@ -140,8 +141,9 @@ export const createRightClickMenuInDesktopIcon = ({
 }: {
 	event: MouseEvent,
 	canBeEdited: boolean,
-	canBeCutAndCopy: boolean,
+	canBeCutAndCopied: boolean,
 	canBeDeleted: boolean,
+	canBePasted: boolean,
 	customSection?: { position: number, section: SectionInRightClickMenuType },
 	onDblClick: () => void,
 	removeDesktopIcon: () => void,
@@ -154,10 +156,18 @@ export const createRightClickMenuInDesktopIcon = ({
 	]
 	const cut = { text: "rightClickMenu.cut", isDisabled: true }
 	const copy = { text: "rightClickMenu.copy", isDisabled: true }
+	const paste = { text: "rightClickMenu.paste", isDisabled: true }
 	const remove = { text: "rightClickMenu.remove", onClick: removeDesktopIcon }
 	const changeName = { text: "rightClickMenu.changeName", onClick: changeToEditingName }
 
-	if (canBeCutAndCopy) sections.push([cut, copy])
+	if (canBeCutAndCopied) sections.push([cut, copy])
+	if (canBePasted) {
+		if (sections.length === 1) {
+			sections.push([paste])
+		} else {
+			sections[1].push(paste)
+		}
+	}
 
 	if (canBeDeleted && canBeEdited) {
 		sections.push([remove, changeName])

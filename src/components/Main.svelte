@@ -72,10 +72,10 @@
 			if (
 				destinationRoute &&
 				canBeDroppedInFolderOrDesktopIcon &&
-				isDestinationRouteDifferentOfOrigin &&
+				(isDestinationRouteDifferentOfOrigin || isMovingFewPixels) &&
 				!isRecycleBinOrMyPCMovingToFolder
 			) {
-				if (isMouseUp && movingDesktopIcons[0].route !== destinationRoute) {
+				if (isMouseUp && movingDesktopIcons[0].route !== destinationRoute && !isMovingFewPixels) {
 					const rectOfShadow = elementShadow.getBoundingClientRect()
 					const ajustmentInX = rectOfShadow.left - event.clientX
 					const ajustmentInY = rectOfShadow.top - event.clientY
