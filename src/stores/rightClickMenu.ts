@@ -1,9 +1,9 @@
-import { createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName } from "."
+import { cleanRecycleBin, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName } from "."
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
+import { NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
 import { writable } from "svelte/store"
 import { generateId } from "@/utils"
-import { NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
 
 export type SubOptionInRightClickMenuType = {
   text: string,
@@ -120,7 +120,9 @@ export const createRightClickMenuInScreen = (
 					]
 				}
 			]
-			: []
+			: [
+				{ text: "rightClickMenu.cleanRecycleBin", onClick: cleanRecycleBin }
+			]
 	].filter(x => x.length),
 	top: event.clientY,
 	left: event.clientX

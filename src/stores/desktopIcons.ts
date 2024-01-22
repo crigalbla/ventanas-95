@@ -51,9 +51,10 @@ export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPref
 }
 
 export const updateDesktopIconParams = (desktopIconId: string, params: UpdatableDesktopIconParams) => {
+	let oldDesktopIcon: IndividualDesktopIconType | undefined
+
 	desktopIcons.update((dis: DesktopIconsType) => {
 		const isChangingNameOrRoute = Boolean(params.name ?? params.route)
-		let oldDesktopIcon: IndividualDesktopIconType
 		let oldRoute: string
 		if (isChangingNameOrRoute) {
 			oldDesktopIcon = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
@@ -62,7 +63,7 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 
 		return dis.map((di: IndividualDesktopIconType) => {
 			// Update routes of files inside of the folder that will change the name or will be moved
-			if (isChangingNameOrRoute && di.route.includes(oldRoute) && di.desktopIconId !== desktopIconId) {
+			if (oldDesktopIcon && di.route.includes(oldRoute) && di.desktopIconId !== desktopIconId) {
 				const newRoute = params.name
 					? `${oldDesktopIcon.route}\\${params.name}`
 					: `${params.route}\\${oldDesktopIcon.name}`
@@ -73,6 +74,7 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 			return di.desktopIconId === desktopIconId ? { ...di, ...params } : di
 		})
 	})
+	if (params.route === RECYCLE_BIN_ROUTE || oldDesktopIcon?.route === RECYCLE_BIN_ROUTE) updateRecycleBinIcon()
 }
 
 export const removeDesktopIcon = (desktopIconId: string) => {
@@ -92,7 +94,6 @@ export const cleanRecycleBin = () => {
 
 export const moveDesktopIconToNewRoute = (desktopIconId: string, newRoute: string) => {
 	updateDesktopIconParams(desktopIconId, { route: newRoute, top: 0, left: 0 })
-	updateRecycleBinIcon()
 }
 
 export const getDesktopIconName = (desktopIconId: string) => {
