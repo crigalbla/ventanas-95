@@ -69,7 +69,6 @@
   		}
   	}
 
-  	console.log({ 1: icon !== NOTEPAD_ICON, 2: !isAlreadyCutOrCopied, 3: isThereAnyCutOrCopiedDesktopIcon() })
   	createRightClickMenuInDesktopIcon({
   		event,
   		desktopIcon: $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType,

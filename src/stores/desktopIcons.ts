@@ -46,17 +46,6 @@ const updateRecycleBinIcon = () => {
 	})
 }
 
-const getCutOrCopiedDesktopIcons = () => {
-	let result: DesktopIconsType = []
-	const unsubscribe = desktopIcons.subscribe((dis) => {
-		result = dis.filter((di) => di.isCopied || di.isCut)
-	})
-	unsubscribe()
-
-	console.log({ result })
-	return result
-}
-
 export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), isFocused, ...rest }: CreateDesktopIconParams) => {
 	desktopIcons.update((dis: DesktopIconsType) =>
 		[...dis, { desktopIconId, zIndex: dis.length + 1, isFocused: isFocused ?? true, ...rest }]
@@ -105,7 +94,6 @@ export const removeDesktopIcon = (desktopIconId: string) => {
 }
 
 export const cutDesktopIcons = (desktopIconIds: string[]) => {
-	console.log({ desktopIconIds })
 	desktopIcons.update((dis: DesktopIconsType) =>
 		dis.map(di =>
 			desktopIconIds.includes(di.desktopIconId)
@@ -125,6 +113,16 @@ export const copyDesktopIcons = (desktopIconIds: string[]) => {
 	)
 }
 
+export const getCutOrCopiedDesktopIcons = () => {
+	let result: DesktopIconsType = []
+	const unsubscribe = desktopIcons.subscribe((dis) => {
+		result = dis.filter((di) => di.isCopied || di.isCut)
+	})
+	unsubscribe()
+
+	return result
+}
+
 export const isThereAnyCutOrCopiedDesktopIcon = () => Boolean(getCutOrCopiedDesktopIcons().length)
 
 export const cleanRecycleBin = () => {
@@ -132,8 +130,12 @@ export const cleanRecycleBin = () => {
 	updateRecycleBinIcon()
 }
 
-export const moveDesktopIconsToNewRoute = (desktopIconIds: string[], newRoute: string, wereCutOrCopied?: boolean) => {
-	let newParams: UpdatableDesktopIconParams = { route: newRoute, top: 0, left: 0 }
+export const moveDesktopIconsToNewRoute = (
+	desktopIconIds: string[],
+	params: { route: string, top?: number, left?: number },
+	wereCutOrCopied?: boolean
+) => {
+	let newParams: UpdatableDesktopIconParams = { route: params.route, top: params.top ?? 0, left: params.left ?? 0 }
 	if (wereCutOrCopied) newParams = { ...newParams, isCopied: false, isCut: false }
 	updateDesktopIconsParams(desktopIconIds, newParams)
 }

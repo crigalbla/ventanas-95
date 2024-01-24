@@ -1,4 +1,4 @@
-import { cleanRecycleBin, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon } from "."
+import { cleanRecycleBin, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon, getCutOrCopiedDesktopIcons } from "."
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
@@ -40,7 +40,7 @@ export const rightClickMenu = writable(state)
 
 export const removeRightClickMenu = () => rightClickMenu.set(undefined!)
 
-const createNewFolderDesktopIcon = (event: MouseEvent, route: string, SectionCoordinates: SectionCoordinatesType) => {
+const createNewFolderDesktopIcon = (event: MouseEvent, route: string, sectionCoordinates: SectionCoordinatesType) => {
 	const desktopIconId = generateId(desktopIconIdPrefix)
 
 	createDesktopIcon({
@@ -50,8 +50,8 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, SectionCoo
 		route,
 		isFocused: false,
 		isEditingName: true,
-		top: event.clientY - SectionCoordinates.top,
-		left: event.clientX - SectionCoordinates.left,
+		top: event.clientY - sectionCoordinates.top,
+		left: event.clientX - sectionCoordinates.left,
 		onDblClick: () => createWindow({
 			title: getDesktopIconName(desktopIconId),
 			desktopIconId,
@@ -98,35 +98,47 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, Sect
 export const createRightClickMenuInScreen = (
 	event: MouseEvent,
 	route: string,
-	SectionCoordinates: SectionCoordinatesType = { top: 0, left: 0 }
-) => rightClickMenu.set({
-	sections: [
-		[
-			{ text: "rightClickMenu.paste", isDisabled: !isThereAnyCutOrCopiedDesktopIcon(), onClick: () => null }
-		],
-		route !== RECYCLE_BIN_ROUTE
-			? [
+	sectionCoordinates: SectionCoordinatesType = { top: 0, left: 0 }
+) => {
+	const newRoute = (event.target as HTMLElement).dataset.route as string
+
+	rightClickMenu.set({
+		sections: [
+			[
 				{
-					text: "rightClickMenu.new",
-					sections: [
-						[{
-							text: "rightClickMenu.folder",
-							onClick: () => createNewFolderDesktopIcon(event, route, SectionCoordinates)
-						}],
-						[{
-							text: "rightClickMenu.textDocument",
-							onClick: () => createNewTextDocumentDesktopIcon(event, route, SectionCoordinates)
-						}]
-					]
+					text: "rightClickMenu.paste",
+					isDisabled: !isThereAnyCutOrCopiedDesktopIcon(),
+					onClick: () => moveDesktopIconsToNewRoute(
+						getCutOrCopiedDesktopIcons().map(di => di.desktopIconId),
+						{ route: newRoute, top: event.clientY, left: event.clientX },
+						true
+					)
 				}
-			]
-			: [
-				{ text: "rightClickMenu.cleanRecycleBin", onClick: cleanRecycleBin }
-			]
-	].filter(x => x.length),
-	top: event.clientY,
-	left: event.clientX
-})
+			],
+			route !== RECYCLE_BIN_ROUTE
+				? [
+					{
+						text: "rightClickMenu.new",
+						sections: [
+							[{
+								text: "rightClickMenu.folder",
+								onClick: () => createNewFolderDesktopIcon(event, route, sectionCoordinates)
+							}],
+							[{
+								text: "rightClickMenu.textDocument",
+								onClick: () => createNewTextDocumentDesktopIcon(event, route, sectionCoordinates)
+							}]
+						]
+					}
+				]
+				: [
+					{ text: "rightClickMenu.cleanRecycleBin", onClick: cleanRecycleBin }
+				]
+		].filter(x => x.length),
+		top: event.clientY,
+		left: event.clientX
+	})
+}
 
 export const createRightClickMenuInDesktopIcon = ({
 	event,
@@ -147,12 +159,13 @@ export const createRightClickMenuInDesktopIcon = ({
 	customSection?: { position: number, section: SectionInRightClickMenuType },
 	onDblClick: () => void,
 }) => {
-	console.log({ canBePasted, isThereAnyCutOrCopiedDesktopIcon: isThereAnyCutOrCopiedDesktopIcon() })
+	const newRoute = (event.target as HTMLElement).dataset.route as string
 	const { desktopIconId, route } = desktopIcon
 	const isInRecycleBin = route === RECYCLE_BIN_ROUTE
-	const onPasteDesktopIcon = () => null
+	const onPasteDesktopIcon = () =>
+		moveDesktopIconsToNewRoute(getCutOrCopiedDesktopIcons().map(di => di.desktopIconId), { route: newRoute }, true)
 	const onRemoveDesktopIcon = () => !isInRecycleBin
-		? moveDesktopIconsToNewRoute([desktopIconId], RECYCLE_BIN_ROUTE)
+		? moveDesktopIconsToNewRoute([desktopIconId], { route: RECYCLE_BIN_ROUTE })
 		: removeDesktopIcon(desktopIconId)
 	const onChangeToIsEditingName = () => updateDesktopIconParams(desktopIconId, { isEditingName: true })
 
