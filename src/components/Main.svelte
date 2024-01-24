@@ -14,6 +14,7 @@
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	let userLoggedAt: Date
 	let desktopScreenRef: HTMLElement
+	$: console.log($desktopIcons)
 
   createLoginWindow()
 

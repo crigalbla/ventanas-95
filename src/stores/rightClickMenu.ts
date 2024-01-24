@@ -1,4 +1,4 @@
-import { cleanRecycleBin, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName } from "."
+import { cleanRecycleBin, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon } from "."
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
@@ -102,7 +102,7 @@ export const createRightClickMenuInScreen = (
 ) => rightClickMenu.set({
 	sections: [
 		[
-			{ text: "rightClickMenu.paste", isDisabled: true }
+			{ text: "rightClickMenu.paste", isDisabled: !isThereAnyCutOrCopiedDesktopIcon(), onClick: () => null }
 		],
 		route !== RECYCLE_BIN_ROUTE
 			? [
@@ -130,35 +130,43 @@ export const createRightClickMenuInScreen = (
 
 export const createRightClickMenuInDesktopIcon = ({
 	event,
+	desktopIcon,
 	canBeEdited,
 	canBeCutAndCopied,
 	canBeDeleted,
 	canBePasted,
 	customSection,
-	onDblClick,
-	removeDesktopIcon,
-	changeToEditingName
+	onDblClick
 }: {
 	event: MouseEvent,
+	desktopIcon: IndividualDesktopIconType,
 	canBeEdited: boolean,
 	canBeCutAndCopied: boolean,
 	canBeDeleted: boolean,
 	canBePasted: boolean,
 	customSection?: { position: number, section: SectionInRightClickMenuType },
 	onDblClick: () => void,
-	removeDesktopIcon: () => void,
-	changeToEditingName: () => void
 }) => {
+	console.log({ canBePasted, isThereAnyCutOrCopiedDesktopIcon: isThereAnyCutOrCopiedDesktopIcon() })
+	const { desktopIconId, route } = desktopIcon
+	const isInRecycleBin = route === RECYCLE_BIN_ROUTE
+	const onPasteDesktopIcon = () => null
+	const onRemoveDesktopIcon = () => !isInRecycleBin
+		? moveDesktopIconsToNewRoute([desktopIconId], RECYCLE_BIN_ROUTE)
+		: removeDesktopIcon(desktopIconId)
+	const onChangeToIsEditingName = () => updateDesktopIconParams(desktopIconId, { isEditingName: true })
+
 	const sections: SectionInRightClickMenuType[] = [
 		[
 			{ text: "rightClickMenu.open", isBold: true, onClick: onDblClick }
 		]
 	]
-	const cut = { text: "rightClickMenu.cut", isDisabled: true }
-	const copy = { text: "rightClickMenu.copy", isDisabled: true }
-	const paste = { text: "rightClickMenu.paste", isDisabled: true }
-	const remove = { text: "rightClickMenu.remove", onClick: removeDesktopIcon }
-	const changeName = { text: "rightClickMenu.changeName", onClick: changeToEditingName }
+	const cut: OptionInRightClickMenuType = { text: "rightClickMenu.cut", onClick: () => cutDesktopIcons([desktopIconId]) }
+	const copy: OptionInRightClickMenuType = { text: "rightClickMenu.copy", onClick: () => copyDesktopIcons([desktopIconId]) }
+	const paste: OptionInRightClickMenuType =
+		{ text: "rightClickMenu.paste", isDisabled: !isThereAnyCutOrCopiedDesktopIcon(), onClick: onPasteDesktopIcon }
+	const remove: OptionInRightClickMenuType = { text: "rightClickMenu.remove", onClick: onRemoveDesktopIcon }
+	const changeName: OptionInRightClickMenuType = { text: "rightClickMenu.changeName", onClick: onChangeToIsEditingName }
 
 	if (canBeCutAndCopied) sections.push([cut, copy])
 	if (canBePasted) {

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createRightClickMenuInDesktopIcon, desktopIcons, moveDesktopIconToNewRoute, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, removeDesktopIcon, cleanRecycleBin } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
+  import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon } from "@/stores"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, NOTEPAD_ICON } from "@/constants"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
 
@@ -10,6 +10,8 @@
   export let route: string
   export let isFocused = false
   export let isEditingName = false
+  export let isCut = false
+  export let isCopied = false
   export let canBeDropped: boolean = undefined!
   export let zIndex: number = 0
   export let top: number = 0
@@ -59,7 +61,7 @@
   	let customSection
   	const isMyPc = desktopIconId === DI_MY_PC
   	const isRecycleBin = desktopIconId === DI_RECYCLE_BIN
-  	const isInRecycleBin = route === RECYCLE_BIN_ROUTE
+  	const isAlreadyCutOrCopied = isCut || isCopied
   	if (isRecycleBin) {
   		customSection = {
   			position: 2,
@@ -67,18 +69,16 @@
   		}
   	}
 
+  	console.log({ 1: icon !== NOTEPAD_ICON, 2: !isAlreadyCutOrCopied, 3: isThereAnyCutOrCopiedDesktopIcon() })
   	createRightClickMenuInDesktopIcon({
   		event,
+  		desktopIcon: $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType,
   		canBeEdited: !isRecycleBin,
   		canBeCutAndCopied: !isMyPc && !isRecycleBin,
   		canBeDeleted: !isMyPc && !isRecycleBin,
-  		canBePasted: icon !== NOTEPAD_ICON,
+  		canBePasted: icon !== NOTEPAD_ICON && !isAlreadyCutOrCopied && isThereAnyCutOrCopiedDesktopIcon(),
   		customSection,
-  		onDblClick,
-  		removeDesktopIcon: () => !isInRecycleBin
-  			? moveDesktopIconToNewRoute(desktopIconId, RECYCLE_BIN_ROUTE)
-  			: removeDesktopIcon(desktopIconId),
-  		changeToEditingName: () => updateDesktopIconParams(desktopIconId, { isEditingName: true })
+  		onDblClick
   	})
   }
 </script>
@@ -105,6 +105,7 @@
     <img
       class="h-8 w-8 mb-1"
       class:blue-tone={isFocused}
+      class:is-cut={isCut}
       src={`icons/${icon}.png`}
       alt={icon}
       draggable="false"
@@ -186,5 +187,9 @@
 
   .blue-tone {
     filter: var(--none, sepia(1) saturate(25) hue-rotate(180deg) brightness(0.7));
+  }
+
+  .is-cut {
+    opacity: 0.5;
   }
 </style>

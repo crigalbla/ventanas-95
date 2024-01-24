@@ -15,6 +15,7 @@ export type IndividualDesktopIconType = {
 	isEditingName?: boolean,
 	isMoving?: boolean,
 	isCut?: boolean,
+	isCopied?: boolean,
   zIndex?: number, // from 1 to 499
   top?: number,
   left?: number,
@@ -43,6 +44,17 @@ const updateRecycleBinIcon = () => {
 			return di
 		})
 	})
+}
+
+const getCutOrCopiedDesktopIcons = () => {
+	let result: DesktopIconsType = []
+	const unsubscribe = desktopIcons.subscribe((dis) => {
+		result = dis.filter((di) => di.isCopied || di.isCut)
+	})
+	unsubscribe()
+
+	console.log({ result })
+	return result
 }
 
 export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), isFocused, ...rest }: CreateDesktopIconParams) => {
@@ -78,6 +90,10 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 	if (params.route === RECYCLE_BIN_ROUTE || oldDesktopIcon?.route === RECYCLE_BIN_ROUTE) updateRecycleBinIcon()
 }
 
+export const updateDesktopIconsParams = (desktopIconIds: string[], params: UpdatableDesktopIconParams) => {
+	desktopIconIds.forEach((desktopIconId) => updateDesktopIconParams(desktopIconId, params))
+}
+
 export const removeDesktopIcon = (desktopIconId: string) => {
 	desktopIcons.update((dis: DesktopIconsType) => {
 		const desktopIconWillBeRemoved = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
@@ -88,18 +104,44 @@ export const removeDesktopIcon = (desktopIconId: string) => {
 	updateRecycleBinIcon()
 }
 
+export const cutDesktopIcons = (desktopIconIds: string[]) => {
+	console.log({ desktopIconIds })
+	desktopIcons.update((dis: DesktopIconsType) =>
+		dis.map(di =>
+			desktopIconIds.includes(di.desktopIconId)
+				? { ...di, isCut: true, isCopied: false }
+				: { ...di, isCut: false, isCopied: false }
+		)
+	)
+}
+
+export const copyDesktopIcons = (desktopIconIds: string[]) => {
+	desktopIcons.update((dis: DesktopIconsType) =>
+		dis.map(di =>
+			desktopIconIds.includes(di.desktopIconId)
+				? { ...di, isCopied: true, isCut: false }
+				: { ...di, isCopied: false, isCut: false }
+		)
+	)
+}
+
+export const isThereAnyCutOrCopiedDesktopIcon = () => Boolean(getCutOrCopiedDesktopIcons().length)
+
 export const cleanRecycleBin = () => {
 	desktopIcons.update((dis: DesktopIconsType) => dis.filter(di => !di.route.includes(RECYCLE_BIN_ROUTE)))
 	updateRecycleBinIcon()
 }
 
-export const moveDesktopIconToNewRoute = (desktopIconId: string, newRoute: string) => {
-	updateDesktopIconParams(desktopIconId, { route: newRoute, top: 0, left: 0 })
+export const moveDesktopIconsToNewRoute = (desktopIconIds: string[], newRoute: string, wereCutOrCopied?: boolean) => {
+	let newParams: UpdatableDesktopIconParams = { route: newRoute, top: 0, left: 0 }
+	if (wereCutOrCopied) newParams = { ...newParams, isCopied: false, isCut: false }
+	updateDesktopIconsParams(desktopIconIds, newParams)
 }
 
 export const getDesktopIconName = (desktopIconId: string) => {
 	let title = ""
-	desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
+	const unsubscribe = desktopIcons.subscribe(dis => title = dis.find(di => di.desktopIconId === desktopIconId)?.name as string)
+	unsubscribe()
 
 	return title
 }
