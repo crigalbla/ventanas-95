@@ -30,5 +30,11 @@ export const t = derived(locale, ($locale) => (key: string, vars: TranslationVar
 	} catch (error) {
 		return key
 	}
+})
+export const translateKey = (key: string) => {
+	let result = ""
+	const unsubscribe = t.subscribe((tr) => result = tr(key))
+	unsubscribe()
+
+	return result
 }
-)

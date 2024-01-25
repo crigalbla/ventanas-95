@@ -93,7 +93,12 @@
 				class="fake-desktop-icon position display-none"
 				class:change-position={desktopIcon.route !== DESKTOP_ROUTE}
 				id={FAKE_DESKTOP_ICON_ID}
-				style="--fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}; --color:black; --none:none; --cursor:{canBeDropped ? "" : "no-drop"};"
+				style="
+					--fakeTop:{fakeTop};
+					--fakeLeft:{fakeLeft};
+					--color:black;
+					--none:none;
+					--cursor:{canBeDropped ? "" : "url('/cursors/no-drop.cur'), no-drop"};"
 				bind:this={fakeDraggable}
 			>
 				<slot />
@@ -126,7 +131,7 @@
 	.fake-desktop-icon {
 		cursor: var(--cursor);
 		z-index: 1500;
-		opacity: 0.6;
+		opacity: 0.5;
 	}
 
 	/* TODO: cambiar el 106 y el 10 */

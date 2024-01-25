@@ -46,7 +46,7 @@
 		const target = event.target as EventTarget & { id: string }
 		// isDifferenceGreaterThan2Seconds is necessary due to body.style.pointerEvents is empty in this moment
 		if (target?.id === DESKTOP_SCREEN_ID && isDifferenceGreaterThan2Seconds(userLoggedAt, new Date())) {
-			createRightClickMenuInScreen(event, DESKTOP_ROUTE)
+			createRightClickMenuInScreen(event)
 		}
 	}
 

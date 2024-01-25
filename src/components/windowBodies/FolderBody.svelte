@@ -37,7 +37,7 @@
   const onContextMenu = (event: MouseEvent) => {
   	if (event.target === contentRef) {
   		const rect = contentRef.getBoundingClientRect()
-  		createRightClickMenuInScreen(event, thisRoute, { top: rect.top, left: rect.left })
+  		createRightClickMenuInScreen(event, { top: rect.top, left: rect.left })
   	}
   }
 

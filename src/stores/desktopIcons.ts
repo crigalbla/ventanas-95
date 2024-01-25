@@ -4,6 +4,7 @@ import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
 import { createWindow } from "./windows"
 import { writable } from "svelte/store"
+import { t, translateKey } from "@/i18n"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -132,11 +133,50 @@ export const cleanRecycleBin = () => {
 
 export const moveDesktopIconsToNewRoute = (
 	desktopIconIds: string[],
-	params: { route: string, top?: number, left?: number },
-	wereCutOrCopied?: boolean
+	params: { route: string, top?: number, left?: number }
 ) => {
+	const cutOrCopiedDesktopIcons = getCutOrCopiedDesktopIcons()
+	const wereCut = cutOrCopiedDesktopIcons.find((di) => di.isCut)
+	const wereCopied = cutOrCopiedDesktopIcons.find((di) => di.isCopied)
 	let newParams: UpdatableDesktopIconParams = { route: params.route, top: params.top ?? 0, left: params.left ?? 0 }
-	if (wereCutOrCopied) newParams = { ...newParams, isCopied: false, isCut: false }
+
+	if (wereCut) newParams = { ...newParams, isCut: false }
+	if (wereCopied) {
+		const copyOf = translateKey("desktopIcon.copyOf")
+		let newName = ""
+		newParams = { ...newParams, isCopied: false }
+
+		// TODO move the element inside when the folder is pasted
+		cutOrCopiedDesktopIcons.forEach((di) => {
+			if (desktopIconIds.includes(di.desktopIconId)) {
+				const copiedDesktopIcons = cutOrCopiedDesktopIcons.filter((di) => di.isCopied)
+				const oldRoutes = copiedDesktopIcons.map((di) => di.route)
+				const desktopIconId = generateId(desktopIconIdPrefix)
+				if (oldRoutes.includes(params.route)) newName = `${copyOf} ${translateKey(di.name)}`
+
+				createDesktopIcon({
+					...di,
+					...newParams,
+					name: newName || di.name,
+					desktopIconId,
+					onDblClick: () => createWindow({
+						title: getDesktopIconName(desktopIconId),
+						desktopIconId,
+						initialWidth: 600,
+						initialHeight: 400,
+						canBeHidden: true,
+						canBeMaximizedOrMinimized: true,
+						body: FolderBody
+					})
+				})
+			}
+		})
+
+		delete newParams.route
+		delete newParams.top
+		delete newParams.left
+	}
+
 	updateDesktopIconsParams(desktopIconIds, newParams)
 }
 
