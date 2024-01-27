@@ -13,6 +13,7 @@
 	const isWindow = id.substring(0, 1) === windowIdPrefix
 	const isDesktopIcon = id.substring(0, 2) === desktopIconIdPrefix
 	let isMouseDown = false
+	let realId: string // This is to prevent a error
 	let fakeDraggable: HTMLElement
 	let fakeLeft = 0
 	let fakeTop = 0
@@ -32,17 +33,18 @@
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
 
 		isMouseDown = true
+		realId = id
 		outOfScreenLeft = 0
 		outOfScreenTop = 0
 	}
 
   const onMouseUp = () => {
-  	isDesktopIcon && isMouseDown && updateDesktopIconParams(id, { isMoving: false })
+  	isDesktopIcon && isMouseDown && updateDesktopIconParams(realId, { isMoving: false })
   	isWindow && unfreezeCurrentCursor()
   	isMouseDown = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
-  		updateParams(id, { left: left + fakeLeft, top: top + fakeTop })
+  		updateParams(realId, { left: left + fakeLeft, top: top + fakeTop })
 
   		fakeLeft = 0
   		fakeTop = 0

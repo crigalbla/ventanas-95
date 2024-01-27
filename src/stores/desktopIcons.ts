@@ -4,7 +4,7 @@ import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { availableDimensions, generateId } from "@/utils"
 import { createWindow } from "./windows"
 import { writable } from "svelte/store"
-import { t, translateKey } from "@/i18n"
+import { translateKey } from "@/i18n"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
