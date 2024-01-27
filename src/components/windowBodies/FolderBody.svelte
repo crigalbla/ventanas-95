@@ -28,7 +28,7 @@
 
   $: thisRouteTranslated = $t(desktopIcon.name) && getRouteTranslated(thisRoute) // $t is necessary to rerender when change language
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
-  $: windowCoordinates = { top: window.top as number, left: window.left as number }
+  $: windowCoordinates = window && { top: window.top as number, left: window.left as number }
   let contentRef: HTMLElement
   let inputSearchRef: HTMLInputElement
 
