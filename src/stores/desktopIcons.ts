@@ -81,18 +81,16 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 
 		// Creating the copies of the element inside of the main folder/s
 		allDesktopIcons.forEach((di2) => {
-			console.log({ di2, routesWithNameOfCopiedDIs })
-			if (routesWithNameOfCopiedDIs.find((x) => di2.route.includes(x))) {
+			const oldRoute = routesWithNameOfCopiedDIs.find((x) => di2.route.includes(x))
+			if (oldRoute) {
 				const desktopIconId2 = generateId(desktopIconIdPrefix)
 				const newRoute = `${newPastedDesktopIcon.route}\\${newPastedDesktopIcon.name}`
-				// const oldRoute = `${di2.route}\\${di2.name}`
 				const isNotepad = di2.icon === NOTEPAD_ICON
 
-				console.log({ di2 })
 				createDesktopIcon({
 					...di2,
 					desktopIconId: desktopIconId2,
-					route: newRoute/* di2.route.replace(oldRoute, newRoute) TODO fix when there 3 sublevel of files */,
+					route: di2.route.replace(oldRoute, newRoute),
 					onDblClick: () => isNotepad ? createDefaultNotepadWindow(desktopIconId2) : createDefaultFolderWindow(desktopIconId2)
 				})
 			}
