@@ -1,8 +1,6 @@
 import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON } from "@/constants"
-import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
-import FolderBody from "@/components/windowBodies/FolderBody.svelte"
+import { createWindow, createDefaultFolderWindow, createDefaultNotepadWindow } from "./windows"
 import { availableDimensions, generateId } from "@/utils"
-import { createWindow } from "./windows"
 import { writable } from "svelte/store"
 import { translateKey } from "@/i18n"
 
@@ -43,6 +41,61 @@ const updateRecycleBinIcon = () => {
 			} else if (di.icon === FULL_RECYCLE_BIN_ICON) return { ...di, icon: RECYCLE_BIN_ICON }
 
 			return di
+		})
+	})
+}
+
+export const getDesktopIcons = () => {
+	let result: DesktopIconsType = []
+	const unsubscribe = desktopIcons.subscribe((dis) => { result = dis })
+	unsubscribe()
+
+	return result
+}
+
+const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
+	const allDesktopIcons = getDesktopIcons()
+	const copiedDesktopIcons = allDesktopIcons.filter((di) => di.isCopied)
+	const routesOfCopiedDesktopIcons = copiedDesktopIcons.map((di) => di.route)
+	const routesWithNameOfCopiedDIs = copiedDesktopIcons.map((di) => `${di.route}\\${di.name}`)
+	const copyOf = translateKey("desktopIcon.copyOf")
+	const pastedDesktopIcons: IndividualDesktopIconType[] = []
+	let newName = ""
+
+	copiedDesktopIcons.forEach((di) => {
+		const desktopIconId = generateId(desktopIconIdPrefix)
+		const isNotepad = di.icon === NOTEPAD_ICON
+
+		if (routesOfCopiedDesktopIcons.includes(params.route as string)) newName = `${copyOf} ${translateKey(di.name)}`
+
+		// Creating the copy
+		const newPastedDesktopIcon = {
+			...di,
+			...params,
+			name: newName || di.name,
+			desktopIconId,
+			onDblClick: () => isNotepad ? createDefaultNotepadWindow(desktopIconId) : createDefaultFolderWindow(desktopIconId)
+		}
+		pastedDesktopIcons.push(newPastedDesktopIcon)
+		createDesktopIcon(pastedDesktopIcons[pastedDesktopIcons.length - 1])
+
+		// Creating the copies of the element inside of the main folder/s
+		allDesktopIcons.forEach((di2) => {
+			console.log({ di2, routesWithNameOfCopiedDIs })
+			if (routesWithNameOfCopiedDIs.find((x) => di2.route.includes(x))) {
+				const desktopIconId2 = generateId(desktopIconIdPrefix)
+				const newRoute = `${newPastedDesktopIcon.route}\\${newPastedDesktopIcon.name}`
+				// const oldRoute = `${di2.route}\\${di2.name}`
+				const isNotepad = di2.icon === NOTEPAD_ICON
+
+				console.log({ di2 })
+				createDesktopIcon({
+					...di2,
+					desktopIconId: desktopIconId2,
+					route: newRoute/* di2.route.replace(oldRoute, newRoute) TODO fix when there 3 sublevel of files */,
+					onDblClick: () => isNotepad ? createDefaultNotepadWindow(desktopIconId2) : createDefaultFolderWindow(desktopIconId2)
+				})
+			}
 		})
 	})
 }
@@ -142,35 +195,8 @@ export const moveDesktopIconsToNewRoute = (
 
 	if (wereCut) newParams = { ...newParams, isCut: false }
 	if (wereCopied) {
-		const copyOf = translateKey("desktopIcon.copyOf")
-		let newName = ""
 		newParams = { ...newParams, isCopied: false }
-
-		// TODO move the element inside when the folder is pasted
-		cutOrCopiedDesktopIcons.forEach((di) => {
-			if (desktopIconIds.includes(di.desktopIconId)) {
-				const copiedDesktopIcons = cutOrCopiedDesktopIcons.filter((di) => di.isCopied)
-				const oldRoutes = copiedDesktopIcons.map((di) => di.route)
-				const desktopIconId = generateId(desktopIconIdPrefix)
-				if (oldRoutes.includes(params.route)) newName = `${copyOf} ${translateKey(di.name)}`
-
-				createDesktopIcon({
-					...di,
-					...newParams,
-					name: newName || di.name,
-					desktopIconId,
-					onDblClick: () => createWindow({
-						title: getDesktopIconName(desktopIconId),
-						desktopIconId,
-						initialWidth: 600,
-						initialHeight: 400,
-						canBeHidden: true,
-						canBeMaximizedOrMinimized: true,
-						body: FolderBody
-					})
-				})
-			}
-		})
+		pasteACopyOfDesktopIcons(newParams)
 
 		delete newParams.route
 		delete newParams.top
@@ -197,15 +223,7 @@ export const createInitialDesktopIcons = () => {
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: DESKTOP_ICON_MARGIN,
-		onDblClick: () => createWindow({
-			title: getDesktopIconName(DI_MY_PC),
-			desktopIconId: DI_MY_PC,
-			initialWidth: 600,
-			initialHeight: 400,
-			canBeHidden: true,
-			canBeMaximizedOrMinimized: true,
-			body: FolderBody
-		})
+		onDblClick: () => createDefaultFolderWindow(DI_MY_PC)
 	})
 	createDesktopIcon({
 		desktopIconId: DI_RECYCLE_BIN,
@@ -215,15 +233,7 @@ export const createInitialDesktopIcons = () => {
 		isFocused: false,
 		top: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_HEIGHT,
 		left: DESKTOP_ICON_MARGIN,
-		onDblClick: () => createWindow({
-			title: getDesktopIconName(DI_RECYCLE_BIN),
-			desktopIconId: DI_RECYCLE_BIN,
-			initialWidth: 600,
-			initialHeight: 400,
-			canBeHidden: true,
-			canBeMaximizedOrMinimized: true,
-			body: FolderBody
-		})
+		onDblClick: () => createDefaultFolderWindow(DI_RECYCLE_BIN)
 	})
 	createDesktopIcon({
 		desktopIconId: DI_FIRST_FOLDER,
@@ -233,15 +243,7 @@ export const createInitialDesktopIcons = () => {
 		isFocused: false,
 		top: DESKTOP_ICON_MARGIN,
 		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH,
-		onDblClick: () => createWindow({
-			title: getDesktopIconName(DI_FIRST_FOLDER),
-			desktopIconId: DI_FIRST_FOLDER,
-			initialWidth: 600,
-			initialHeight: 400,
-			canBeHidden: true,
-			canBeMaximizedOrMinimized: true,
-			body: FolderBody
-		})
+		onDblClick: () => createDefaultFolderWindow(DI_FIRST_FOLDER)
 	})
 	setTimeout(() => {
 		const { availableHeight, availableWidth } = availableDimensions()
@@ -255,16 +257,7 @@ export const createInitialDesktopIcons = () => {
 			properties: { text: "desktopIcon.about.text" },
 			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
 			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH,
-			onDblClick: () => createWindow({
-				title: getDesktopIconName(DI_ABOUT_NOTEPAD),
-				subTitle: "subTitle.notepad",
-				desktopIconId: DI_ABOUT_NOTEPAD,
-				initialWidth: 300,
-				initialHeight: 150,
-				canBeHidden: true,
-				canBeMaximizedOrMinimized: true,
-				body: NotepadBody
-			})
+			onDblClick: () => createDefaultNotepadWindow(DI_ABOUT_NOTEPAD)
 		})
 	}, 1)
 }

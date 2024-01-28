@@ -14,6 +14,7 @@
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	let userLoggedAt: Date
 	let desktopScreenRef: HTMLElement
+	$: console.log({ dis: $desktopIcons })
 
   createLoginWindow()
 
@@ -83,8 +84,6 @@
 						? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
 						: { top: 0, left: 0 }
 
-					// TODO fix bug when trying to move out 2 files from a folder
-					// TODO fix bug when trying to move 2 files a and d to a recycle bin
 					updateDesktopIconParams(
 						movingDesktopIcons[0].desktopIconId,
 						{ ...newCoordinates, route: destinationRoute, isMoving: false }
@@ -120,7 +119,7 @@
   $: if ($user?.isLoggedIn) {
   	playStartingAudio()
   	waitingCursor()
-  	createInitialWindows()
+  	// createInitialWindows()
   	createInitialDesktopIcons()
   	userLoggedAt = new Date()
   }

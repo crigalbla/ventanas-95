@@ -1,8 +1,11 @@
+import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
+import FolderBody from "@/components/windowBodies/FolderBody.svelte"
+import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
+import { getDesktopIconName } from "./desktopIcons"
+import { user, type UserType } from "./user"
 import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
-import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
 import { generateId } from "@/utils"
-import { user, type UserType } from "./user"
 
 export type IndividualWindowType = {
   title: string
@@ -89,6 +92,27 @@ export const createIsTouchableDeviceWindow = () => createWindow({
 	canBeResized: false,
 	minWidth: 300,
 	maxWidth: 450
+})
+
+export const createDefaultFolderWindow = (desktopIconId: string) => createWindow({
+	title: getDesktopIconName(desktopIconId),
+	desktopIconId,
+	initialWidth: 600,
+	initialHeight: 400,
+	canBeHidden: true,
+	canBeMaximizedOrMinimized: true,
+	body: FolderBody
+})
+
+export const createDefaultNotepadWindow = (desktopIconId: string) => createWindow({
+	title: getDesktopIconName(desktopIconId),
+	subTitle: "subTitle.notepad",
+	desktopIconId,
+	initialWidth: 300,
+	initialHeight: 150,
+	canBeHidden: true,
+	canBeMaximizedOrMinimized: true,
+	body: NotepadBody
 })
 
 export const createInitialWindows = () => {
