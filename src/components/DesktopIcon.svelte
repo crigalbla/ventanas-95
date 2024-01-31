@@ -30,7 +30,11 @@
   	textareaRef.style.height = (textareaRef.scrollHeight + 1.6) + "px"
   }
   $: if (!isFocused && newName) updateDesktopIconParams(desktopIconId, { name: newName })
-  $: if (isFocused) desktopIconRef?.focus()
+  $: if (isFocused) {
+  	const desktopIconByQuerySelector = document.querySelector(`#${desktopIconId}`) as HTMLElement
+
+  	desktopIconByQuerySelector?.focus()
+  }
 
   const onMouseDownDesktopIcon = () => !isEditingName && desktopIcons.update((dis: DesktopIconsType) => {
   	const oldZIndex: number = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
@@ -49,8 +53,6 @@
   	textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
   	newName = newName.length > 0 ? $t(textareaRef.value).trim() : name
   }
-
-  const onKeyDownInDesktopIcon = (event: KeyboardEvent) => event.key === "Enter" && !isEditingName && onDblClick()
 
   const onKeyDownInInput = (event: KeyboardEvent) => {
   	if (event.key === "Enter") {
@@ -98,7 +100,6 @@
     tabindex={0}
     on:mousedown={onMouseDownDesktopIcon}
     on:contextmenu={onContextMenu}
-    on:keydown={onKeyDownInDesktopIcon}
     on:dblclick={() => !isEditingName && onDblClick()}
     bind:this={desktopIconRef}
   >

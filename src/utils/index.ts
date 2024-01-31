@@ -107,13 +107,6 @@ export const getCurrentTime = () => {
 
 export const generateId = (prefix: string) => `${prefix}-${Math.random().toString().replace("0.", "")}`
 
-export const isDifferenceGreaterThan2Seconds = (date1: Date, date2: Date): boolean => {
-	const timeDifferenceInMilliseconds = date2.getTime() - date1.getTime()
-	const timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000
-
-	return timeDifferenceInSeconds > 2
-}
-
 export const isMobileOrTablet = (): boolean => {
 	if (typeof navigator !== "undefined") {
 		const userAgent = navigator.userAgent.toLowerCase()

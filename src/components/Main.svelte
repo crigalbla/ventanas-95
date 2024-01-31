@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
-  import { isDifferenceGreaterThan2Seconds, isDifferentOfRecycleBinAndMyPC, waitingCursor } from "@/utils"
+  import { isDifferentOfRecycleBinAndMyPC, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
@@ -10,10 +10,9 @@
   import RightClickMenu from "./RightClickMenu.svelte"
   import IconsSelector from "./IconsSelector.svelte"
 
+	let desktopScreenRef: HTMLElement
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
-	let userLoggedAt: Date
-	let desktopScreenRef: HTMLElement
 
   createLoginWindow()
 
@@ -44,10 +43,7 @@
 
 	const onContextMenu = (event: MouseEvent) => {
 		const target = event.target as EventTarget & { id: string }
-		// isDifferenceGreaterThan2Seconds is necessary due to body.style.pointerEvents is empty in this moment
-		if (target?.id === DESKTOP_SCREEN_ID && isDifferenceGreaterThan2Seconds(userLoggedAt, new Date())) {
-			createRightClickMenuInScreen(event)
-		}
+		if (target?.id === DESKTOP_SCREEN_ID) createRightClickMenuInScreen(event)
 	}
 
 	const dropDesktopIcon = (event: MouseEvent) => {
@@ -120,11 +116,10 @@
   	waitingCursor()
   	createInitialWindows()
   	createInitialDesktopIcons()
-  	userLoggedAt = new Date()
   }
 
 	onMount(() => {
-		const mouseDownEvent = (event: MouseEvent) => {
+		const mouseDown = (event: MouseEvent) => {
 			const target = event.target as Node
 			const rightClickMenu = document.querySelector(`#${RIGHT_CLICK_MENU_ID}`)
 			const subRightClickMenu = document.querySelector(`#${SUB_RIGHT_CLICK_MENU_ID}`)
@@ -154,15 +149,24 @@
 				}
 			})
 		}
+		const keyDown = (event: KeyboardEvent) => {
+			if (event.key === "Enter") {
+				$desktopIcons.forEach((di) => {
+					if (di.isFocused && !di.isEditingName) di.onDblClick()
+				})
+			}
+		}
 		const mouseMove = (event: MouseEvent) => dropDesktopIcon(event)
 		const mouseUp = (event: MouseEvent) => dropDesktopIcon(event)
 
-		document.addEventListener("mousedown", mouseDownEvent)
+		document.addEventListener("mousedown", mouseDown)
+		document.addEventListener("keydown", keyDown)
 		document.addEventListener("mousemove", mouseMove)
 		document.addEventListener("mouseup", mouseUp)
 
 		return () => {
-			document.removeEventListener("mousedown", mouseDownEvent)
+			document.removeEventListener("mousedown", mouseDown)
+			document.removeEventListener("keydown", keyDown)
 			document.removeEventListener("mousemove", mouseMove)
 			document.removeEventListener("mouseup", mouseUp)
 		}

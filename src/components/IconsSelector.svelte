@@ -49,7 +49,8 @@
   		)
 
   		const onMouseDown = (event: MouseEvent) => {
-  			if (isMouseInThisHTMLElement(event)) {
+  			const isLeftClick = event.button === 0
+  			if (isMouseInThisHTMLElement(event) && isLeftClick) {
   				isMouseDown = true
   				top = event.pageY - relativeCoordinates.top
   				left = event.pageX - relativeCoordinates.left
@@ -59,7 +60,7 @@
 
   		const onMouseUp = () => {
   			if (isMouseDown) {
-  				unfreezeCurrentCursor()
+  				isShowed && unfreezeCurrentCursor()
   				isMouseDown = false
   				isShowed = false
   				height = 0
@@ -68,9 +69,10 @@
   		}
 
   		const onMouseMove = (event: MouseEvent) => {
-  			if (isMouseDown && !isMouseOutOfThisElement(event, rangeToMoveMouse)) {
-  				freezeCurrentCursor(event)
+  			const isLeftClick = event.button === 0
+  			if (isMouseDown && !isMouseOutOfThisElement(event, rangeToMoveMouse) && isLeftClick) {
   				isShowed = height > 2 || width > 2
+  				isShowed && freezeCurrentCursor(event)
 
   				if (initialCursorPosition.y > event.pageY) {
   					height = initialCursorPosition.y - event.pageY

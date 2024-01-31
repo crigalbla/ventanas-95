@@ -40,7 +40,7 @@
 
   const onMouseUp = () => {
   	isDesktopIcon && isMouseDown && updateDesktopIconParams(realId, { isMoving: false })
-  	isWindow && unfreezeCurrentCursor()
+  	isMouseDown && isWindow && unfreezeCurrentCursor()
   	isMouseDown = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
