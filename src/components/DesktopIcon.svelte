@@ -37,7 +37,7 @@
   }
 
   const onMouseDownDesktopIcon = () => !isEditingName && desktopIcons.update((dis: DesktopIconsType) => {
-  	const oldZIndex: number = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
+  	const oldZIndex = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
 
   	return dis.map((di: IndividualDesktopIconType) => {
   		if (di.desktopIconId === desktopIconId) return ({ ...di, isFocused: true, zIndex: dis.length + 1 })
@@ -49,9 +49,16 @@
 
   const onInput = (event: Event) => {
   	const textareaHTML = event.target as HTMLTextAreaElement
-  	textareaHTML.style.height = "auto"
-  	textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
-  	newName = newName.length > 0 ? $t(textareaRef.value).trim() : name
+  	const regex = /[\\/:*?"<>|]/
+  	const containCharacterNotAllowed = regex.test(textareaRef.value)
+  	if (containCharacterNotAllowed) { // TODO make a modal to avoid this characters
+  		textareaRef.value = textareaRef.value.slice(0, -1)
+  		setTimeout(() => textareaRef.blur(), 0)
+  	} else {
+  		textareaHTML.style.height = "auto"
+  		textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
+  		newName = newName.length > 0 ? $t(textareaRef.value).trim() : name
+  	}
   }
 
   const onKeyDownInInput = (event: KeyboardEvent) => {

@@ -181,6 +181,7 @@
 		data-route={DESKTOP_ROUTE}
 		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
 		on:contextmenu={onContextMenu}
+		on:drag={(event) => event.preventDefault()}
 		bind:this={desktopScreenRef}
 	>
 		{#each $windows as { body, canLoseFocus, ...window }}
