@@ -74,10 +74,10 @@
 	}
 </script>
 
-{#if canBeDraggabled}
+{#if canBeDraggabled || isDesktopIcon}
 	<section
 		class:desktop-icon-only={isDesktopIcon}
-		on:mousedown={onMouseDown}
+		on:mousedown={canBeDraggabled ? onMouseDown : () => null}
 		role="tab"
 		tabindex="0"
 	>

@@ -20,14 +20,17 @@
 
   let desktopIconRef: HTMLElement
   let textareaRef: HTMLTextAreaElement
+  let newName = name
   $: thisRoute = icon !== NOTEPAD_ICON ? `${route}\\${name}` : undefined
   $: maxHeight = isFocused || isEditingName ? 350 : DESKTOP_ICON_HEIGHT
   $: if (textareaRef) {
   	textareaRef.focus()
   	textareaRef.select()
   	textareaRef.style.height = "auto"
-  	textareaRef.style.height = (textareaRef.scrollHeight) + "px"
+  	textareaRef.style.height = (textareaRef.scrollHeight + 1.6) + "px"
   }
+  $: if (!isFocused && newName) updateDesktopIconParams(desktopIconId, { name: newName })
+  $: if (isFocused) desktopIconRef?.focus()
 
   const onMouseDownDesktopIcon = () => !isEditingName && desktopIcons.update((dis: DesktopIconsType) => {
   	const oldZIndex: number = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
@@ -43,17 +46,17 @@
   const onInput = (event: Event) => {
   	const textareaHTML = event.target as HTMLTextAreaElement
   	textareaHTML.style.height = "auto"
-  	textareaHTML.style.height = (textareaHTML.scrollHeight) + "px"
-  	const newName = $t(textareaHTML.value)
-  	if (newName.length > 0) updateDesktopIconParams(desktopIconId, { name: newName.trim() })
+  	textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
+  	newName = newName.length > 0 ? $t(textareaRef.value).trim() : name
   }
 
-  const onKeyDownInDesktopIcon = (event: KeyboardEvent) => event.key === "Enter" && onDblClick()
+  const onKeyDownInDesktopIcon = (event: KeyboardEvent) => event.key === "Enter" && !isEditingName && onDblClick()
 
   const onKeyDownInInput = (event: KeyboardEvent) => {
   	if (event.key === "Enter") {
-  		updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true })
-  		desktopIconRef.focus()
+  		setTimeout(() => {
+  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName || name })
+  		}, 1)
   	}
   }
 
@@ -85,7 +88,6 @@
 <Draggable id={desktopIconId} canBeDraggabled={!isEditingName} canBeDropped={canBeDropped} {top} {left} fake>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-  <!-- svelte-ignore a11y-autofocus -->
   <!-- NOTE: doble tap with touchpad does not work with on:dblclick -->
   <!-- NOTE2: tabindex is to allow on:keydown -->
   <section
@@ -94,7 +96,6 @@
     data-route={thisRoute}
     style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{DESKTOP_ICON_WIDTH}; --max-height:{maxHeight};"
     tabindex={0}
-    autofocus={isFocused}
     on:mousedown={onMouseDownDesktopIcon}
     on:contextmenu={onContextMenu}
     on:keydown={onKeyDownInDesktopIcon}
@@ -151,6 +152,7 @@
     padding: 1px 1px 0px 1px;
     font-size: 13px;
     line-height: 1;
+    pointer-events: auto;
   }
 
   .overflow-text {

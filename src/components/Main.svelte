@@ -66,11 +66,11 @@
 			const isRecycleBinOrMyPC = !isDifferentOfRecycleBinAndMyPC(movingDesktopIcons[0].desktopIconId)
 			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || !isDestinationADesktopIcon || !isRecycleBinOrMyPC
 			const isDestinationRouteDifferentOfOrigin =
-				destinationRoute !== `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
-			const isRecycleBinOrMyPCMovingToFolder = isRecycleBinOrMyPC && destinationRoute !== movingDesktopIcons[0].route
+				destinationRoute && destinationRoute !== `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
+			const isRecycleBinOrMyPCMovingToFolder =
+				isRecycleBinOrMyPC && destinationRoute !== movingDesktopIcons[0].route && isDestinationRouteDifferentOfOrigin
 
 			if (
-				destinationRoute &&
 				canBeDroppedInFolderOrDesktopIcon &&
 				(isDestinationRouteDifferentOfOrigin || isMovingFewPixels) &&
 				!isRecycleBinOrMyPCMovingToFolder
@@ -118,7 +118,7 @@
   $: if ($user?.isLoggedIn) {
   	playStartingAudio()
   	waitingCursor()
-  	// createInitialWindows()
+  	createInitialWindows()
   	createInitialDesktopIcons()
   	userLoggedAt = new Date()
   }
