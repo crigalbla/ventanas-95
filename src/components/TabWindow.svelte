@@ -39,7 +39,7 @@
 </script>
 
 <Button
-  className={`${!isFocused ? "border-color-up" : "border-color-down background-granulated font-extrabold"} h-5/6 w-1/3 px-1`}
+  className={`${!isFocused ? "border-color-up" : "border-color-down background-granulated font-extrabold"} w-1/3 px-1`}
   id={`${windowId}-tab`}
   on:click={onClickTabWindow}
 >

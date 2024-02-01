@@ -32,7 +32,6 @@
 
 		return () => null
 	})()
-	// $: if (mainSection) parentElement = mainSection.parentElement as HTMLElement
 
 	const onMouseDown = (e: MouseEvent) => {
 		const target: HTMLElement = e?.target as HTMLElement

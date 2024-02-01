@@ -116,19 +116,21 @@
       <img src="icons/ventanas-95.png" alt="start" draggable="false"/>
       <span class="text-xl tracking-wider font-extrabold ml-2">{$t("navigationBar.start")}</span>
     </Button>
-    {#each $windows.filter(w => w.canLoseFocus !== false) as window}
-      <TabWindow
-        title={window.title}
-        subTitle={window.subTitle}
-        windowId={window.windowId}
-        desktopIconId={window.desktopIconId}
-        icon={window.icon}
-        isMinimized={window.isMinimized ?? false}
-        isFocused={window.isFocused ?? true}
-      />
-    {/each}
+    <div class="flex w-full h-5/6 gap-1">
+      {#each $windows.filter(w => w.canLoseFocus !== false) as window}
+        <TabWindow
+          title={window.title}
+          subTitle={window.subTitle}
+          windowId={window.windowId}
+          desktopIconId={window.desktopIconId}
+          icon={window.icon}
+          isMinimized={window.isMinimized ?? false}
+          isFocused={window.isFocused ?? true}
+        />
+      {/each}
+    </div>
   </div>
-  <div class="background-silver border-color-soft-down flex items-center justify-between ml-1 pl-1 pr-2 h-5/6 w-28">
+  <div class="background-silver border-color-soft-down flex items-center justify-between ml-1 pl-1 pr-2 h-5/6 min-w-max w-28">
     <img class="h-8 w-8" src="icons/speaker-220px.png" alt="speaker" draggable="false"/>
     <span class="h-5">{currentTime}</span>
   </div>

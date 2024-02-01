@@ -75,10 +75,7 @@
     bind:this={contentRef}
   >
     {#each desktopIconsInThisFolder as { properties, ...icon }}
-      <DesktopIcon
-        {...icon}
-        onDblClick={isThisFolderRecycleBin ? () => null : icon.onDblClick}
-      />
+      <DesktopIcon {...icon} onDblClick={isThisFolderRecycleBin ? () => null : icon.onDblClick} />
     {/each}
     {#if contentRef}
       <IconsSelector rangeToMoveMouse={contentRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />
