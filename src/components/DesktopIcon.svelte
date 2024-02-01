@@ -125,6 +125,7 @@
         maxlength="200"
         on:input={onInput}
         on:keydown={onKeyDownInInput}
+        on:dragstart={(event) => event.preventDefault()}
         bind:this={textareaRef}
       />
     {:else}
@@ -133,7 +134,7 @@
         class:focused={isFocused}
         class:overflow-text={!isFocused}
         class:text-white={route === DESKTOP_ROUTE || !route}>
-        {$t(name)}
+          {$t(name)}
       </span>
     {/if}
   </section>
@@ -160,7 +161,6 @@
     padding: 1px 1px 0px 1px;
     font-size: 13px;
     line-height: 1;
-    pointer-events: auto;
   }
 
   .overflow-text {
@@ -179,6 +179,7 @@
     resize: none;
     cursor: auto;
     font-size: 14px;
+    pointer-events: auto !important;
   }
 
   textarea:focus {

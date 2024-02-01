@@ -2,6 +2,7 @@
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType } from "@/stores"
   import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, unfreezeCurrentCursor } from "@/utils"
   import { DESKTOP_ROUTE, FAKE_DESKTOP_ICON_ID } from "@/constants"
+  import { onMount } from "svelte"
 
 	export let left: number
 	export let top: number
@@ -14,11 +15,15 @@
 	const isDesktopIcon = id.substring(0, 2) === desktopIconIdPrefix
 	let isMouseDown = false
 	let realId: string // This is to prevent a error
+	let mainSection: HTMLElement
 	let fakeDraggable: HTMLElement
+	let parentElement: HTMLElement | null
 	let fakeLeft = 0
 	let fakeTop = 0
 	let outOfScreenLeft = 0
 	let outOfScreenTop = 0
+	let parentScrollLeft = 0
+	let parentScrollTop = 0
 
 	$: desktopIcon = $desktopIcons.find(di => di.desktopIconId === id) as IndividualDesktopIconType
 	$: updateParams = (() => {
@@ -27,15 +32,20 @@
 
 		return () => null
 	})()
+	// $: if (mainSection) parentElement = mainSection.parentElement as HTMLElement
 
 	const onMouseDown = (e: MouseEvent) => {
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
 
+		parentScrollLeft = parentElement?.scrollLeft || 0
+		parentScrollTop = parentElement?.scrollTop || 0
 		isMouseDown = true
 		realId = id
 		outOfScreenLeft = 0
 		outOfScreenTop = 0
+		fakeLeft = 0 - parentScrollLeft
+  	fakeTop = 0 - parentScrollTop
 	}
 
   const onMouseUp = () => {
@@ -44,10 +54,10 @@
   	isMouseDown = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
-  		updateParams(realId, { left: left + fakeLeft, top: top + fakeTop })
-
-  		fakeLeft = 0
-  		fakeTop = 0
+  		updateParams(
+  			realId,
+  			{ left: left + fakeLeft + parentScrollLeft, top: top + fakeTop + parentScrollTop }
+  		)
   	}
   }
 
@@ -72,6 +82,10 @@
 			}
 		}
 	}
+
+	onMount(() => {
+		if (isDesktopIcon) parentElement = mainSection.parentElement
+	})
 </script>
 
 {#if canBeDraggabled || isDesktopIcon}
@@ -80,6 +94,7 @@
 		on:mousedown={canBeDraggabled ? onMouseDown : () => null}
 		role="tab"
 		tabindex="0"
+		bind:this={mainSection}
 	>
 		<slot />
 	</section>

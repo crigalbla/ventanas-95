@@ -13,13 +13,13 @@
   $: window = $windows.find(w => w.windowId === windowId) as IndividualWindowType
   $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   $: thisRoute = `${desktopIcon.route}\\${desktopIcon.name}`
-  $: isRecycleBin = desktopIcon.desktopIconId === DI_RECYCLE_BIN
-  $: isMyPC = desktopIcon.desktopIconId === DI_MY_PC
+  $: isThisFolderRecycleBin = desktopIcon.desktopIconId === DI_RECYCLE_BIN
+  $: isThisFolderMyPC = desktopIcon.desktopIconId === DI_MY_PC
 
   const getRouteTranslated = (route: string) => {
   	const arrayText = route.split("\\")
 
-  	if (isRecycleBin || isMyPC) return $t(arrayText[arrayText.length - 1])
+  	if (isThisFolderRecycleBin || isThisFolderMyPC) return $t(arrayText[arrayText.length - 1])
 
   	const arrayTextTranslated = arrayText.map((str) => $t(str))
 
@@ -75,7 +75,10 @@
     bind:this={contentRef}
   >
     {#each desktopIconsInThisFolder as { properties, ...icon }}
-      <DesktopIcon {...icon} onDblClick={isRecycleBin ? () => null : icon.onDblClick} />
+      <DesktopIcon
+        {...icon}
+        onDblClick={isThisFolderRecycleBin ? () => null : icon.onDblClick}
+      />
     {/each}
     {#if contentRef}
       <IconsSelector rangeToMoveMouse={contentRef} relativeCoordinates={windowCoordinates} folderRoute={thisRoute} />
