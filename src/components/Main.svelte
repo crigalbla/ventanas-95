@@ -13,6 +13,7 @@
 	let desktopScreenRef: HTMLElement
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
+	$: console.log({ dis: $desktopIcons })
 
   createLoginWindow()
 
