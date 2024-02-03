@@ -62,28 +62,34 @@
 			const isMovingFewPixels = elementUnderDesktopIcon.id === movingDesktopIcons[0].desktopIconId
 			const isRecycleBinOrMyPC = !isDifferentOfRecycleBinAndMyPC(movingDesktopIcons[0].desktopIconId)
 			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || !isDestinationADesktopIcon || !isRecycleBinOrMyPC
-			const isDestinationRouteDifferentOfOrigin =
+			const isDestinationRouteDifferentOfOrigin = destinationRoute && destinationRoute !== movingDesktopIcons[0].route
+			const isDestinationRouteDifferentOfOriginWithName =
 				destinationRoute && destinationRoute !== `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
 			const isRecycleBinOrMyPCMovingToFolder =
-				isRecycleBinOrMyPC && destinationRoute !== movingDesktopIcons[0].route && isDestinationRouteDifferentOfOrigin
+				isRecycleBinOrMyPC && isDestinationRouteDifferentOfOrigin && isDestinationRouteDifferentOfOriginWithName
 
 			if (
 				canBeDroppedInFolderOrDesktopIcon &&
-				(isDestinationRouteDifferentOfOrigin || isMovingFewPixels) &&
+				(isDestinationRouteDifferentOfOriginWithName || isMovingFewPixels) &&
 				!isRecycleBinOrMyPCMovingToFolder
 			) {
-				if (isMouseUp && movingDesktopIcons[0].route !== destinationRoute && !isMovingFewPixels) {
-					const rectOfShadow = elementShadow.getBoundingClientRect()
-					const ajustmentInX = rectOfShadow.left - event.clientX
-					const ajustmentInY = rectOfShadow.top - event.clientY
-					const newCoordinates = destinationRoute === DESKTOP_ROUTE
-						? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
-						: { top: 0, left: 0 }
+				if (isMouseUp && !isMovingFewPixels) {
+					if (isDestinationRouteDifferentOfOrigin) {
+						const rectOfShadow = elementShadow.getBoundingClientRect()
+						const ajustmentInX = rectOfShadow.left - event.clientX
+						const ajustmentInY = rectOfShadow.top - event.clientY
+						const newCoordinates = destinationRoute === DESKTOP_ROUTE
+							? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
+							: { top: 0, left: 0 }
 
-					updateDesktopIconParams(
-						movingDesktopIcons[0].desktopIconId,
-						{ ...newCoordinates, route: destinationRoute, isMoving: false }
-					)
+						console.log({ newCoordinates })
+						updateDesktopIconParams(
+							movingDesktopIcons[0].desktopIconId,
+							{ ...newCoordinates, route: destinationRoute, isMoving: false }
+						)
+					} else if (isDestinationADesktopIcon) {
+						updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
+					}
 				}
 				if (isMouseMove && !movingDesktopIcons[0].canBeDropped) {
 					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: true })
