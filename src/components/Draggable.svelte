@@ -150,7 +150,7 @@
 		opacity: 0.5;
 	}
 
-	/* TODO: cambiar el 106 y el 10 */
+	/* TODO: change 106 and 10 */
 	.change-position {
 		top: calc((var(--fakeTop) + 106) * 1px) !important;
 		left: calc((var(--fakeLeft) + 10) * 1px) !important;

@@ -13,7 +13,6 @@
 	let desktopScreenRef: HTMLElement
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
-	$: console.log({ dis: $desktopIcons })
 
   createLoginWindow()
 
@@ -82,7 +81,6 @@
 							? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
 							: { top: 0, left: 0 }
 
-						console.log({ newCoordinates })
 						updateDesktopIconParams(
 							movingDesktopIcons[0].desktopIconId,
 							{ ...newCoordinates, route: destinationRoute, isMoving: false }
@@ -221,6 +219,7 @@
     <section class="w-full h-full bg-black absolute" use:wakeUp />
   {/if}
 {/if}
+<svelte:window on:scroll={() => window.scrollTo({ top: 0, left: 0 })} />
 
 <style>
 	.desktop-screen {

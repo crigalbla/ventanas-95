@@ -66,11 +66,6 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, sectionCoo
 
 const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, SectionCoordinates: SectionCoordinatesType) => {
 	const desktopIconId = generateId(desktopIconIdPrefix)
-	// TODO avoid duplicate names
-	// const arrayNames = []
-	// desktopIcons.subscribe((dis: DesktopIconsType) =>
-	// 	dis.forEach((di: IndividualDesktopIconType) => di.route === route && arrayNames.push(di.name)))
-	// console.log(arrayNames)
 
 	createDesktopIcon({
 		desktopIconId,
