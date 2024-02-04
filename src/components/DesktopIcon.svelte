@@ -20,7 +20,7 @@
 
   let desktopIconRef: HTMLElement
   let textareaRef: HTMLTextAreaElement
-  let newName = name
+  let newName: string
   $: thisRoute = icon !== NOTEPAD_ICON ? `${route}\\${name}` : undefined
   $: maxHeight = isFocused || isEditingName ? 350 : DESKTOP_ICON_HEIGHT
   $: if (textareaRef) {
@@ -29,7 +29,6 @@
   	textareaRef.style.height = "auto"
   	textareaRef.style.height = (textareaRef.scrollHeight + 1.6) + "px"
   }
-  $: if (!isFocused && newName) updateDesktopIconParams(desktopIconId, { name: newName })
   $: if (isFocused) {
   	const desktopIconByQuerySelector = document.querySelector(`#${desktopIconId}`) as HTMLElement
 
@@ -48,24 +47,33 @@
   })
 
   const onInput = (event: Event) => {
-  	const textareaHTML = event.target as HTMLTextAreaElement
-  	const regex = /[\\/:*?"<>|]/
-  	const containCharacterNotAllowed = regex.test(textareaRef.value)
-  	if (containCharacterNotAllowed) { // TODO make a modal to avoid this characters
-  		textareaRef.value = textareaRef.value.slice(0, -1)
-  		setTimeout(() => textareaRef.blur(), 0)
-  	} else {
-  		textareaHTML.style.height = "auto"
-  		textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
-  		newName = newName.length > 0 ? $t(textareaRef.value).trim() : name
+  	const target = event.target as EventTarget & { value: string }
+  	if (target?.value !== "\n") { // Change value if value is different of enter key
+  		const textareaHTML = event.target as HTMLTextAreaElement
+  		const regex = /[\\/:*?"<>|]/
+  		const containCharacterNotAllowed = regex.test(textareaRef.value)
+  		if (containCharacterNotAllowed) { // TODO make a modal to avoid these characters
+  			textareaRef.value = textareaRef.value.slice(0, -1)
+  			setTimeout(() => textareaRef.blur(), 0)
+  		} else {
+  			textareaHTML.style.height = "auto"
+  			textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
+  			newName = $t(textareaRef.value).trim() || name
+  		}
   	}
   }
 
   const onKeyDownInInput = (event: KeyboardEvent) => {
   	if (event.key === "Enter") {
-  		setTimeout(() => {
-  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName || name })
+  		setTimeout(() => { // Timer to avoid open folder
+  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName })
   		}, 1)
+  	}
+  }
+
+  const onMouseDown = () => {
+  	if (newName && newName !== name) {
+  		updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: false, name: newName })
   	}
   }
 
@@ -139,6 +147,7 @@
     {/if}
   </section>
 </Draggable>
+<svelte:window on:mousedown={onMouseDown} />
 
 <style>
   .desktop-icon {
