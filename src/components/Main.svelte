@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { createInitialDesktopIcons, createInitialWindows, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windows } from "@/stores"
+  import { createInitialDesktopIcons, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
-  import Window from "@/components/Window.svelte"
-  import { onMount } from "svelte"
   import RightClickMenu from "./RightClickMenu.svelte"
   import IconsSelector from "./IconsSelector.svelte"
+  import Window from "@/components/Window.svelte"
+  import { onMount } from "svelte"
 
 	let desktopScreenRef: HTMLElement
+	let windowUnderMouseAtInitOfDrag: string | undefined
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 
@@ -46,6 +47,13 @@
 		if (target?.id === DESKTOP_SCREEN_ID) createRightClickMenuInScreen(event)
 	}
 
+	// To avoid move desktopIcons between the same folder in different windows
+	const updateWindowUnderMouse = (elementsUnderMouse: Element[]) => {
+		if (!windowUnderMouseAtInitOfDrag) {
+			windowUnderMouseAtInitOfDrag = elementsUnderMouse.find(x => x.id.substring(0, 1) === windowIdPrefix)?.id || "fake"
+		}
+	}
+
 	const dropDesktopIcon = (event: MouseEvent) => {
 		// TODO complete when there are several desktopIcons
 		const movingDesktopIcons = $desktopIcons.filter(di => di.isMoving)
@@ -54,6 +62,7 @@
 			const isMouseUp = event.type === "mouseup"
 			const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
 				?.filter(x => x.id !== FAKE_DESKTOP_ICON_ID)
+			updateWindowUnderMouse(elementsUnderMouse)
 			const elementShadow = elementsUnderMouse[0] as HTMLElement
 			const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement
 			const destinationRoute = elementUnderDesktopIcon?.dataset.route
@@ -85,9 +94,13 @@
 							movingDesktopIcons[0].desktopIconId,
 							{ ...newCoordinates, route: destinationRoute, isMoving: false }
 						)
-					} else if (isDestinationADesktopIcon) {
-						updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
+					} else {
+						const windowUnderMouse = elementsUnderMouse.find(x => x.id.substring(0, 1) === windowIdPrefix)?.id || "fake"
+						if (isDestinationADesktopIcon || windowUnderMouseAtInitOfDrag !== windowUnderMouse) {
+							updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
+						}
 					}
+					windowUnderMouseAtInitOfDrag = undefined
 				}
 				if (isMouseMove && !movingDesktopIcons[0].canBeDropped) {
 					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: true })
@@ -119,7 +132,6 @@
   $: if ($user?.isLoggedIn) {
   	playStartingAudio()
   	waitingCursor()
-  	createInitialWindows()
   	createInitialDesktopIcons()
   }
 

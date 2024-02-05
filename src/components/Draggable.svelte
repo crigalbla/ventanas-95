@@ -33,6 +33,13 @@
 		return () => null
 	})()
 
+	// const canUpdateParams = (newLeft: number, newTop: number) => {
+	// 	if (isWindow) return true
+
+	// 	return (parentElement?.clientHeight as number) >= newTop &&
+	// 		(parentElement?.clientWidth as number) >= newLeft
+	// }
+
 	const onMouseDown = (e: MouseEvent) => {
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
@@ -53,10 +60,10 @@
   	isMouseDown = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
-  		updateParams(
-  			realId,
-  			{ left: left + fakeLeft + parentScrollLeft, top: top + fakeTop + parentScrollTop }
-  		)
+  		const newLeft = left + fakeLeft + parentScrollLeft
+  		const newTop = top + fakeTop + parentScrollTop
+  		// if (canUpdateParams(newLeft, newTop))
+  		updateParams(realId, { left: newLeft, top: newTop })
   	}
   }
 
