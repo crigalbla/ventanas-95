@@ -40,7 +40,8 @@
   export let oldLeft: number = undefined!
   export let closeCallBack: () => void | { preventCloseWindow: boolean } = undefined!
 
-  $: iconFromDesktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.icon
+  $: desktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)
+  $: iconFromDesktopIcon = desktopIcon?.icon
   let windowDiv: HTMLElement = undefined!
   const headerHeight = 24
 
@@ -174,7 +175,7 @@
               />
             {/if}
             <span class="overflow-text text-white ml-1">
-              {`${$t(title)}${subTitle ? " - " + $t(subTitle) : ""}`}
+              {`${$t(desktopIcon?.name || title)}${subTitle ? " - " + $t(subTitle) : ""}`}
             </span>
           </div>
           <div class="flex self-center gap-1 ml-1">
