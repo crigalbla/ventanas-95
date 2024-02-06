@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon } from "@/stores"
+  import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon, createWindow } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, NOTEPAD_ICON } from "@/constants"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
@@ -48,7 +48,7 @@
 
   const onInput = (event: Event) => {
   	const target = event.target as EventTarget & { value: string }
-  	if (target?.value !== "\n") { // Change value if value is different of enter key
+  	if (!target?.value.includes("\n")) { // Change value if value is different of enter key
   		const textareaHTML = event.target as HTMLTextAreaElement
   		const regex = /[\\/:*?"<>|]/
   		const containCharacterNotAllowed = regex.test(textareaRef.value)
@@ -60,6 +60,8 @@
   			textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
   			newName = $t(textareaRef.value).trim() || name
   		}
+  	} else {
+  		textareaRef.value = textareaRef.value.slice(0, -1) // Remove enter key
   	}
   }
 
@@ -67,12 +69,14 @@
   	if (event.key === "Enter") {
   		setTimeout(() => { // Timer to avoid open folder
   			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName })
-  		}, 1)
+  		}, 0)
   	}
   }
 
-  const onMouseDown = () => {
-  	if (newName && newName !== name) {
+  const onMouseDown = (event: MouseEvent) => {
+  	const target = event.target as Node
+  	const desktopIconHTML = document.querySelector(`#${desktopIconId}`)
+  	if (newName && newName !== name && !desktopIconHTML?.contains(target)) {
   		updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: false, name: newName })
   	}
   }

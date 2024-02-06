@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createInitialDesktopIcons, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
-  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID } from "@/constants"
+  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_NAME_ALREDY_IN_USE } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
@@ -161,7 +161,10 @@
 					if (di.isFocused) {
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
 					} else if (di.isEditingName) {
-						updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
+						setTimeout(() => {
+							const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREDY_IN_USE}`)
+							!windowNameAlredyInUse && updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
+						}, 0)
 					}
 				}
 			})

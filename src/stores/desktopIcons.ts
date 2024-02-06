@@ -1,4 +1,4 @@
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON, W_NAME_ALREDY_IN_USE } from "@/constants"
 import { createWindow, createDefaultFolderWindow, createDefaultNotepadWindow } from "./windows"
 import { availableDimensions, generateId } from "@/utils"
 import { writable } from "svelte/store"
@@ -113,6 +113,19 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 		if (isChangingNameOrRoute) {
 			oldDesktopIcon = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
 			oldRoute = `${oldDesktopIcon.route}\\${oldDesktopIcon.name}`
+		}
+		if (params.name) {
+			const thereIsADesktopIconWithSameName =
+				Boolean(dis.find((di) =>
+					di.route === oldDesktopIcon?.route &&
+					(di?.name === params.name || translateKey(di?.name) === params.name)
+				))
+
+			if (thereIsADesktopIconWithSameName) {
+				const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREDY_IN_USE}`)
+				!windowNameAlredyInUse && createWindow({ title: "test", windowId: W_NAME_ALREDY_IN_USE })
+				return dis
+			}
 		}
 
 		return dis.map((di: IndividualDesktopIconType) => {
