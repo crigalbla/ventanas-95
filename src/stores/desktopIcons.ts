@@ -3,6 +3,7 @@ import { createWindow, createDefaultFolderWindow, createDefaultNotepadWindow } f
 import { availableDimensions, generateId } from "@/utils"
 import { writable } from "svelte/store"
 import { translateKey } from "@/i18n"
+import NameAlredyInUse from "@/components/windowBodies/NameAlredyInUse.svelte"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -123,7 +124,14 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 
 			if (thereIsADesktopIconWithSameName) {
 				const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREDY_IN_USE}`)
-				!windowNameAlredyInUse && createWindow({ title: "test", windowId: W_NAME_ALREDY_IN_USE })
+				!windowNameAlredyInUse && createWindow({
+					title: "nameAlredyInUse.title",
+					windowId: W_NAME_ALREDY_IN_USE,
+					canBeResized: false,
+					canLoseFocus: false,
+					maxWidth: 600,
+					body: NameAlredyInUse
+				})
 				return dis
 			}
 		}
