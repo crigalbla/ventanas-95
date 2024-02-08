@@ -2,14 +2,21 @@
   import { removeWindow } from "@/stores"
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
+  import { onMount } from "svelte"
 
   export let windowId: string
+
+  onMount(() => {
+  	// eslint-disable-next-line no-undef
+  	const audio = new Audio("/sounds/error.mp3")
+  	void audio?.play()
+  })
 </script>
 
 <section class="flex m-5 mr-11 gap-4">
   <img class="h-11 w-11" src="icons/error-270px.png" alt="error" draggable="false" />
   <div class="flex flex-col gap-6">
-    <p>{$t("nameAlredyInUse.subtitle")}</p>
+    <p>{$t("nameAlredyInUse.subtitle", { filename: $t("FILE") })}</p>
     <div class="flex justify-center">
       <Button className="px-9" on:click={() => removeWindow(windowId)}>{$t("accept")}</Button>
     </div>
