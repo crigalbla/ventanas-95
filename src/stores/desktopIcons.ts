@@ -127,6 +127,8 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 				!windowNameAlredyInUse && createWindow({
 					title: "nameAlredyInUse.title",
 					windowId: W_NAME_ALREDY_IN_USE,
+					desktopIconId,
+					isBlocking: true,
 					canBeResized: false,
 					canLoseFocus: false,
 					maxWidth: 600,
