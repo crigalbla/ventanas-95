@@ -2,7 +2,7 @@
   import { windows, type IndividualWindowType, type WindowsType, desktopIcons, type IndividualDesktopIconType } from "@/stores"
   import Button from "./Button.svelte"
   import { t } from "@/i18n"
-  import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
+  import { INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
 
   export let title: string
   export let subTitle: string = undefined!
@@ -13,6 +13,8 @@
   export let isFocused: boolean
 
   $: iconFromDesktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.icon
+  $: desktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)
+  $: finalTitle = $t((windowId !== W_BLOCKING && desktopIcon?.name) || title)
 
   const onClickTabWindow = () => {
   	windows.update((ws: WindowsType) => {
@@ -52,7 +54,7 @@
     />
   {/if}
   <span class="overflow-text text-left h-6 ml-1">
-    {`${$t(title)}${subTitle ? " - " + $t(subTitle) : ""}`}
+    {`${$t(finalTitle)}${subTitle ? " - " + $t(subTitle) : ""}`}
   </span>
 </Button>
 

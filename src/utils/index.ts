@@ -1,5 +1,4 @@
-import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID, DI_RECYCLE_BIN, DI_MY_PC, W_NAME_ALREADY_IN_USE } from "@/constants"
-import { windows } from "@/stores"
+import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID, DI_RECYCLE_BIN, DI_MY_PC, W_BLOCKING } from "@/constants"
 
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
@@ -60,7 +59,7 @@ export const unfreezeCurrentCursor = () => {
 }
 
 export const thereIsWindowBlocking = (event?: Event) => {
-	const blockingWindow = document.querySelector(`#${W_NAME_ALREADY_IN_USE}`)
+	const blockingWindow = document.querySelector(`#${W_BLOCKING}`)
 
 	if (blockingWindow) {
 		const navigationBar = document.querySelector(`#${NAVIGATION_BAR_ID}`)

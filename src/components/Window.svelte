@@ -3,7 +3,7 @@
 
   import type { IndividualDesktopIconType, IndividualWindowType, WindowsType } from "@/stores"
   import { removeWindow, windows, updateWindowParams, desktopIcons } from "@/stores"
-  import { INITIAL_WINDOW_Z_INDEX, W_NAME_ALREADY_IN_USE } from "@/constants"
+  import { INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
   import { availableDimensions } from "@/utils"
   import { t } from "@/i18n"
 
@@ -41,8 +41,8 @@
   export let closeCallBack: () => void | { preventCloseWindow: boolean } = undefined!
 
   $: desktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)
-  $: iconFromDesktopIcon = (windowId !== W_NAME_ALREADY_IN_USE && desktopIcon?.icon) as string | undefined
-  $: finalTitle = $t((windowId !== W_NAME_ALREADY_IN_USE && desktopIcon?.name) || title)
+  $: iconFromDesktopIcon = (windowId !== W_BLOCKING && desktopIcon?.icon) as string | undefined
+  $: finalTitle = $t((windowId !== W_BLOCKING && desktopIcon?.name) || title)
   let windowDiv: HTMLElement = undefined!
   const headerHeight = 24
 

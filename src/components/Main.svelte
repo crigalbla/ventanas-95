@@ -1,14 +1,16 @@
 <script lang="ts">
+  import { onMount } from "svelte"
+
   import { createInitialDesktopIcons, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
-  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_NAME_ALREADY_IN_USE } from "@/constants"
+  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, playAudio, thereIsWindowBlocking, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
-  import RightClickMenu from "./RightClickMenu.svelte"
-  import IconsSelector from "./IconsSelector.svelte"
   import Window from "@/components/Window.svelte"
-  import { onMount } from "svelte"
+
+	import RightClickMenu from "./RightClickMenu.svelte"
+  import IconsSelector from "./IconsSelector.svelte"
 
 	let desktopScreenRef: HTMLElement
 	let windowUnderMouseAtInitOfDrag: string | undefined
@@ -162,7 +164,7 @@
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
 					} else if (di.isEditingName) {
 						setTimeout(() => {
-							const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREADY_IN_USE}`)
+							const windowNameAlredyInUse = document.querySelector(`#${W_BLOCKING}`)
 							!windowNameAlredyInUse && updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
 						}, 0)
 					}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType } from "@/stores"
-  import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, unfreezeCurrentCursor } from "@/utils"
+  import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, thereIsWindowBlocking, unfreezeCurrentCursor } from "@/utils"
   import { DESKTOP_ROUTE, FAKE_DESKTOP_ICON_ID } from "@/constants"
   import { onMount } from "svelte"
 
@@ -34,6 +34,8 @@
 	})()
 
 	const onMouseDown = (e: MouseEvent) => {
+		if (isDesktopIcon && thereIsWindowBlocking()) return
+
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
 

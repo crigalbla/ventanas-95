@@ -1,8 +1,10 @@
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON, W_NAME_ALREADY_IN_USE } from "@/constants"
-import { createDefaultFolderWindow, createDefaultNotepadWindow, createNameAlreadyInUseWindow } from "./windows"
-import { availableDimensions, generateId } from "@/utils"
 import { writable } from "svelte/store"
+
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON } from "@/constants"
+import { availableDimensions, generateId } from "@/utils"
 import { translateKey } from "@/i18n"
+
+import { createDefaultFolderWindow, createDefaultNotepadWindow, createNameAlreadyInUseWindow } from "./windows"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,

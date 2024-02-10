@@ -1,9 +1,12 @@
-import { cleanRecycleBin, createDesktopIcon, createWindow, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon, getCutOrCopiedDesktopIcons } from "."
+import { writable } from "svelte/store"
+
+import { DESKTOP_ROUTE, NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
-import { DESKTOP_ROUTE, NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
-import { writable } from "svelte/store"
 import { generateId } from "@/utils"
+
+import { cleanRecycleBin, createDesktopIcon, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon, getCutOrCopiedDesktopIcons } from "./desktopIcons"
+import { createWindow } from "./windows"
 
 export type SubOptionInRightClickMenuType = {
   text: string,

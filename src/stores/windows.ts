@@ -1,12 +1,14 @@
-import NameAlreadyInUse from "@/components/windowBodies/NameAlreadyInUse.svelte"
-import { INITIAL_WINDOW_Z_INDEX, W_NAME_ALREADY_IN_USE } from "@/constants"
-import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
-import FolderBody from "@/components/windowBodies/FolderBody.svelte"
-import { getDesktopIconName } from "./desktopIcons"
-import { user, type UserType } from "./user"
 import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
+
+import NameAlreadyInUse from "@/components/windowBodies/NameAlreadyInUse.svelte"
+import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
+import FolderBody from "@/components/windowBodies/FolderBody.svelte"
+import { INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
 import { generateId } from "@/utils"
+
+import { getDesktopIconName } from "./desktopIcons"
+import { user, type UserType } from "./user"
 
 export type IndividualWindowType = {
   title: string
@@ -118,10 +120,10 @@ export const createDefaultNotepadWindow = (desktopIconId: string) => createWindo
 })
 
 export const createNameAlreadyInUseWindow = (desktopIconId: string) => {
-	const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREADY_IN_USE}`)
+	const windowNameAlredyInUse = document.querySelector(`#${W_BLOCKING}`)
 	!windowNameAlredyInUse && createWindow({
 		title: "nameAlreadyInUse.title",
-		windowId: W_NAME_ALREADY_IN_USE,
+		windowId: W_BLOCKING,
 		desktopIconId,
 		isBlocking: true,
 		canBeResized: false,
