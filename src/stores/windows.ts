@@ -1,6 +1,7 @@
+import NameAlreadyInUse from "@/components/windowBodies/NameAlreadyInUse.svelte"
+import { INITIAL_WINDOW_Z_INDEX, W_NAME_ALREADY_IN_USE } from "@/constants"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
-import { INITIAL_WINDOW_Z_INDEX } from "@/constants"
 import { getDesktopIconName } from "./desktopIcons"
 import { user, type UserType } from "./user"
 import type { ComponentType } from "svelte"
@@ -115,3 +116,17 @@ export const createDefaultNotepadWindow = (desktopIconId: string) => createWindo
 	canBeMaximizedOrMinimized: true,
 	body: NotepadBody
 })
+
+export const createNameAlreadyInUseWindow = (desktopIconId: string) => {
+	const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREADY_IN_USE}`)
+	!windowNameAlredyInUse && createWindow({
+		title: "nameAlreadyInUse.title",
+		windowId: W_NAME_ALREADY_IN_USE,
+		desktopIconId,
+		isBlocking: true,
+		canBeResized: false,
+		canLoseFocus: false,
+		maxWidth: 600,
+		body: NameAlreadyInUse
+	})
+}

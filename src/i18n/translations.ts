@@ -60,8 +60,8 @@ const translations: Translations = {
 		"rightClickMenu.changeName": "Cambiar nombre",
 		"rightClickMenu.cleanRecycleBin": "Vaciar Papelera de reciclaje",
 		"route.desktop": "Escritorio",
-		"nameAlredyInUse.title": "Error al renombrar archivo",
-		"nameAlredyInUse.subtitle": "No se puede renombrar {{filename}}: Ya existe un archivo con este nombre. Especifica un nombre de archivo diferente."
+		"nameAlreadyInUse.title": "Error al renombrar archivo",
+		"nameAlreadyInUse.subtitle": "No se puede renombrar {{filename}}: Ya existe un archivo con este nombre. Especifica un nombre de archivo diferente."
 	},
 	en: {
 		accept: "OK",
@@ -116,8 +116,8 @@ const translations: Translations = {
 		"rightClickMenu.changeName": "Rename",
 		"rightClickMenu.cleanRecycleBin": "Clean Recycle bin",
 		"route.desktop": "Desktop",
-		"nameAlredyInUse.title": "Error renaming file",
-		"nameAlredyInUse.subtitle": "Cannot rename {{filename}}: A file with the name you specified already exists. Specify a different filename."
+		"nameAlreadyInUse.title": "Error renaming file",
+		"nameAlreadyInUse.subtitle": "Cannot rename {{filename}}: A file with the name you specified already exists. Specify a different filename."
 	}
 }
 

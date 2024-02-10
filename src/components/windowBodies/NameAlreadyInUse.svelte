@@ -16,7 +16,7 @@
 <section class="flex m-5 mr-11 gap-4">
   <img class="h-11 w-11" src="icons/error-270px.png" alt="error" draggable="false" />
   <div class="flex flex-col gap-6">
-    <p>{$t("nameAlredyInUse.subtitle", { filename: $t(desktopIcon?.name) })}</p>
+    <p>{$t("nameAlreadyInUse.subtitle", { filename: $t(desktopIcon?.name) })}</p>
     <div class="flex justify-center">
       <Button className="px-9" on:click={() => removeWindow(windowId)}>{$t("accept")}</Button>
     </div>

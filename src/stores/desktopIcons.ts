@@ -1,9 +1,8 @@
 import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON, W_NAME_ALREADY_IN_USE } from "@/constants"
-import { createWindow, createDefaultFolderWindow, createDefaultNotepadWindow } from "./windows"
+import { createDefaultFolderWindow, createDefaultNotepadWindow, createNameAlreadyInUseWindow } from "./windows"
 import { availableDimensions, generateId } from "@/utils"
 import { writable } from "svelte/store"
 import { translateKey } from "@/i18n"
-import NameAlredyInUse from "@/components/windowBodies/NameAlredyInUse.svelte"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -123,17 +122,7 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 				))
 
 			if (thereIsADesktopIconWithSameName) {
-				const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREADY_IN_USE}`)
-				!windowNameAlredyInUse && createWindow({
-					title: "nameAlredyInUse.title",
-					windowId: W_NAME_ALREADY_IN_USE,
-					desktopIconId,
-					isBlocking: true,
-					canBeResized: false,
-					canLoseFocus: false,
-					maxWidth: 600,
-					body: NameAlredyInUse
-				})
+				createNameAlreadyInUseWindow(desktopIconId)
 				return dis
 			}
 		}
