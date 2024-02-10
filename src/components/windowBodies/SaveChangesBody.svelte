@@ -1,6 +1,7 @@
 <script lang="ts">
   import { desktopIcons, removeWindow, type IndividualDesktopIconType } from "@/stores"
   import Button from "../Button.svelte"
+  import { playAudio } from "@/utils"
   import { onMount } from "svelte"
   import { t } from "@/i18n"
 
@@ -25,11 +26,7 @@
   	closeCallBack({ shouldSaveChanges: true, shouldCloseNotepadWindow: true })
   }
 
-  onMount(() => {
-  	// eslint-disable-next-line no-undef
-  	const audio = new Audio("/sounds/error.mp3")
-  	void audio?.play()
-  })
+  onMount(() => playAudio("/sounds/error.mp3"))
 </script>
 
 <section class="flex m-5 mr-11">

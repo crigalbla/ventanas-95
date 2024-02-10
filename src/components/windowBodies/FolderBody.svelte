@@ -2,6 +2,7 @@
   import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
   import { DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
   import IconsSelector from "../IconsSelector.svelte"
+  import { thereIsWindowBlocking } from "@/utils"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
   import { onMount } from "svelte"
@@ -10,7 +11,7 @@
   export let windowId: string
   export let desktopIconId: string
 
-  $: window = $windows.find(w => w.windowId === windowId) as IndividualWindowType
+  $: myWindow = $windows.find(w => w.windowId === windowId) as IndividualWindowType
   $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
   $: thisRoute = `${desktopIcon.route}\\${desktopIcon.name}`
   $: isThisFolderRecycleBin = desktopIcon.desktopIconId === DI_RECYCLE_BIN
@@ -28,13 +29,15 @@
 
   $: thisRouteTranslated = $t(desktopIcon.name) && getRouteTranslated(thisRoute) // $t is necessary to rerender when change language
   $: desktopIconsInThisFolder = $desktopIcons.filter(di => di.route === thisRoute)
-  $: windowCoordinates = window && { top: window.top as number, left: window.left as number }
+  $: windowCoordinates = window && { top: myWindow?.top as number, left: myWindow?.left as number }
   let contentRef: HTMLElement
   let inputSearchRef: HTMLInputElement
 
   const onClickHeaderButton = () => null
 
   const onContextMenu = (event: MouseEvent) => {
+  	if (thereIsWindowBlocking(event)) return
+
   	if (event.target === contentRef) {
   		const rect = contentRef.getBoundingClientRect()
   		createRightClickMenuInScreen(event, { top: rect.top, left: rect.left })

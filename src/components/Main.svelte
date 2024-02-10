@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createInitialDesktopIcons, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
-  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_NAME_ALREDY_IN_USE } from "@/constants"
-  import { isDifferentOfRecycleBinAndMyPC, waitingCursor } from "@/utils"
+  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_NAME_ALREADY_IN_USE } from "@/constants"
+  import { isDifferentOfRecycleBinAndMyPC, playAudio, thereIsWindowBlocking, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
@@ -16,12 +16,6 @@
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 
   createLoginWindow()
-
-  const playStartingAudio = () => {
-  	// eslint-disable-next-line no-undef
-  	const audio = new Audio("/sounds/starting.mp3")
-  	void audio?.play()
-  }
 
   const wakeUp = (_: HTMLElement) => {
   	const wakingUp = () => {
@@ -43,6 +37,8 @@
   }
 
 	const onContextMenu = (event: MouseEvent) => {
+		if (thereIsWindowBlocking(event)) return
+
 		const target = event.target as EventTarget & { id: string }
 		if (target?.id === DESKTOP_SCREEN_ID) createRightClickMenuInScreen(event)
 	}
@@ -58,6 +54,8 @@
 		// TODO complete when there are several desktopIcons
 		const movingDesktopIcons = $desktopIcons.filter(di => di.isMoving)
 		if (movingDesktopIcons?.length > 0) {
+			if (thereIsWindowBlocking(event)) return
+
 			const isMouseMove = event.type === "mousemove"
 			const isMouseUp = event.type === "mouseup"
 			const elementsUnderMouse = document.elementsFromPoint(event.clientX, event.clientY)
@@ -130,13 +128,15 @@
 	}
 
   $: if ($user?.isLoggedIn) {
-  	playStartingAudio()
+  	playAudio("/sounds/starting.mp3")
   	waitingCursor()
   	createInitialDesktopIcons()
   }
 
 	onMount(() => {
 		const mouseDown = (event: MouseEvent) => {
+			if (thereIsWindowBlocking(event)) return
+
 			const target = event.target as Node
 			const rightClickMenu = document.querySelector(`#${RIGHT_CLICK_MENU_ID}`)
 			const subRightClickMenu = document.querySelector(`#${SUB_RIGHT_CLICK_MENU_ID}`)
@@ -162,7 +162,7 @@
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
 					} else if (di.isEditingName) {
 						setTimeout(() => {
-							const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREDY_IN_USE}`)
+							const windowNameAlredyInUse = document.querySelector(`#${W_NAME_ALREADY_IN_USE}`)
 							!windowNameAlredyInUse && updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
 						}, 0)
 					}
@@ -170,6 +170,8 @@
 			})
 		}
 		const keyDown = (event: KeyboardEvent) => {
+			if (thereIsWindowBlocking(event)) return
+
 			if (event.key === "Enter") {
 				$desktopIcons.forEach((di) => {
 					if (di.isFocused && !di.isEditingName) di.onDblClick()

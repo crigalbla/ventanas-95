@@ -33,13 +33,6 @@
 		return () => null
 	})()
 
-	// const canUpdateParams = (newLeft: number, newTop: number) => {
-	// 	if (isWindow) return true
-
-	// 	return (parentElement?.clientHeight as number) >= newTop &&
-	// 		(parentElement?.clientWidth as number) >= newLeft
-	// }
-
 	const onMouseDown = (e: MouseEvent) => {
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return

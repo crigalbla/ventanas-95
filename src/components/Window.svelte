@@ -2,9 +2,9 @@
   import { onMount } from "svelte"
 
   import type { IndividualDesktopIconType, IndividualWindowType, WindowsType } from "@/stores"
-  import { removeWindow, windows, updateWindowParams, desktopIcons, windowIdPrefix } from "@/stores"
-  import { INITIAL_WINDOW_Z_INDEX, W_NAME_ALREDY_IN_USE } from "@/constants"
-  import { availableDimensions, freezeCurrentCursor } from "@/utils"
+  import { removeWindow, windows, updateWindowParams, desktopIcons } from "@/stores"
+  import { INITIAL_WINDOW_Z_INDEX, W_NAME_ALREADY_IN_USE } from "@/constants"
+  import { availableDimensions } from "@/utils"
   import { t } from "@/i18n"
 
   import WindowButton from "./WindowButton.svelte"
@@ -24,7 +24,6 @@
   export let isMinimized: boolean = false
   export let isFullScreen: boolean = false
   export let isFocused: boolean = true
-  export let isBlocking: boolean = false
   export let initialWidth: number = 0
   export let initialHeight: number = 0
   export let left: number = undefined!
@@ -42,8 +41,8 @@
   export let closeCallBack: () => void | { preventCloseWindow: boolean } = undefined!
 
   $: desktopIcon = $desktopIcons.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)
-  $: iconFromDesktopIcon = (windowId !== W_NAME_ALREDY_IN_USE && desktopIcon?.icon) as string | undefined
-  $: finalTitle = $t((windowId !== W_NAME_ALREDY_IN_USE && desktopIcon?.name) || title)
+  $: iconFromDesktopIcon = (windowId !== W_NAME_ALREADY_IN_USE && desktopIcon?.icon) as string | undefined
+  $: finalTitle = $t((windowId !== W_NAME_ALREADY_IN_USE && desktopIcon?.name) || title)
   let windowDiv: HTMLElement = undefined!
   const headerHeight = 24
 
@@ -62,23 +61,6 @@
   }
 
   doIfIsFullScreen()
-
-  // const playClickNotAllowed = () => {
-  // 	const audio = new Audio("/sounds/clickNotAllowed.mp3")
-  // 	void audio?.play()
-  // }
-
-  const blockDesktopAndDesktopIcons = () => {
-  	document.body.querySelectorAll("*").forEach((x) => {
-  		if ((x as HTMLElement).dataset.route) {
-  			(x as HTMLElement).style.pointerEvents = "none"
-  			// x.addEventListener("mousedown", playClickNotAllowed)
-  		}
-  		if (x.id.substring(0, 1) === windowIdPrefix) {
-  			(x as HTMLElement).style.pointerEvents = "all"
-  		}
-  	})
-  }
 
   const onQuestionButtonClick = (event: Event) => {
   	const helpButton: HTMLButtonElement = event.target as HTMLButtonElement
@@ -160,18 +142,6 @@
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
   		updateWindowParams(windowId, { top: rect.top, left: rect.left })
-  	}
-
-  	if (isBlocking && windowDiv) blockDesktopAndDesktopIcons()
-
-  	return () => {
-  		if (isBlocking) {
-  			console.log("unblock")
-  			document.body.querySelectorAll("*").forEach((x) => {
-  				(x as HTMLElement).style.pointerEvents = ""
-  				// x.removeEventListener("mousedown", playClickNotAllowed)
-  			})
-  		}
   	}
   })
 </script>

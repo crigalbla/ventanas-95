@@ -1,8 +1,15 @@
-import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID, DI_RECYCLE_BIN, DI_MY_PC } from "@/constants"
+import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID, DI_RECYCLE_BIN, DI_MY_PC, W_NAME_ALREADY_IN_USE } from "@/constants"
+import { windows } from "@/stores"
 
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
 }
+
+type AudioPlayingsType = {
+	[key: string]: { tracks: number }
+}
+
+const audioPlayings: AudioPlayingsType = {}
 
 export const isMouseOutOfDesktopScreen = (e: MouseEvent) =>
 	isMouseOutOfThisElement(e, document.getElementById(DESKTOP_SCREEN_ID) ?? document.body)
@@ -50,6 +57,30 @@ export const unfreezeCurrentCursor = () => {
 	const body = document.querySelector("body") as HTMLElement
 	html.style.cursor = ""
 	body.style.pointerEvents = ""
+}
+
+export const thereIsWindowBlocking = (event?: Event) => {
+	const blockingWindow = document.querySelector(`#${W_NAME_ALREADY_IN_USE}`)
+
+	if (blockingWindow) {
+		const navigationBar = document.querySelector(`#${NAVIGATION_BAR_ID}`)
+		const isClickedInside = blockingWindow?.contains(event?.target as Node) || navigationBar?.contains(event?.target as Node)
+		const isClickedOutside = event && !isClickedInside
+
+		if (isClickedOutside) playAudio("/sounds/clickNotAllowed.mp3")
+	}
+
+	return Boolean(blockingWindow)
+}
+
+export const playAudio = (audioUrl: string) => {
+	// eslint-disable-next-line no-undef
+	const audio = new Audio(audioUrl)
+	audioPlayings[audioUrl] = { tracks: (audioPlayings[audioUrl]?.tracks || 0) + 1 }
+
+	audio.addEventListener("ended", () => delete audioPlayings[audioUrl])
+
+	if (audioPlayings[audioUrl]?.tracks === 1) void audio?.play()
 }
 
 export const availableDimensions = () => {

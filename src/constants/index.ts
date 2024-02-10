@@ -16,7 +16,7 @@ export const DI_MY_PC = "di-my-pc"
 export const DI_RECYCLE_BIN = "di-recycle-bin"
 export const DI_FIRST_FOLDER = "di-first-folder"
 export const DI_ABOUT_NOTEPAD = "di-about-notepad"
-export const W_NAME_ALREDY_IN_USE = "w-name-alredy-in-use"
+export const W_NAME_ALREADY_IN_USE = "w-name-alredy-in-use"
 
 export const RECYCLE_BIN_NAME = "desktopIcon.recycleBin"
 export const MY_PC_NAME = "desktopIcon.myPc"

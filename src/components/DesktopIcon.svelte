@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon, createWindow } from "@/stores"
+  import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon, windows } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, NOTEPAD_ICON } from "@/constants"
+  import { thereIsWindowBlocking } from "@/utils"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
 
@@ -21,6 +22,7 @@
   let desktopIconRef: HTMLElement
   let textareaRef: HTMLTextAreaElement
   let newName: string
+  $: pointerEventsNoneInTextarea = $windows && thereIsWindowBlocking()
   $: thisRoute = icon !== NOTEPAD_ICON ? `${route}\\${name}` : undefined
   $: maxHeight = isFocused || isEditingName ? 350 : DESKTOP_ICON_HEIGHT
   $: if (textareaRef) {
@@ -35,18 +37,21 @@
   	desktopIconByQuerySelector?.focus()
   }
 
-  const onMouseDownDesktopIcon = () => !isEditingName && desktopIcons.update((dis: DesktopIconsType) => {
-  	const oldZIndex = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
+  const onMouseDownDesktopIcon = () => !isEditingName && !thereIsWindowBlocking() &&
+    desktopIcons.update((dis: DesktopIconsType) => {
+    	const oldZIndex = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
 
-  	return dis.map((di: IndividualDesktopIconType) => {
-  		if (di.desktopIconId === desktopIconId) return ({ ...di, isFocused: true, zIndex: dis.length + 1 })
-  		if ((di.zIndex as number) > oldZIndex) return ({ ...di, zIndex: (di.zIndex as number) - 1 })
+    	return dis.map((di: IndividualDesktopIconType) => {
+    		if (di.desktopIconId === desktopIconId) return ({ ...di, isFocused: true, zIndex: dis.length + 1 })
+    		if ((di.zIndex as number) > oldZIndex) return ({ ...di, zIndex: (di.zIndex as number) - 1 })
 
-  		return di
-  	})
-  })
+    		return di
+    	})
+    })
 
   const onInput = (event: Event) => {
+  	if (thereIsWindowBlocking()) return
+
   	const target = event.target as EventTarget & { value: string }
   	if (!target?.value.includes("\n")) { // Change value if value is different of enter key
   		const textareaHTML = event.target as HTMLTextAreaElement
@@ -66,6 +71,8 @@
   }
 
   const onKeyDownInInput = (event: KeyboardEvent) => {
+  	if (thereIsWindowBlocking()) return
+
   	if (event.key === "Enter") {
   		setTimeout(() => { // Timer to avoid open folder
   			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName })
@@ -74,6 +81,8 @@
   }
 
   const onMouseDown = (event: MouseEvent) => {
+  	if (thereIsWindowBlocking()) return
+
   	const target = event.target as Node
   	const desktopIconHTML = document.querySelector(`#${desktopIconId}`)
   	if (newName && newName !== name && !desktopIconHTML?.contains(target)) {
@@ -82,6 +91,8 @@
   }
 
   const onContextMenu = (event: MouseEvent) => {
+  	if (thereIsWindowBlocking()) return
+
   	let customSection
   	const isMyPc = desktopIconId === DI_MY_PC
   	const isRecycleBin = desktopIconId === DI_RECYCLE_BIN
@@ -133,6 +144,7 @@
     {#if isEditingName}
       <textarea
         class="text text-center"
+        class:pointer-events-none={pointerEventsNoneInTextarea}
         value={$t(name)}
         maxlength="200"
         on:input={onInput}
@@ -164,7 +176,7 @@
     outline: none;
   }
 
-  .desktop-icon * {
+  .desktop-icon *:not(textarea) {
     pointer-events: none;
   }
 
@@ -192,7 +204,6 @@
     resize: none;
     cursor: auto;
     font-size: 14px;
-    pointer-events: auto !important;
   }
 
   textarea:focus {
