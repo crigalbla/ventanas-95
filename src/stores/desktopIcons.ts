@@ -47,6 +47,39 @@ const updateRecycleBinIcon = () => {
 	})
 }
 
+const avoidChanges = (
+	{ dis, oldDesktopIcon, desktopIconId, name, route }:
+	{
+		dis: DesktopIconsType,
+		oldDesktopIcon: IndividualDesktopIconType | undefined,
+		desktopIconId: string,
+		name: string | undefined,
+		route: string | undefined
+	}
+): boolean => {
+	let thereIsADesktopIconWithSameName
+
+	if (name) {
+		thereIsADesktopIconWithSameName =
+			Boolean(dis.find((di) =>
+				di.route === oldDesktopIcon?.route &&
+				(di?.name === name || translateKey(di?.name) === name)
+			))
+		thereIsADesktopIconWithSameName && createNameAlreadyInUseWindow(desktopIconId, true)
+	} else if (route && !route.includes(RECYCLE_BIN_ROUTE)) {
+		thereIsADesktopIconWithSameName =
+			Boolean(dis.find((di) =>
+				di.route === route &&
+				(di?.name === oldDesktopIcon?.name || translateKey(di?.name) === oldDesktopIcon?.name)
+			))
+		thereIsADesktopIconWithSameName && createNameAlreadyInUseWindow(desktopIconId)
+	}
+
+	if (thereIsADesktopIconWithSameName) return true
+
+	return false
+}
+
 export const getDesktopIcons = () => {
 	let result: DesktopIconsType = []
 	const unsubscribe = desktopIcons.subscribe((dis) => { result = dis })
@@ -116,16 +149,11 @@ export const updateDesktopIconParams = (desktopIconId: string, params: Updatable
 			oldDesktopIcon = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
 			oldRoute = `${oldDesktopIcon.route}\\${oldDesktopIcon.name}`
 		}
-		if (params.name) {
-			const thereIsADesktopIconWithSameName =
-				Boolean(dis.find((di) =>
-					di.route === oldDesktopIcon?.route &&
-					(di?.name === params.name || translateKey(di?.name) === params.name)
-				))
-
-			if (thereIsADesktopIconWithSameName) {
-				createNameAlreadyInUseWindow(desktopIconId)
-				return dis
+		if (avoidChanges({ dis, oldDesktopIcon, desktopIconId, name: params.name, route: params.route })) {
+			if (params.name) return dis
+			if (params.route) {
+				setTimeout(() => updateDesktopIconParams(desktopIconId, { canBeDropped: true }), 0) // To avoid no-drag cursor
+				return dis.map((di) => ({ ...di, canBeDropped: di.desktopIconId === desktopIconId ? false : di.canBeDropped }))
 			}
 		}
 

@@ -119,10 +119,10 @@ export const createDefaultNotepadWindow = (desktopIconId: string) => createWindo
 	body: NotepadBody
 })
 
-export const createNameAlreadyInUseWindow = (desktopIconId: string) => {
-	const windowNameAlredyInUse = document.querySelector(`#${W_BLOCKING}`)
-	!windowNameAlredyInUse && createWindow({
-		title: "nameAlreadyInUse.title",
+export const createNameAlreadyInUseWindow = (desktopIconId: string, isByRename?: boolean) => {
+	const blockingWindow = document.querySelector(`#${W_BLOCKING}`)
+	!blockingWindow && createWindow({
+		title: isByRename ? "nameAlreadyInUse.title" : "nameAlreadyInUseInNewRoute.title",
 		windowId: W_BLOCKING,
 		desktopIconId,
 		isBlocking: true,

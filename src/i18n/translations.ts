@@ -61,7 +61,9 @@ const translations: Translations = {
 		"rightClickMenu.cleanRecycleBin": "Vaciar Papelera de reciclaje",
 		"route.desktop": "Escritorio",
 		"nameAlreadyInUse.title": "Error al renombrar archivo",
-		"nameAlreadyInUse.subtitle": "No se puede renombrar {{filename}}: Ya existe un archivo con este nombre. Especifica un nombre de archivo diferente."
+		"nameAlreadyInUse.subtitle": "No se puede renombrar {{filename}}: Ya existe un archivo con este nombre. Especifica un nombre de archivo diferente.",
+		"nameAlreadyInUseInNewRoute.title": "Error al mover archivo",
+		"nameAlreadyInUseInNewRoute.subtitle": "No se puede mover {{filename}}: Ya existe un archivo con este nombre en la nueva ruta de destino."
 	},
 	en: {
 		accept: "OK",
@@ -117,7 +119,9 @@ const translations: Translations = {
 		"rightClickMenu.cleanRecycleBin": "Clean Recycle bin",
 		"route.desktop": "Desktop",
 		"nameAlreadyInUse.title": "Error renaming file",
-		"nameAlreadyInUse.subtitle": "Cannot rename {{filename}}: A file with the name you specified already exists. Specify a different filename."
+		"nameAlreadyInUse.subtitle": "Cannot rename {{filename}}: A file with the name you specified already exists. Specify a different filename.",
+		"nameAlreadyInUseInNewRoute.title": "Error moving file",
+		"nameAlreadyInUseInNewRoute.subtitle": "Cannot move {{filename}}: A file with the name you specified already exists in the new destination route."
 	}
 }
 
