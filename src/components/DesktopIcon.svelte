@@ -75,7 +75,8 @@
 
   	if (event.key === "Enter") {
   		setTimeout(() => { // Timer to avoid open folder
-  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName })
+  			// TODO fix erro when Enter
+  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName || name })
   		}, 0)
   	}
   }

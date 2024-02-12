@@ -5,7 +5,7 @@ import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { generateId } from "@/utils"
 
-import { cleanRecycleBin, createDesktopIcon, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon, getCutOrCopiedDesktopIcons } from "./desktopIcons"
+import { cleanRecycleBin, createDesktopIcon, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon, getCutOrCopiedDesktopIcons, getNameForANewFile } from "./desktopIcons"
 import { createWindow } from "./windows"
 
 export type SubOptionInRightClickMenuType = {
@@ -49,7 +49,7 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, sectionCoo
 	createDesktopIcon({
 		desktopIconId,
 		icon: "open-folder",
-		name: "desktopIcon.newFolder",
+		name: getNameForANewFile("desktopIcon.newFolder", route),
 		route,
 		isFocused: false,
 		isEditingName: true,
@@ -73,7 +73,7 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, Sect
 	createDesktopIcon({
 		desktopIconId,
 		icon: NOTEPAD_ICON,
-		name: "desktopIcon.newTextDocument",
+		name: getNameForANewFile("desktopIcon.newTextDocument", route),
 		route,
 		isFocused: false,
 		isEditingName: true,

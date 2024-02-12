@@ -80,14 +80,6 @@ const avoidChanges = (
 	return false
 }
 
-export const getDesktopIcons = () => {
-	let result: DesktopIconsType = []
-	const unsubscribe = desktopIcons.subscribe((dis) => { result = dis })
-	unsubscribe()
-
-	return result
-}
-
 const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 	const allDesktopIcons = getDesktopIcons()
 	const copiedDesktopIcons = allDesktopIcons.filter((di) => di.isCopied)
@@ -131,6 +123,29 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 			}
 		})
 	})
+}
+
+export const getNameForANewFile = (name: string, route: string): string => {
+	const fileWithThisName = getDesktopIcons().find((di) => di.route === route && di.name === name)
+
+	if (fileWithThisName) {
+		const regex = /\((\d+)\)$/
+		const coincidence = regex.exec(fileWithThisName.name)
+		const enumeration = coincidence ? ` (${Number(coincidence[1]) + 1})` : " (2)"
+		const newName = name.replace(coincidence?.[0] ?? "", "").trim()
+
+		return getNameForANewFile(`${translateKey(newName)}${enumeration}`, route)
+	}
+
+	return name
+}
+
+export const getDesktopIcons = () => {
+	let result: DesktopIconsType = []
+	const unsubscribe = desktopIcons.subscribe((dis) => { result = dis })
+	unsubscribe()
+
+	return result
 }
 
 export const createDesktopIcon = ({ desktopIconId = generateId(desktopIconIdPrefix), isFocused, ...rest }: CreateDesktopIconParams) => {
