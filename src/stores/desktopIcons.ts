@@ -63,14 +63,16 @@ const avoidChanges = (
 		thereIsADesktopIconWithSameName =
 			Boolean(dis.find((di) =>
 				di.route === oldDesktopIcon?.route &&
-				(di?.name === name || translateKey(di?.name) === name)
+				(di?.name === name || translateKey(di?.name) === name) &&
+				di.desktopIconId !== oldDesktopIcon?.desktopIconId
 			))
 		thereIsADesktopIconWithSameName && createNameAlreadyInUseWindow(desktopIconId, true)
 	} else if (route && !route.includes(RECYCLE_BIN_ROUTE)) {
 		thereIsADesktopIconWithSameName =
 			Boolean(dis.find((di) =>
 				di.route === route &&
-				(di?.name === oldDesktopIcon?.name || translateKey(di?.name) === oldDesktopIcon?.name)
+				(di?.name === oldDesktopIcon?.name || translateKey(di?.name) === oldDesktopIcon?.name) &&
+				di.desktopIconId !== oldDesktopIcon?.desktopIconId
 			))
 		thereIsADesktopIconWithSameName && createNameAlreadyInUseWindow(desktopIconId)
 	}

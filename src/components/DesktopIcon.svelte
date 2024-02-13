@@ -66,7 +66,8 @@
   			newName = $t(textareaRef.value).trim() || name
   		}
   	} else {
-  		textareaRef.value = textareaRef.value.slice(0, -1) // Remove enter key
+  		textareaRef.value = textareaRef.value.slice(0, -1).trim() // Remove enter key
+  		newName = $t(textareaRef.value).trim() || name
   	}
   }
 
@@ -75,8 +76,7 @@
 
   	if (event.key === "Enter") {
   		setTimeout(() => { // Timer to avoid open folder
-  			// TODO fix erro when Enter
-  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName || name })
+  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName })
   		}, 0)
   	}
   }
