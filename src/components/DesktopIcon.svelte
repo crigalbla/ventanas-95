@@ -21,7 +21,7 @@
 
   let desktopIconRef: HTMLElement
   let textareaRef: HTMLTextAreaElement
-  let newName: string
+  $: newName = name
   $: pointerEventsNoneInTextarea = $windows && thereIsWindowBlocking()
   $: thisRoute = icon !== NOTEPAD_ICON ? `${route}\\${name}` : undefined
   $: maxHeight = isFocused || isEditingName ? 350 : DESKTOP_ICON_HEIGHT
@@ -67,7 +67,6 @@
   		}
   	} else {
   		textareaRef.value = textareaRef.value.slice(0, -1).trim() // Remove enter key
-  		newName = $t(textareaRef.value).trim() || name
   	}
   }
 

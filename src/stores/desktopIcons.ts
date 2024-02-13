@@ -101,7 +101,7 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 		const newPastedDesktopIcon = {
 			...di,
 			...params,
-			name: newName || di.name,
+			name: getNameForANewFile(newName || di.name, params.route ?? di.route),
 			desktopIconId,
 			onDblClick: () => isNotepad ? createDefaultNotepadWindow(desktopIconId) : createDefaultFolderWindow(desktopIconId)
 		}

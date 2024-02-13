@@ -71,15 +71,17 @@
 			const isRecycleBinOrMyPC = !isDifferentOfRecycleBinAndMyPC(movingDesktopIcons[0].desktopIconId)
 			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || !isDestinationADesktopIcon || !isRecycleBinOrMyPC
 			const isDestinationRouteDifferentOfOrigin = destinationRoute && destinationRoute !== movingDesktopIcons[0].route
-			const isDestinationRouteDifferentOfOriginWithName =
-				destinationRoute && destinationRoute !== `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
+			const routePlusName = `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
+			const isDestinationRouteDifferentOfOriginWithName = destinationRoute && destinationRoute !== routePlusName
 			const isRecycleBinOrMyPCMovingToFolder =
 				isRecycleBinOrMyPC && isDestinationRouteDifferentOfOrigin && isDestinationRouteDifferentOfOriginWithName
+			const isOldRouteIncludedInDestinationRoute = destinationRoute?.includes(routePlusName)
 
 			if (
 				canBeDroppedInFolderOrDesktopIcon &&
 				(isDestinationRouteDifferentOfOriginWithName || isMovingFewPixels) &&
-				!isRecycleBinOrMyPCMovingToFolder
+				!isRecycleBinOrMyPCMovingToFolder &&
+				!isOldRouteIncludedInDestinationRoute
 			) {
 				if (isMouseUp && !isMovingFewPixels) {
 					if (isDestinationRouteDifferentOfOrigin) {
