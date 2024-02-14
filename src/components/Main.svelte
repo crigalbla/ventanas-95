@@ -80,8 +80,8 @@
 			if (
 				canBeDroppedInFolderOrDesktopIcon &&
 				(isDestinationRouteDifferentOfOriginWithName || isMovingFewPixels) &&
-				!isRecycleBinOrMyPCMovingToFolder &&
-				!isOldRouteIncludedInDestinationRoute
+				(!isOldRouteIncludedInDestinationRoute || isMovingFewPixels) &&
+				!isRecycleBinOrMyPCMovingToFolder
 			) {
 				if (isMouseUp && !isMovingFewPixels) {
 					if (isDestinationRouteDifferentOfOrigin) {
@@ -102,7 +102,6 @@
 							updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
 						}
 					}
-					windowUnderMouseAtInitOfDrag = undefined
 				}
 				if (isMouseMove && !movingDesktopIcons[0].canBeDropped) {
 					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: true })
@@ -128,6 +127,8 @@
 					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
 				}
 			}
+
+			if (isMouseUp) windowUnderMouseAtInitOfDrag = undefined
 		}
 	}
 
