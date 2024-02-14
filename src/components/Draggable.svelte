@@ -35,6 +35,7 @@
 
 	const onMouseDown = (e: MouseEvent) => {
 		if (isDesktopIcon && thereIsWindowBlocking()) return
+		if (e.button === 1 || e.button === 2) return
 
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return

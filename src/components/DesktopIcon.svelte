@@ -37,7 +37,7 @@
   	desktopIconByQuerySelector?.focus()
   }
 
-  const onMouseDownDesktopIcon = () => !isEditingName && !thereIsWindowBlocking() &&
+  const onMouseDownDesktopIcon = (event: MouseEvent) => !isEditingName && event.button !== 1 && !thereIsWindowBlocking() &&
     desktopIcons.update((dis: DesktopIconsType) => {
     	const oldZIndex = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
 

@@ -53,7 +53,7 @@
 	}
 
 	const dropDesktopIcon = (event: MouseEvent) => {
-		// TODO complete when there are several desktopIcons
+		// Complete method when there is the possibility to move several desktopIcons
 		const movingDesktopIcons = $desktopIcons.filter(di => di.isMoving)
 		if (movingDesktopIcons?.length > 0) {
 			if (thereIsWindowBlocking(event)) return
@@ -167,8 +167,8 @@
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
 					} else if (di.isEditingName) {
 						setTimeout(() => {
-							const windowNameAlredyInUse = document.querySelector(`#${W_BLOCKING}`)
-							!windowNameAlredyInUse && updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
+							const windowNameAlreadyInUse = document.querySelector(`#${W_BLOCKING}`)
+							!windowNameAlreadyInUse && updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
 						}, 0)
 					}
 				}
