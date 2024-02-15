@@ -16,6 +16,11 @@
 	let windowUnderMouseAtInitOfDrag: string | undefined
   $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
+	$: if ($user?.isLoggedIn) {
+  	playAudio("/sounds/starting.mp3")
+  	waitingCursor()
+  	createInitialDesktopIcons()
+	}
 
   createLoginWindow()
 
@@ -88,9 +93,15 @@
 						const rectOfShadow = elementShadow.getBoundingClientRect()
 						const ajustmentInX = rectOfShadow.left - event.clientX
 						const ajustmentInY = rectOfShadow.top - event.clientY
-						const newCoordinates = destinationRoute === DESKTOP_ROUTE
-							? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
-							: { top: 0, left: 0 }
+						let newCoordinates = { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
+						if (destinationRoute !== DESKTOP_ROUTE) {
+							console.log({
+								clientWidth: elementUnderDesktopIcon.clientWidth,
+								offsetWidth: elementUnderDesktopIcon.offsetWidth,
+								scrollWidth: elementUnderDesktopIcon.scrollWidth
+							})
+							newCoordinates = { top: 0, left: 0 }
+						}
 
 						updateDesktopIconParams(
 							movingDesktopIcons[0].desktopIconId,
@@ -131,12 +142,6 @@
 			if (isMouseUp) windowUnderMouseAtInitOfDrag = undefined
 		}
 	}
-
-  $: if ($user?.isLoggedIn) {
-  	playAudio("/sounds/starting.mp3")
-  	waitingCursor()
-  	createInitialDesktopIcons()
-  }
 
 	onMount(() => {
 		const mouseDown = (event: MouseEvent) => {

@@ -1,12 +1,10 @@
 import { writable } from "svelte/store"
 
 import { DESKTOP_ROUTE, NOTEPAD_ICON, RECYCLE_BIN_ROUTE } from "@/constants"
-import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
-import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { generateId } from "@/utils"
 
-import { cleanRecycleBin, createDesktopIcon, desktopIconIdPrefix, getDesktopIconName, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon, getCutOrCopiedDesktopIcons, getNameForANewFile } from "./desktopIcons"
-import { createWindow } from "./windows"
+import { cleanRecycleBin, createDesktopIcon, desktopIconIdPrefix, updateDesktopIconParams, type IndividualDesktopIconType, removeDesktopIcon, cutDesktopIcons, copyDesktopIcons, moveDesktopIconsToNewRoute, isThereAnyCutOrCopiedDesktopIcon, getCutOrCopiedDesktopIcons, getNameForANewFile } from "./desktopIcons"
+import { createDefaultFolderWindow, createDefaultNotepadWindow } from "./windows"
 
 export type SubOptionInRightClickMenuType = {
   text: string,
@@ -55,15 +53,7 @@ const createNewFolderDesktopIcon = (event: MouseEvent, route: string, sectionCoo
 		isEditingName: true,
 		top: event.clientY - sectionCoordinates.top,
 		left: event.clientX - sectionCoordinates.left,
-		onDblClick: () => createWindow({
-			title: getDesktopIconName(desktopIconId),
-			desktopIconId,
-			initialWidth: 600,
-			initialHeight: 400,
-			canBeHidden: true,
-			canBeMaximizedOrMinimized: true,
-			body: FolderBody
-		})
+		onDblClick: () => createDefaultFolderWindow(desktopIconId)
 	})
 }
 
@@ -80,16 +70,7 @@ const createNewTextDocumentDesktopIcon = (event: MouseEvent, route: string, Sect
 		properties: { text: "" },
 		top: event.clientY - SectionCoordinates.top,
 		left: event.clientX - SectionCoordinates.left,
-		onDblClick: () => createWindow({
-			title: getDesktopIconName(desktopIconId),
-			subTitle: "subTitle.notepad",
-			desktopIconId,
-			initialWidth: 300,
-			initialHeight: 150,
-			canBeHidden: true,
-			canBeMaximizedOrMinimized: true,
-			body: NotepadBody
-		})
+		onDblClick: () => createDefaultNotepadWindow(desktopIconId)
 	})
 }
 
