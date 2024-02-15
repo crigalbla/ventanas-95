@@ -127,6 +127,42 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 	})
 }
 
+export const getNewCoordinatesInNewFolder = (route: string) => {
+	// const folder = document.querySelector(`[data-route="${route.replaceAll("\\", "\\\\")}"]`)
+	// const clientWidth = folder?.clientWidth as number
+	let newCoordinates = { top: 0, left: 0 }
+	// let spaceWasFound = false
+
+	// console.log({ folder, route })
+	const unsubscribe = desktopIcons.subscribe((dis) => {
+		const lookForASpace = () => {
+			for (const di of dis) {
+				if (di.route === route) {
+					const top = di.top as number
+					const left = di.left as number
+					const right = left + DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN
+					const bottom = top + DESKTOP_ICON_HEIGHT + DESKTOP_ICON_MARGIN
+
+					if (
+						newCoordinates.left >= left && newCoordinates.left <= right &&
+						newCoordinates.top >= top && newCoordinates.top <= bottom
+					) {
+						// spaceWasFound = true
+						newCoordinates = { top, left: right }
+					// } else {
+					// 	!spaceWasFound && lookForASpace()
+					// 	break
+					}
+				}
+			}
+		}
+		lookForASpace()
+	})
+	unsubscribe()
+
+	return newCoordinates
+}
+
 export const getNameForANewFile = (name: string, route: string): string => {
 	const fileWithThisName = getDesktopIcons().find((di) => di.route === route && di.name === name)
 

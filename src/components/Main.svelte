@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { createInitialDesktopIcons, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
+  import { createInitialDesktopIcons, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, playAudio, thereIsWindowBlocking, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
@@ -93,15 +93,9 @@
 						const rectOfShadow = elementShadow.getBoundingClientRect()
 						const ajustmentInX = rectOfShadow.left - event.clientX
 						const ajustmentInY = rectOfShadow.top - event.clientY
-						let newCoordinates = { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
-						if (destinationRoute !== DESKTOP_ROUTE) {
-							console.log({
-								clientWidth: elementUnderDesktopIcon.clientWidth,
-								offsetWidth: elementUnderDesktopIcon.offsetWidth,
-								scrollWidth: elementUnderDesktopIcon.scrollWidth
-							})
-							newCoordinates = { top: 0, left: 0 }
-						}
+						const newCoordinates = destinationRoute === DESKTOP_ROUTE
+							? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
+							: getNewCoordinatesInNewFolder(destinationRoute)
 
 						updateDesktopIconParams(
 							movingDesktopIcons[0].desktopIconId,
