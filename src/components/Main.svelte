@@ -95,6 +95,7 @@
 						const ajustmentInY = rectOfShadow.top - event.clientY
 						const newCoordinates = destinationRoute === DESKTOP_ROUTE
 							? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
+							// : { top: 0, left: 0 }
 							: getNewCoordinatesInNewFolder(destinationRoute)
 
 						updateDesktopIconParams(

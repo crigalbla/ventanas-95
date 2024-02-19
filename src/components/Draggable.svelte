@@ -58,7 +58,7 @@
   		fakeDraggable.classList.add("display-none")
   		const newLeft = left + fakeLeft + parentScrollLeft
   		const newTop = top + fakeTop + parentScrollTop
-  		updateParams(realId, { left: newLeft, top: newTop })
+  		if (id === realId) updateParams(realId, { left: newLeft, top: newTop })
   	}
   }
 
