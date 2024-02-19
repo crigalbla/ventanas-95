@@ -1,6 +1,6 @@
 import { writable } from "svelte/store"
 
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON, DEFAULT_FOLDER_WINDOW_WIDTH } from "@/constants"
 import { availableDimensions, generateId } from "@/utils"
 import { translateKey } from "@/i18n"
 
@@ -128,8 +128,8 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 }
 
 export const getNewCoordinatesInNewFolder = (route: string) => {
-	// const folder = document.querySelector(`[data-route="${route.replaceAll("\\", "\\\\")}"]`)
-	// const clientWidth = folder?.clientWidth as number
+	const folder = document.querySelector(`[data-route="${route.replaceAll("\\", "\\\\")}"]`)
+	const clientWidth = folder?.clientWidth as number || DEFAULT_FOLDER_WINDOW_WIDTH
 	let newCoordinates = { top: 0, left: 0 }
 
 	const unsubscribe = desktopIcons.subscribe((dis) => {
@@ -137,19 +137,27 @@ export const getNewCoordinatesInNewFolder = (route: string) => {
 
 		const lookForASpace = () => {
 			for (const di of disInThisRoute) {
-				if (di.route === route) {
-					const top = di.top as number
-					const left = di.left as number
-					const right = left + DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN
-					const bottom = top + DESKTOP_ICON_HEIGHT + DESKTOP_ICON_MARGIN
+				const widthPlusMargin = DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN
+				const heightPlusMargin = DESKTOP_ICON_HEIGHT + DESKTOP_ICON_MARGIN
+				const top = di.top as number
+				const left = di.left as number
+				const right = left + widthPlusMargin
+				const bottom = top + heightPlusMargin
 
-					if (
-						newCoordinates.left < right &&
-						newCoordinates.left + DESKTOP_ICON_WIDTH > left &&
-						newCoordinates.top < bottom &&
-						newCoordinates.top + DESKTOP_ICON_HEIGHT > top
-					) {
+				if (
+					newCoordinates.left < right &&
+					newCoordinates.left + DESKTOP_ICON_WIDTH > left &&
+					newCoordinates.top < bottom &&
+					newCoordinates.top + DESKTOP_ICON_HEIGHT > top
+				) {
+					const row = Math.trunc(top / heightPlusMargin) + 1
+					const column = Math.trunc(left / widthPlusMargin) + 1
+
+					if (right + widthPlusMargin <= clientWidth) {
 						newCoordinates = { top: 0, left: right }
+					} else {
+						// TODO fix error in left
+						newCoordinates = { top: row * heightPlusMargin, left: column * widthPlusMargin }
 					}
 				}
 			}
@@ -166,7 +174,6 @@ export const getNewCoordinatesInNewFolder = (route: string) => {
 					newCoordinates.top + DESKTOP_ICON_HEIGHT > top
 			})
 
-			console.log(thereIsIntersection)
 			if (thereIsIntersection) lookForASpace()
 		}
 		lookForASpace()

@@ -1,10 +1,10 @@
 import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
 
+import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
 import NameAlreadyInUse from "@/components/windowBodies/NameAlreadyInUse.svelte"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
-import { INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
 import { generateId } from "@/utils"
 
 import { getDesktopIconName } from "./desktopIcons"
@@ -101,8 +101,8 @@ export const createIsTouchableDeviceWindow = () => createWindow({
 export const createDefaultFolderWindow = (desktopIconId: string) => createWindow({
 	title: getDesktopIconName(desktopIconId),
 	desktopIconId,
-	initialWidth: 600,
-	initialHeight: 400,
+	initialWidth: DEFAULT_FOLDER_WINDOW_WIDTH,
+	initialHeight: DEFAULT_FOLDER_WINDOW_HEIGHT,
 	canBeHidden: true,
 	canBeMaximizedOrMinimized: true,
 	body: FolderBody
