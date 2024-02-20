@@ -131,6 +131,7 @@ export const getNewCoordinatesInNewFolder = (route: string) => {
 	const folder = document.querySelector(`[data-route="${route.replaceAll("\\", "\\\\")}"]`)
 	const clientWidth = folder?.clientWidth as number || DEFAULT_FOLDER_WINDOW_WIDTH
 	let newCoordinates = { top: 0, left: 0 }
+	let attemptsByRow: { [key: number]: number } = { 0: 0 }
 
 	const unsubscribe = desktopIcons.subscribe((dis) => {
 		const disInThisRoute = dis.filter((di) => di.route === route)
@@ -150,15 +151,21 @@ export const getNewCoordinatesInNewFolder = (route: string) => {
 					newCoordinates.top < bottom &&
 					newCoordinates.top + DESKTOP_ICON_HEIGHT > top
 				) {
-					const row = Math.trunc(top / heightPlusMargin) + 1
-					const column = Math.trunc(left / widthPlusMargin) + 1
-
-					if (right + widthPlusMargin <= clientWidth) {
-						newCoordinates = { top: 0, left: right }
+					// row and column start at 0
+					const isNewDesktopIconInsideOfClientWidth = right + widthPlusMargin <= clientWidth
+					const row = Math.trunc(top / heightPlusMargin) + (isNewDesktopIconInsideOfClientWidth ? 0 : 1)
+					if (attemptsByRow[row] >= 0) {
+						attemptsByRow[row]++
 					} else {
-						// TODO fix error in left
-						newCoordinates = { top: row * heightPlusMargin, left: column * widthPlusMargin }
+						attemptsByRow = { ...attemptsByRow, [row]: 0 }
 					}
+					// TODO fix position in second row
+					const column = isNewDesktopIconInsideOfClientWidth ? Math.trunc(left / widthPlusMargin) + attemptsByRow[row] : 0
+					const newTop = row * heightPlusMargin
+					const newLeft = column * widthPlusMargin
+
+					newCoordinates = { top: newTop, left: newLeft }
+					console.log({ newCoordinates, row, column, isNewDesktopIconInsideOfClientWidth, attemptsByRow })
 				}
 			}
 
