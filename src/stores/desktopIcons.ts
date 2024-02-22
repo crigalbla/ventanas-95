@@ -128,52 +128,48 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 }
 
 export const getNewCoordinatesInNewFolder = (route: string) => {
-	const folder = document.querySelector(`[data-route="${route.replaceAll("\\", "\\\\")}"]`)
-	const clientWidth = folder?.clientWidth as number || DEFAULT_FOLDER_WINDOW_WIDTH
+	const insideFolder = document.querySelector(`[data-route="${route.replaceAll("\\", "\\\\")}"]:not([id^="di"])`)
+	const clientWidth = insideFolder?.clientWidth as number || DEFAULT_FOLDER_WINDOW_WIDTH
+	const widthPlusMargin = DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN
+	const heightPlusMargin = DESKTOP_ICON_HEIGHT + DESKTOP_ICON_MARGIN
 	let newCoordinates = { top: 0, left: 0 }
-	let attemptsByRow: { [key: number]: number } = { 0: 0 }
 
 	const unsubscribe = desktopIcons.subscribe((dis) => {
 		const disInThisRoute = dis.filter((di) => di.route === route)
 
+		const getSides = (di: IndividualDesktopIconType) => {
+			const top = di.top as number + DESKTOP_ICON_MARGIN
+			const left = di.left as number + DESKTOP_ICON_MARGIN
+			const right = left + DESKTOP_ICON_WIDTH - DESKTOP_ICON_MARGIN
+			const bottom = top + DESKTOP_ICON_HEIGHT - DESKTOP_ICON_MARGIN
+
+			return { top, left, right, bottom }
+		}
+
 		const lookForASpace = () => {
 			for (const di of disInThisRoute) {
-				const widthPlusMargin = DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN
-				const heightPlusMargin = DESKTOP_ICON_HEIGHT + DESKTOP_ICON_MARGIN
-				const top = di.top as number
-				const left = di.left as number
-				const right = left + widthPlusMargin
-				const bottom = top + heightPlusMargin
+				const { top, left, right, bottom } = getSides(di)
 
+				// if: Is the new possition on an existing desktopIcon?
 				if (
 					newCoordinates.left < right &&
 					newCoordinates.left + DESKTOP_ICON_WIDTH > left &&
 					newCoordinates.top < bottom &&
 					newCoordinates.top + DESKTOP_ICON_HEIGHT > top
 				) {
-					// row and column start at 0
-					const isNewDesktopIconInsideOfClientWidth = right + widthPlusMargin <= clientWidth
-					const row = Math.trunc(top / heightPlusMargin) + (isNewDesktopIconInsideOfClientWidth ? 0 : 1)
-					if (attemptsByRow[row] >= 0) {
-						attemptsByRow[row]++
+					const newLeft = newCoordinates.left + widthPlusMargin
+					const isNewDesktopIconInsideOfClientWidth = right + DESKTOP_ICON_MARGIN + widthPlusMargin <= clientWidth
+					if (isNewDesktopIconInsideOfClientWidth) {
+						newCoordinates = { top: newCoordinates.top, left: newLeft }
 					} else {
-						attemptsByRow = { ...attemptsByRow, [row]: 0 }
+						const newTop = newCoordinates.top + heightPlusMargin
+						newCoordinates = { top: newTop, left: 0 }
 					}
-					// TODO fix position in second row
-					const column = isNewDesktopIconInsideOfClientWidth ? Math.trunc(left / widthPlusMargin) + attemptsByRow[row] : 0
-					const newTop = row * heightPlusMargin
-					const newLeft = column * widthPlusMargin
-
-					newCoordinates = { top: newTop, left: newLeft }
-					console.log({ newCoordinates, row, column, isNewDesktopIconInsideOfClientWidth, attemptsByRow })
 				}
 			}
 
-			const thereIsIntersection = disInThisRoute.find((x) => {
-				const top = x.top as number
-				const left = x.left as number
-				const right = left + DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN
-				const bottom = top + DESKTOP_ICON_HEIGHT + DESKTOP_ICON_MARGIN
+			const thereIsIntersection = disInThisRoute.find((di) => {
+				const { top, left, right, bottom } = getSides(di)
 
 				return newCoordinates.left < right &&
 					newCoordinates.left + DESKTOP_ICON_WIDTH > left &&
@@ -365,6 +361,19 @@ export const createInitialDesktopIcons = () => {
 		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH,
 		onDblClick: () => createDefaultFolderWindow(DI_FIRST_FOLDER)
 	})
+	for (let i = 10; i > 2; i--) {
+		const desktopIconId = generateId(desktopIconIdPrefix)
+		createDesktopIcon({
+			desktopIconId,
+			icon: "open-folder",
+			name: (i - 2).toString(),
+			route: DESKTOP_ROUTE,
+			isFocused: false,
+			top: DESKTOP_ICON_MARGIN,
+			left: (DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN) * i,
+			onDblClick: () => createDefaultFolderWindow(desktopIconId)
+		})
+	}
 	setTimeout(() => {
 		const { availableHeight, availableWidth } = availableDimensions()
 

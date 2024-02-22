@@ -134,9 +134,9 @@
   onMount(() => {
   	updateWindowParams(windowId, {
   		width: windowDiv.offsetWidth,
-  		minWidth: windowDiv.offsetWidth,
+  		minWidth: minWidth || windowDiv.offsetWidth,
   	  height: windowDiv.offsetHeight,
-  		minHeight: windowDiv.offsetHeight
+  		minHeight: minHeight || windowDiv.offsetHeight
   	})
 
   	if (!left && !top) {

@@ -105,6 +105,8 @@ export const createDefaultFolderWindow = (desktopIconId: string) => createWindow
 	initialHeight: DEFAULT_FOLDER_WINDOW_HEIGHT,
 	canBeHidden: true,
 	canBeMaximizedOrMinimized: true,
+	minWidth: 360,
+	minHeight: 200,
 	body: FolderBody
 })
 
@@ -112,8 +114,10 @@ export const createDefaultNotepadWindow = (desktopIconId: string) => createWindo
 	title: getDesktopIconName(desktopIconId),
 	subTitle: "subTitle.notepad",
 	desktopIconId,
-	initialWidth: 300,
-	initialHeight: 150,
+	initialWidth: 350,
+	initialHeight: 200,
+	minWidth: 250,
+	minHeight: 150,
 	canBeHidden: true,
 	canBeMaximizedOrMinimized: true,
 	body: NotepadBody
