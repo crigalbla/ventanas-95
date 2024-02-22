@@ -8,7 +8,7 @@
 
   const onClickButtons = (isUsingName: boolean) => {
   	removeWindow(windowId)
-  	isUsingName && user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
+  	user.update((u: UserType) => ({ ...u, isLoggedIn: true, userName: isUsingName ? u.userName : undefined }))
   }
 
   const onKeyUp = (event: Event) => {
@@ -20,7 +20,7 @@
 </script>
 
 <section class="background-silver login-body-height flex justify-center gap-4 p-4">
-  <img class="h-16 w-16" src="icons/connection-2-computers.png" alt="connection-2-computers" draggable="false"/>
+  <img class="h-16 w-16" src="icons/connection-2-computers.png" alt="connection-2-computers" draggable="false" />
   <div class="flex gap-4 flex-col">
     <p>{$t("login.description")}</p>
     <div class="flex gap-2 flex-col">
