@@ -154,8 +154,8 @@
 
 	.position {
 		position: absolute;
-		top: calc((var(--fakeTop) + var(--plusFakeTop)) * 1px);
-    left: calc((var(--fakeLeft) + var(--plusFakeLeft)) * 1px);
+		top: calc((var(--fakeTop) + var(--plusFakeTop, 0)) * 1px);
+    left: calc((var(--fakeLeft) + var(--plusFakeLeft, 0)) * 1px);
 		width: calc(var(--width) * 1px);
     height: calc(var(--height) * 1px);
 	}
