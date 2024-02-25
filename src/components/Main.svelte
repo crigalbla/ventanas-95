@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { createInitialDesktopIcons, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
+  import { createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, playAudio, thereIsWindowBlocking, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
@@ -19,7 +19,7 @@
 	$: if ($user?.isLoggedIn) {
   	playAudio("/sounds/starting.mp3")
   	waitingCursor()
-  	createInitialDesktopIcons()
+  	loadDesktopIcons()
 	}
 
   createLoginWindow()

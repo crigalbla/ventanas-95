@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createLoginWindow, desktopIcons, removeWindow, user, windows } from "@/stores"
+  import { createLoginWindow, removeWindow, user, windows } from "@/stores"
   import { waitingCursor } from "@/utils"
   import Button from "../Button.svelte"
   import { t } from "@/i18n"
@@ -17,8 +17,6 @@
   	setTimeout(() => {
   		user.set({})
   		windows.set([])
-  		desktopIcons.set([])
-  		removeWindow(windowId)
   		createLoginWindow()
   	}, 500)
   }
