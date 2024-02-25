@@ -330,6 +330,16 @@ export const getDesktopIconName = (desktopIconId: string) => {
 	return title
 }
 
+export const getFolderDesktopIconContainingFile = (fileRoute: string) => {
+	let result: IndividualDesktopIconType | undefined
+	const unsubscribe = desktopIcons.subscribe((dis) => {
+		result = dis.find((di) => `${di.route}\\${di.name}` === fileRoute)
+	})
+	unsubscribe()
+
+	return result
+}
+
 export const createInitialDesktopIcons = () => {
 	createDesktopIcon({
 		desktopIconId: DI_MY_PC,

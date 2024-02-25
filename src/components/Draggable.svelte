@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType } from "@/stores"
+	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType, windows, getFolderDesktopIconContainingFile } from "@/stores"
   import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, thereIsWindowBlocking, unfreezeCurrentCursor } from "@/utils"
-  import { DESKTOP_ROUTE, FAKE_DESKTOP_ICON_ID } from "@/constants"
+  import { FAKE_DESKTOP_ICON_ID } from "@/constants"
   import { onMount } from "svelte"
 
 	export let left: number
@@ -20,18 +20,35 @@
 	let parentElement: HTMLElement | null
 	let fakeLeft = 0
 	let fakeTop = 0
+	let plusFakeTop = 0
+	let plusFakeLeft = 0
 	let outOfScreenLeft = 0
 	let outOfScreenTop = 0
 	let parentScrollLeft = 0
 	let parentScrollTop = 0
 
 	$: desktopIcon = $desktopIcons.find(di => di.desktopIconId === id) as IndividualDesktopIconType
+	$: route = desktopIcon?.route // route to avoid repetitions of getFolderDesktopIconContainingFile
 	$: updateParams = (() => {
 		if (isDesktopIcon && canBeDropped) return updateDesktopIconParams
 		if (isWindow) return updateWindowParams
 
 		return () => null
 	})()
+	$: if (route) {
+		const folderDesktopIconContainingFile = getFolderDesktopIconContainingFile(route)
+		const htmlWindowContainingFile = folderDesktopIconContainingFile && document.querySelector(
+			`#${$windows.find((di) => di.desktopIconId === folderDesktopIconContainingFile.desktopIconId)?.windowId}`
+		)
+		if (htmlWindowContainingFile && parentElement) {
+			const htmlWindowContainingFileRect = htmlWindowContainingFile.getBoundingClientRect()
+			const parentElementRect = parentElement.getBoundingClientRect()
+			const smallMargin = 5
+
+			plusFakeTop = parentElementRect.top - htmlWindowContainingFileRect.top + smallMargin
+			plusFakeLeft = parentElementRect.left - htmlWindowContainingFileRect.left + smallMargin
+		}
+	}
 
 	const onMouseDown = (e: MouseEvent) => {
 		if (isDesktopIcon && thereIsWindowBlocking()) return
@@ -109,11 +126,12 @@
 		{:else if isDesktopIcon}
 			<div
 				class="fake-desktop-icon position display-none"
-				class:change-position={desktopIcon.route !== DESKTOP_ROUTE}
 				id={FAKE_DESKTOP_ICON_ID}
 				style="
 					--fakeTop:{fakeTop};
 					--fakeLeft:{fakeLeft};
+					--plusFakeTop:{plusFakeTop};
+					--plusFakeLeft:{plusFakeLeft};
 					--color:black;
 					--none:none;
 					--cursor:{canBeDropped ? "" : "url('/cursors/no-drop.cur'), no-drop"};"
@@ -136,8 +154,8 @@
 
 	.position {
 		position: absolute;
-		top: calc(var(--fakeTop) * 1px);
-    left: calc(var(--fakeLeft) * 1px);
+		top: calc((var(--fakeTop) + var(--plusFakeTop)) * 1px);
+    left: calc((var(--fakeLeft) + var(--plusFakeLeft)) * 1px);
 		width: calc(var(--width) * 1px);
     height: calc(var(--height) * 1px);
 	}
@@ -150,11 +168,5 @@
 		cursor: var(--cursor);
 		z-index: 1500;
 		opacity: 0.5;
-	}
-
-	/* TODO: change 106 and 10 (remove !important?) */
-	.change-position {
-		top: calc((var(--fakeTop) + 106) * 1px) !important;
-		left: calc((var(--fakeLeft) + 10) * 1px) !important;
 	}
 </style>
