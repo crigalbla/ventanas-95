@@ -50,9 +50,9 @@
 		}
 	}
 
-	const onMouseDown = (e: MouseEvent) => {
+	const drag = (e: MouseEvent | TouchEvent) => {
 		if (isDesktopIcon && thereIsWindowBlocking()) return
-		if (e.button === 1 || e.button === 2) return
+		if ((e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return
 
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
@@ -67,7 +67,7 @@
   	fakeTop = 0 - parentScrollTop
 	}
 
-  const onMouseUp = () => {
+  const drop = () => {
   	isDesktopIcon && isMouseDown && updateDesktopIconParams(realId, { isMoving: false })
   	isMouseDown && isWindow && unfreezeCurrentCursor()
   	isMouseDown = false
@@ -79,24 +79,31 @@
   	}
   }
 
-	const onMouseMove = (e: MouseEvent) => {
+	// TODO new method to on:touchmove?
+	const dragging = (e: MouseEvent | TouchEvent) => {
 		if (isMouseDown) {
-			const isMouseOutOfRange = isDesktopIcon ? isMouseOutOfThisElement(e, document.body) : isMouseOutOfDesktopScreen(e)
+			const isTouchEvent = ("touches" in e)
+			const isMouseOutOfRange = isDesktopIcon
+				? !isTouchEvent && isMouseOutOfThisElement(e, document.body)
+				: !isTouchEvent && isMouseOutOfDesktopScreen(e)
 			isDesktopIcon && updateDesktopIconParams(id, { isMoving: true })
-			isWindow && freezeCurrentCursor(e)
+			isWindow && !isTouchEvent && freezeCurrentCursor(e)
+			const xPosition = isTouchEvent ? e.touches[0].pageX : e.movementX
+			const yPosition = isTouchEvent ? e.touches[0].pageY : e.movementY
+
 			if (!isMouseOutOfRange) {
 				if (fake && fakeDraggable) {
 					fakeDraggable.classList.remove("display-none")
-					fakeLeft += e.movementX + outOfScreenLeft
-					fakeTop += e.movementY + outOfScreenTop
+					fakeLeft += xPosition + outOfScreenLeft
+					fakeTop += yPosition + outOfScreenTop
 				} else {
-					updateParams(id, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop })
+					updateParams(id, { left: left + xPosition + outOfScreenLeft, top: top + yPosition + outOfScreenTop })
 				}
 				outOfScreenLeft = 0
 				outOfScreenTop = 0
 			} else {
-				outOfScreenLeft += e.movementX
-				outOfScreenTop += e.movementY
+				outOfScreenLeft += xPosition
+				outOfScreenTop += yPosition
 			}
 		}
 	}
@@ -109,7 +116,8 @@
 {#if canBeDraggabled || isDesktopIcon}
 	<section
 		class:desktop-icon-only={isDesktopIcon}
-		on:mousedown={canBeDraggabled ? onMouseDown : () => null}
+		on:mousedown={canBeDraggabled ? drag : () => null}
+		on:touchstart={canBeDraggabled ? drag : () => null}
 		role="tab"
 		tabindex="0"
 		bind:this={mainSection}
@@ -144,7 +152,12 @@
 {:else}
 	<slot />
 {/if}
-<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
+<svelte:window
+	on:mouseup={drop}
+	on:touchend={drop}
+	on:mousemove={dragging}
+	on:touchmove={dragging}
+/>
 
 <style>
 	.desktop-icon-only {
