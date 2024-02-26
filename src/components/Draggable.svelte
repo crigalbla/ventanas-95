@@ -13,7 +13,9 @@
 
 	const isWindow = id.substring(0, 1) === windowIdPrefix
 	const isDesktopIcon = id.substring(0, 2) === desktopIconIdPrefix
-	let isMouseDown = false
+	let isDragStarted = false
+	let offsetX = 0
+	let offsetY = 0
 	let realId: string // This is to prevent a error
 	let mainSection: HTMLElement
 	let fakeDraggable: HTMLElement
@@ -50,16 +52,16 @@
 		}
 	}
 
-	const drag = (e: MouseEvent | TouchEvent) => {
+	const onMouseDown = (e: MouseEvent) => {
 		if (isDesktopIcon && thereIsWindowBlocking()) return
-		if ((e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return
+		if (e.button === 1 || e.button === 2) return
 
 		const target: HTMLElement = e?.target as HTMLElement
 		if (target?.tagName === "BUTTON" || target.parentElement?.tagName === "BUTTON") return
 
 		parentScrollLeft = parentElement?.scrollLeft || 0
 		parentScrollTop = parentElement?.scrollTop || 0
-		isMouseDown = true
+		isDragStarted = true
 		realId = id
 		outOfScreenLeft = 0
 		outOfScreenTop = 0
@@ -67,10 +69,10 @@
   	fakeTop = 0 - parentScrollTop
 	}
 
-  const drop = () => {
-  	isDesktopIcon && isMouseDown && updateDesktopIconParams(realId, { isMoving: false })
-  	isMouseDown && isWindow && unfreezeCurrentCursor()
-  	isMouseDown = false
+  const onMouseUp = () => {
+  	isDesktopIcon && isDragStarted && updateDesktopIconParams(realId, { isMoving: false })
+  	isDragStarted && isWindow && unfreezeCurrentCursor()
+  	isDragStarted = false
   	if (fake && fakeDraggable) {
   		fakeDraggable.classList.add("display-none")
   		const newLeft = left + fakeLeft + parentScrollLeft
@@ -79,31 +81,59 @@
   	}
   }
 
-	// TODO new method to on:touchmove?
-	const dragging = (e: MouseEvent | TouchEvent) => {
-		if (isMouseDown) {
-			const isTouchEvent = ("touches" in e)
-			const isMouseOutOfRange = isDesktopIcon
-				? !isTouchEvent && isMouseOutOfThisElement(e, document.body)
-				: !isTouchEvent && isMouseOutOfDesktopScreen(e)
+	const onMouseMove = (e: MouseEvent) => {
+		if (isDragStarted) {
+			const isMouseOutOfRange = isDesktopIcon ? isMouseOutOfThisElement(e, document.body) : isMouseOutOfDesktopScreen(e)
 			isDesktopIcon && updateDesktopIconParams(id, { isMoving: true })
-			isWindow && !isTouchEvent && freezeCurrentCursor(e)
-			const xPosition = isTouchEvent ? e.touches[0].pageX : e.movementX
-			const yPosition = isTouchEvent ? e.touches[0].pageY : e.movementY
-
+			isWindow && freezeCurrentCursor(e)
 			if (!isMouseOutOfRange) {
 				if (fake && fakeDraggable) {
 					fakeDraggable.classList.remove("display-none")
-					fakeLeft += xPosition + outOfScreenLeft
-					fakeTop += yPosition + outOfScreenTop
+					fakeLeft += e.movementX + outOfScreenLeft
+					fakeTop += e.movementY + outOfScreenTop
 				} else {
-					updateParams(id, { left: left + xPosition + outOfScreenLeft, top: top + yPosition + outOfScreenTop })
+					updateParams(id, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop })
 				}
 				outOfScreenLeft = 0
 				outOfScreenTop = 0
 			} else {
-				outOfScreenLeft += xPosition
-				outOfScreenTop += yPosition
+				outOfScreenLeft += e.movementX
+				outOfScreenTop += e.movementY
+			}
+		}
+	}
+
+	const onTouchStart = (e: TouchEvent) => {
+		if (isDesktopIcon && thereIsWindowBlocking()) return
+
+		offsetX = e.touches[0].clientX - left - window.scrollX
+		offsetY = e.touches[0].clientY - top - window.scrollY
+		fakeLeft = 0
+		fakeTop = 0
+		isDragStarted = true
+		realId = id
+	}
+
+	const onTouchEnd = () => {
+		isDesktopIcon && isDragStarted && updateDesktopIconParams(realId, { isMoving: false })
+  	isDragStarted = false
+  	if (fake && fakeDraggable) {
+  		fakeDraggable.classList.add("display-none")
+  		const newLeft = left + fakeLeft
+  		const newTop = top + fakeTop
+  		if (id === realId) updateParams(realId, { left: newLeft, top: newTop })
+  	}
+	}
+
+	const onTouchMove = (e: TouchEvent) => {
+		if (isDragStarted) {
+			isDesktopIcon && updateDesktopIconParams(id, { isMoving: true })
+			if (fake && fakeDraggable) {
+				fakeDraggable.classList.remove("display-none")
+				fakeLeft = e.touches[0].clientX - offsetX - left
+				fakeTop = e.touches[0].clientY - offsetY - top
+			} else {
+				updateParams(id, { left: e.touches[0].clientX - offsetX - left, top: e.touches[0].clientY - offsetY - top })
 			}
 		}
 	}
@@ -116,15 +146,15 @@
 {#if canBeDraggabled || isDesktopIcon}
 	<section
 		class:desktop-icon-only={isDesktopIcon}
-		on:mousedown={canBeDraggabled ? drag : () => null}
-		on:touchstart={canBeDraggabled ? drag : () => null}
+		on:mousedown={canBeDraggabled ? onMouseDown : () => null}
+		on:touchstart={canBeDraggabled ? onTouchStart : () => null}
 		role="tab"
 		tabindex="0"
 		bind:this={mainSection}
 	>
 		<slot />
 	</section>
-	{#if fake && isMouseDown}
+	{#if fake && isDragStarted}
 		{#if isWindow}
 			<div
 				class="fake-window position display-none"
@@ -153,10 +183,10 @@
 	<slot />
 {/if}
 <svelte:window
-	on:mouseup={drop}
-	on:touchend={drop}
-	on:mousemove={dragging}
-	on:touchmove={dragging}
+	on:mouseup={onMouseUp}
+	on:touchend={onTouchEnd}
+	on:mousemove={onMouseMove}
+	on:touchmove={onTouchMove}
 />
 
 <style>
