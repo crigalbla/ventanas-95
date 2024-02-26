@@ -8,7 +8,7 @@
 	export let top: number
 	export let fake = false
 	export let canBeDraggabled = true
-	export let canBeDropped: boolean = true
+	export let canBeDropped = true
 	export let id: string
 
 	const isWindow = id.substring(0, 1) === windowIdPrefix
