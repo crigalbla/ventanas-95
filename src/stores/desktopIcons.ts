@@ -342,9 +342,7 @@ export const getFolderDesktopIconContainingFile = (fileRoute: string) => {
 
 export const loadDesktopIcons = () => {
 	const unsubscribe = desktopIcons.subscribe((dis) => {
-		if (dis.length) {
-			setTimeout(() => dis.forEach((di) => createDesktopIcon(di)), 0)
-		} else {
+		if (dis.length === 0) {
 			setTimeout(createInitialDesktopIcons, 0)
 		}
 	})

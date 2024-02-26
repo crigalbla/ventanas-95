@@ -106,8 +106,8 @@
 	const onTouchStart = (e: TouchEvent) => {
 		if (isDesktopIcon && thereIsWindowBlocking()) return
 
-		offsetX = e.touches[0].clientX - left - window.scrollX
-		offsetY = e.touches[0].clientY - top - window.scrollY
+		offsetX = e.touches[0].clientX - left
+		offsetY = e.touches[0].clientY - top
 		fakeLeft = 0
 		fakeTop = 0
 		isDragStarted = true

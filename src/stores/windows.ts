@@ -95,7 +95,8 @@ export const createIsTouchableDeviceWindow = () => createWindow({
 	canBeDraggabled: true,
 	canBeResized: false,
 	minWidth: 300,
-	maxWidth: 450
+	maxWidth: 450,
+	minHeight: 415
 })
 
 export const createDefaultFolderWindow = (desktopIconId: string) => createWindow({

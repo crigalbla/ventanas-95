@@ -137,7 +137,7 @@ export const getCurrentTime = () => {
 
 export const generateId = (prefix: string) => `${prefix}-${Math.random().toString().replace("0.", "")}`
 
-export const isMobileOrTablet = (): boolean => {
+export const isMobileOrTablet = (): boolean | undefined => {
 	if (typeof navigator !== "undefined") {
 		const userAgent = navigator.userAgent.toLowerCase()
 		const hasTouchstart = "ontouchstart" in document
@@ -145,7 +145,7 @@ export const isMobileOrTablet = (): boolean => {
 		return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i.test(userAgent) && hasTouchstart
 	}
 
-	return false
+	return undefined
 }
 
 export const isDifferentOfRecycleBinAndMyPC = (id: string) => id !== DI_RECYCLE_BIN && id !== DI_MY_PC

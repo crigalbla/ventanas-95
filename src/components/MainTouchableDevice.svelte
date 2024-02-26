@@ -24,7 +24,3 @@
     </section>
   </Window>
 {/if}
-
-<style>
-
-</style>
