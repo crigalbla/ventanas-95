@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { t } from "@/i18n"
-  import Button from "../Button.svelte"
-  import { afterUpdate, onMount } from "svelte"
   import { updateDesktopIconParams, desktopIcons, updateWindowParams, type IndividualDesktopIconType, createWindow, removeWindow } from "@/stores"
   import SaveChangesBody from "./SaveChangesBody.svelte"
+  import { afterUpdate, onMount } from "svelte"
+  import Button from "../Button.svelte"
+  import { t } from "@/i18n"
 
   type PropertiesType = {
     text: string

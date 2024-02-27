@@ -10,6 +10,7 @@
   import WindowButton from "./WindowButton.svelte"
   import Draggable from "./Draggable.svelte"
   import Resize from "./Resize.svelte"
+  import Tooltip from "./Tooltip.svelte"
 
   export let title: string
   export let subTitle: string = undefined!
@@ -44,6 +45,7 @@
   $: iconFromDesktopIcon = (windowId !== W_BLOCKING && desktopIcon?.icon) as string | undefined
   $: finalTitle = $t((windowId !== W_BLOCKING && desktopIcon?.name) || title)
   let windowDiv: HTMLElement = undefined!
+  const showTooltip = false
   const headerHeight = 24
 
   const doIfIsFullScreen = () => {
@@ -73,11 +75,11 @@
 
   	const removeHelpCursor = () => {
   		modifyCursor()
-  		helpButton?.classList.remove("border-color-shadow-down")
+  		helpButton?.classList.remove("border-color-down")
   		windowDiv.removeEventListener("click", removeHelpCursor)
   	}
 
-  	helpButton?.classList.add("border-color-shadow-down")
+  	helpButton?.classList.add("border-color-down")
   	modifyCursor("url('/cursors/help.cur'), help", "none")
   	setTimeout(() => windowDiv.addEventListener("click", removeHelpCursor), 1)
   }
@@ -203,6 +205,9 @@
     </div>
   </Resize>
 </section>
+{#if showTooltip}
+  <Tooltip top={0} left={0} text={"aa"} />
+{/if}
 
 <style>
   .window-center {

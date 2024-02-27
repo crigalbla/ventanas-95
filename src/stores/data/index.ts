@@ -1,7 +1,7 @@
 export const aboutNotepadTextSpanish = `
 ¡Hola! ¿Qué tal?
 
-Primero que nada, gracias por entrar en mi proyecto.
+Antes de nada, gracias por entrar en mi proyecto.
 Como puedes ver, está basado en un famoso sistema operativo del año 1995, para ello he usado y estudiado el comportamiento de dicho sistema operativo.
 Lo he hecho todo con Astro y Svelte, no tienes nada de backend ni ninguna persistencia de datos, espero que te guste. Puedes ver el código si te apetece, está aquí:
 ----------------------------------

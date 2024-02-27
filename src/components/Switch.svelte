@@ -1,7 +1,7 @@
 <script lang="ts">
+  import MainTouchableDevice from "./MainTouchableDevice.svelte"
   import { isMobileOrTablet } from "@/utils"
   import Main from "./Main.svelte"
-  import MainTouchableDevice from "./MainTouchableDevice.svelte"
 
   const isMobileOrTabletResult = isMobileOrTablet()
 </script>

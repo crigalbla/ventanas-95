@@ -1,8 +1,8 @@
 <script lang="ts">
   import { windows, type IndividualWindowType, type WindowsType, desktopIcons, type IndividualDesktopIconType } from "@/stores"
+  import { INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
   import Button from "./Button.svelte"
   import { t } from "@/i18n"
-  import { INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
 
   export let title: string
   export let subTitle: string = undefined!
@@ -43,6 +43,7 @@
 <Button
   className={`${!isFocused ? "border-color-up" : "border-color-down background-granulated font-extrabold"} w-1/3 px-1`}
   id={`${windowId}-tab`}
+  hasActiveDisabled
   on:click={onClickTabWindow}
 >
   {#if icon || iconFromDesktopIcon}

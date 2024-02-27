@@ -4,7 +4,7 @@
   import CloseSessionBody from "./windowBodies/CloseSessionBody.svelte"
   import { t } from "@/i18n"
   import { doItMouseDownEvent, getCurrentTime, waitingCursor } from "@/utils"
-  import { createWindow, user, windows, type UserType, desktopIcons } from "@/stores"
+  import { createWindow, user, windows, type UserType } from "@/stores"
   import TurnOffBody from "./windowBodies/TurnOffBody.svelte"
   import TabWindow from "./TabWindow.svelte"
   import { onMount } from "svelte"
@@ -76,7 +76,7 @@
 </script>
 
 <Curtain show={showCurtain} />
-<section
+<footer
   class="background-silver border-top-white navigation-bar w-full absolute bottom-0 flex items-center justify-between px-1"
   style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
   id={NAVIGATION_BAR_ID}
@@ -132,7 +132,7 @@
     <img class="h-8 w-8" src="icons/speaker-220px.png" alt="speaker" draggable="false"/>
     <span class="h-5">{currentTime}</span>
   </div>
-</section>
+</footer>
 
 <style>
   .navigation-bar {

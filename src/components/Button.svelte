@@ -2,6 +2,7 @@
   export let className = ""
   export let id: string = undefined!
   export let removeButtonStyles = false
+  export let hasActiveDisabled = false
   export let isMousePointer = false
   export let hasHover = false
   export let buttonRef: HTMLElement | undefined = undefined
@@ -9,6 +10,7 @@
 
 <button
   class:remove-button-styles={removeButtonStyles}
+  class:active-disabled={hasActiveDisabled}
   class:mouse-pointer={isMousePointer}
   class:option={hasHover}
   class={`background-silver flex items-center ${className}`.trim()}
@@ -34,7 +36,7 @@
     background-color: #0000aa;
   }
 
-  button:active {
-		border-color: #f5f5f5 #0b1717 #0b1717 #f5f5f5;
+  .active-disabled:active {
+      border-color: #f5f5f5 #0b1717 #0b1717 #f5f5f5;
   }
 </style>
