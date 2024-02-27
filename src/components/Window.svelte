@@ -45,7 +45,9 @@
   $: iconFromDesktopIcon = (windowId !== W_BLOCKING && desktopIcon?.icon) as string | undefined
   $: finalTitle = $t((windowId !== W_BLOCKING && desktopIcon?.name) || title)
   let windowDiv: HTMLElement = undefined!
-  const showTooltip = false
+  let showTooltip = false
+  let tooltipTop = 0
+  let tooltipLeft = 0
   const headerHeight = 24
 
   const doIfIsFullScreen = () => {
@@ -73,10 +75,20 @@
   		}
   	}
 
-  	const removeHelpCursor = () => {
+  	const removeHelpCursor = (mouseEvent: MouseEvent) => {
   		modifyCursor()
   		helpButton?.classList.remove("border-color-down")
+  		showTooltip = true
+  		tooltipTop = mouseEvent.pageY
+  		tooltipLeft = mouseEvent.pageX
+
   		windowDiv.removeEventListener("click", removeHelpCursor)
+  		setTimeout(() => document.body.addEventListener("click", hideTooltip), 1)
+  	}
+
+  	const hideTooltip = () => {
+  		showTooltip = false
+  		document.body.removeEventListener("click", hideTooltip)
   	}
 
   	helpButton?.classList.add("border-color-down")
@@ -206,7 +218,7 @@
   </Resize>
 </section>
 {#if showTooltip}
-  <Tooltip top={0} left={0} text={"aa"} />
+  <Tooltip top={tooltipTop} left={tooltipLeft} />
 {/if}
 
 <style>

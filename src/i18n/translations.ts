@@ -1,4 +1,4 @@
-import { aboutNotepadTextEnglish, aboutNotepadTextSpanish } from "@/stores/data"
+import { aboutNotepadTextEnglish, aboutNotepadTextSpanish, tooltipEnglish, tooltipSpanish } from "@/stores/data"
 
 type Translations = {
   [locale: string]: {
@@ -46,6 +46,7 @@ const translations: Translations = {
 		"desktopIcon.newTextDocument": "Nuevo documento de texto",
 		"desktopIcon.about": "Sobre mi",
 		"desktopIcon.about.text": aboutNotepadTextSpanish,
+		"tooltip.text": tooltipSpanish,
 		"subTitle.notepad": "Bloc de notas",
 		"saveChangesBody.title": "El texto del archivo {{file}} ha cambiado.",
 		"saveChangesBody.question": "¿Deseas guardar los cambios?",
@@ -104,6 +105,7 @@ const translations: Translations = {
 		"desktopIcon.newTextDocument": "New text document",
 		"desktopIcon.about": "About",
 		"desktopIcon.about.text": aboutNotepadTextEnglish,
+		"tooltip.text": tooltipEnglish,
 		"subTitle.notepad": "Notepad",
 		"saveChangesBody.title": "The text of the {file} file has changed.",
 		"saveChangesBody.question": "Do you want save the changes?",

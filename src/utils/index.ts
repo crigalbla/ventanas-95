@@ -1,4 +1,4 @@
-import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID, DI_RECYCLE_BIN, DI_MY_PC, W_BLOCKING, DESKTOP_ROUTE } from "@/constants"
+import { NAVIGATION_BAR_ID, DESKTOP_SCREEN_ID, DI_RECYCLE_BIN, DI_MY_PC, W_BLOCKING } from "@/constants"
 
 type CustomMouseEvent = MouseEvent & {
   toElement: Element
