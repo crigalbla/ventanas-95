@@ -1,54 +1,29 @@
-# Astro Starter Kit: Basics
+# Ventanas 95
 
-```sh
-npm create astro@latest -- --template basics
-```
+Welcome to Ventanas 95, a nostalgic trip to the iconic operating system from 95 recreated with Astro and Svelte. This project aims to provide a fun and interactive experience reminiscent of said interface. Below you can see some screenshots
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+![Login Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpiha59_RgtWVTdb0xD2kkVh_wfpMsXqB_7jKSUhjPaf3Stqn7I-DkV0HTAmTiiGWsG-fMHLRw5JpL6Jn1RaXX75gYp8W0VA=w1920-h868)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Features
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- **Familiar interface:** Relive the classic Ventanas 95 desktop experience in a 1995-looking interface. Short wait times have been simulated with some interactions.
+- **Login interface:** You can log in with a user or as a guest if you wish. Once inside, you can simulate logging out, suspending, restarting, and shutting down the operating system.
+- **Interactive Windows:** Explore the desktop, open folders and interact with the different windows on the screen. You can move them, enlarge them and reduce them.
+- **Interactive DesktopIcons:** The desktopIcons have a lot of play. You can create, edit, move, copy, cut and paste them. You will be able to do all this functionality between folders. If you delete an icon, it will go directly to the recycling bin.
+- **Notepad:** There is a notepad type of desktopIcon, where you can create text and save it if you want.
+- **DesktopIcons selection:** You can select several desktopIcons at the same time, although at the moment you cannot do anything with all of them at the same time.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
+## Commands
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Command                           | Action                                           |
+| :-------------------------------- | :----------------------------------------------- |
+| `npm install`                     | Installs dependencies                            |
+| `npm run start` or `npm run dev`  | Starts local dev server at `localhost:4321`      |
+| `npm run build`                   | Build your production site to `./dist            |
+| `npm run preview`                 | Preview your build locally, before deploying     |
+| `npm run astro ...`               | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help`         | Get help using the Astro CLI                     |
+| `npm run lint`                    | Run linter to see errors or warnings             |
+| `npm run lint --fix`              | Run linter to fix and format                     |
