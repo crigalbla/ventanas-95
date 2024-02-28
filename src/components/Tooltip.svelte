@@ -5,34 +5,40 @@
 	export let top: number
   export let left: number
 
+  const paddingAndMargin = 10
   let isTooltipReady = false
-  let tooltioRef: HTMLElement
+  let tooltipRef: HTMLElement
   let shadowWidth = 0
   let shadowHeight = 0
 
   onMount(() => {
   	const checkIfTooltipFitsOnScreen = () => {
-  		const rect = tooltioRef.getBoundingClientRect()
+  		const rect = tooltipRef.getBoundingClientRect()
   		const isOutsideX = rect.right > window.innerWidth
   		const isOutsideY = rect.bottom > window.innerHeight
-  		shadowWidth = rect.width
-  		shadowHeight = rect.height
 
-  		if (isOutsideX) left = left - rect.width
-  		if (isOutsideY) top = window.innerHeight - rect.height
+  		if (isOutsideX) left = left - rect.width - paddingAndMargin * 2
+  		if (isOutsideY) top = window.innerHeight - rect.height - paddingAndMargin * 2
 
   		isTooltipReady = true
   	}
 
+  	const giveShadowSize = () => {
+  		const rect = tooltipRef.getBoundingClientRect()
+  		shadowWidth = rect.width
+  		shadowHeight = rect.height
+  	}
+
   	checkIfTooltipFitsOnScreen()
+  	setTimeout(giveShadowSize, 1)
   })
 </script>
 
 <section
   class="tooltip"
   class:not-ready={!isTooltipReady}
-  style="--top:{top}; --left:{left};"
-  bind:this={tooltioRef}
+  style="--top:{top}; --left:{left}; --paddingAndMargin:{paddingAndMargin};"
+  bind:this={tooltipRef}
 >
   {$t("tooltip.text")}
 </section>
@@ -51,12 +57,12 @@
     position: absolute;
     white-space: pre-line;
     font-size: 14px;
-    padding: 5px 10px;
+    padding: calc(var(--paddingAndMargin) * 1px);
+    margin: calc(var(--paddingAndMargin) * 1px);
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
     min-width: 150px;
     max-width: 440px;
-    margin: 10px;
     background: rgb(255, 255, 245);
     border: 1px solid black;
     z-index: 501;
