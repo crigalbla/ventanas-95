@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon, windows } from "@/stores"
+  import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon, windows, createBlockingWindow } from "@/stores"
   import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, NOTEPAD_ICON } from "@/constants"
-  import { thereIsWindowBlocking } from "@/utils"
+  import { thereIsBlockingWindow } from "@/utils"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
 
@@ -22,7 +22,7 @@
   let desktopIconRef: HTMLElement
   let textareaRef: HTMLTextAreaElement
   $: newName = name
-  $: pointerEventsNoneInTextarea = $windows && thereIsWindowBlocking()
+  $: pointerEventsNoneInTextarea = $windows && thereIsBlockingWindow()
   $: thisRoute = icon !== NOTEPAD_ICON ? `${route}\\${name}` : undefined
   $: maxHeight = isFocused || isEditingName ? 350 : DESKTOP_ICON_HEIGHT
   $: if (textareaRef) {
@@ -37,7 +37,12 @@
   	desktopIconByQuerySelector?.focus()
   }
 
-  const onMouseDownDesktopIcon = (event: MouseEvent) => !isEditingName && event.button !== 1 && !thereIsWindowBlocking() &&
+  const containCharacterNotAllowed = () => {
+  	const regex = /[\\/:*?"<>|]/
+  	return regex.test(newName)
+  }
+
+  const onMouseDownDesktopIcon = (event: MouseEvent) => !isEditingName && event.button !== 1 && !thereIsBlockingWindow() &&
     desktopIcons.update((dis: DesktopIconsType) => {
     	const oldZIndex = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
 
@@ -50,48 +55,49 @@
     })
 
   const onInput = (event: Event) => {
-  	if (thereIsWindowBlocking()) return
+  	if (thereIsBlockingWindow()) return
 
   	const target = event.target as EventTarget & { value: string }
   	if (!target?.value.includes("\n")) { // Change value if value is different of enter key
   		const textareaHTML = event.target as HTMLTextAreaElement
-  		const regex = /[\\/:*?"<>|]/
-  		const containCharacterNotAllowed = regex.test(textareaRef.value)
-  		if (containCharacterNotAllowed) { // TODO make a modal to avoid these characters
-  			textareaRef.value = textareaRef.value.slice(0, -1)
-  			setTimeout(() => textareaRef.blur(), 0)
-  		} else {
-  			textareaHTML.style.height = "auto"
-  			textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
-  			newName = $t(textareaRef.value).trim() || name
-  		}
+  		textareaHTML.style.height = "auto"
+  		textareaHTML.style.height = (textareaHTML.scrollHeight + 1.6) + "px"
+  		newName = $t(textareaRef.value).trim() || name
   	} else {
   		textareaRef.value = textareaRef.value.slice(0, -1).trim() // Remove enter key
   	}
   }
 
   const onKeyDownInInput = (event: KeyboardEvent) => {
-  	if (thereIsWindowBlocking()) return
+  	if (thereIsBlockingWindow()) return
 
   	if (event.key === "Enter") {
   		setTimeout(() => { // Timer to avoid open folder
-  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName })
+  			if (containCharacterNotAllowed()) {
+  				createBlockingWindow(desktopIconId, "charactersNotAllowed.title")
+  			} else {
+  				updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: true, name: newName })
+  			}
   		}, 0)
   	}
   }
 
   const onMouseDown = (event: MouseEvent) => {
-  	if (thereIsWindowBlocking()) return
+  	if (thereIsBlockingWindow()) return
 
   	const target = event.target as Node
   	const desktopIconHTML = document.querySelector(`#${desktopIconId}`)
   	if (newName && newName !== name && !desktopIconHTML?.contains(target)) {
-  		updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: false, name: newName })
+  		if (containCharacterNotAllowed()) {
+  			createBlockingWindow(desktopIconId, "charactersNotAllowed.title")
+  		} else {
+  			updateDesktopIconParams(desktopIconId, { isEditingName: false, isFocused: false, name: newName })
+  		}
   	}
   }
 
   const onContextMenu = (event: MouseEvent) => {
-  	if (thereIsWindowBlocking()) return
+  	if (thereIsBlockingWindow()) return
 
   	let customSection
   	const isMyPc = desktopIconId === DI_MY_PC

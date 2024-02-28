@@ -3,7 +3,7 @@
 
   import { createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
-  import { isDifferentOfRecycleBinAndMyPC, playAudio, thereIsWindowBlocking, waitingCursor } from "@/utils"
+  import { isDifferentOfRecycleBinAndMyPC, playAudio, thereIsBlockingWindow, waitingCursor } from "@/utils"
   import LoginBody from "@/components/windowBodies/LoginBody.svelte"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
@@ -44,7 +44,7 @@
   }
 
 	const onContextMenu = (event: MouseEvent) => {
-		if (thereIsWindowBlocking(event)) return
+		if (thereIsBlockingWindow(event)) return
 
 		const target = event.target as EventTarget & { id: string }
 		if (target?.id === DESKTOP_SCREEN_ID) createRightClickMenuInScreen(event)
@@ -61,7 +61,7 @@
 		// Complete method when there is the possibility to move several desktopIcons
 		const movingDesktopIcons = $desktopIcons.filter(di => di.isMoving)
 		if (movingDesktopIcons?.length > 0) {
-			if (thereIsWindowBlocking(event)) return
+			if (thereIsBlockingWindow(event)) return
 
 			const isMouseMove = event.type === "mousemove"
 			const isMouseUp = event.type === "mouseup"
@@ -140,7 +140,7 @@
 
 	onMount(() => {
 		const mouseDown = (event: MouseEvent) => {
-			if (thereIsWindowBlocking(event)) return
+			if (thereIsBlockingWindow(event)) return
 
 			const target = event.target as Node
 			const rightClickMenu = document.querySelector(`#${RIGHT_CLICK_MENU_ID}`)
@@ -167,15 +167,15 @@
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
 					} else if (di.isEditingName) {
 						setTimeout(() => {
-							const windowNameAlreadyInUse = document.querySelector(`#${W_BLOCKING}`)
-							!windowNameAlreadyInUse && updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
+							const blockingWindow = document.querySelector(`#${W_BLOCKING}`)
+							!blockingWindow && updateDesktopIconParams(di.desktopIconId, { isEditingName: false, isFocused: true })
 						}, 0)
 					}
 				}
 			})
 		}
 		const keyDown = (event: KeyboardEvent) => {
-			if (thereIsWindowBlocking(event)) return
+			if (thereIsBlockingWindow(event)) return
 
 			if (event.key === "Enter") {
 				$desktopIcons.forEach((di) => {

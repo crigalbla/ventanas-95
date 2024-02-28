@@ -2,7 +2,7 @@ import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
 
 import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
-import NameAlreadyInUse from "@/components/windowBodies/NameAlreadyInUse.svelte"
+import BlockingBody from "@/components/windowBodies/BlockingBody.svelte"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import { generateId } from "@/utils"
@@ -124,16 +124,16 @@ export const createDefaultNotepadWindow = (desktopIconId: string) => createWindo
 	body: NotepadBody
 })
 
-export const createNameAlreadyInUseWindow = (desktopIconId: string, isByRename?: boolean) => {
+export const createBlockingWindow = (desktopIconId: string, title: string) => {
 	const blockingWindow = document.querySelector(`#${W_BLOCKING}`)
 	!blockingWindow && createWindow({
-		title: isByRename ? "nameAlreadyInUse.title" : "nameAlreadyInUseInNewRoute.title",
+		title,
 		windowId: W_BLOCKING,
 		desktopIconId,
 		isBlocking: true,
 		canBeResized: false,
 		canLoseFocus: false,
 		maxWidth: 600,
-		body: NameAlreadyInUse
+		body: BlockingBody
 	})
 }

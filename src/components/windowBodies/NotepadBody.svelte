@@ -106,10 +106,10 @@
 
 <section class="notepad">
   <div class="header mx-2">
-    <Button className="mr-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("file")}</Button>
-    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("edition")}</Button>
-    <Button className="mx-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("search")}</Button>
-    <Button className="ml-2" removeButtonStyles on:click={onClickHeaderButton}>{$t("help")}</Button>
+    <Button className="mr-2 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("file")}</Button>
+    <Button className="mx-2 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("edition")}</Button>
+    <Button className="mx-2 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("search")}</Button>
+    <Button className="ml-2 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("help")}</Button>
   </div>
   <div class="body border-color-soft-down">
     <textarea

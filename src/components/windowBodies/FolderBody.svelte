@@ -2,7 +2,7 @@
   import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
   import { DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
   import IconsSelector from "../IconsSelector.svelte"
-  import { thereIsWindowBlocking } from "@/utils"
+  import { thereIsBlockingWindow } from "@/utils"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
   import { onMount } from "svelte"
@@ -36,7 +36,7 @@
   const onClickHeaderButton = () => null
 
   const onContextMenu = (event: MouseEvent) => {
-  	if (thereIsWindowBlocking(event)) return
+  	if (thereIsBlockingWindow(event)) return
 
   	if (event.target === contentRef) {
   		const rect = contentRef.getBoundingClientRect()
@@ -51,12 +51,12 @@
   <div class="small-border mb-1">
     <div class="small-border-bottom flex h-8 px-1">
       <div class="border-color-soft-up decoration-bar"/>
-      <Button className="mr-2 mt-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("file")}</Button>
-      <Button className="mx-2 mt-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("edition")}</Button>
-      <Button className="mx-2 mt-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("see")}</Button>
-      <Button className="mx-2 mt-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("goTo")}</Button>
-      <Button className="mx-2 mt-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("favourites")}</Button>
-      <Button className="ml-2 mt-1" removeButtonStyles on:click={onClickHeaderButton}>{$t("help")}</Button>
+      <Button className="mr-2 mt-1 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("file")}</Button>
+      <Button className="mx-2 mt-1 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("edition")}</Button>
+      <Button className="mx-2 mt-1 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("see")}</Button>
+      <Button className="mx-2 mt-1 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("goTo")}</Button>
+      <Button className="mx-2 mt-1 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("favourites")}</Button>
+      <Button className="ml-2 mt-1 opacity-60" removeButtonStyles on:click={onClickHeaderButton}>{$t("help")}</Button>
     </div>
     <div class="flex h-8 mx-1">
       <div class="border-color-soft-up decoration-bar"/>

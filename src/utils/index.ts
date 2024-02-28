@@ -58,7 +58,7 @@ export const unfreezeCurrentCursor = () => {
 	body.style.pointerEvents = ""
 }
 
-export const thereIsWindowBlocking = (event?: Event) => {
+export const thereIsBlockingWindow = (event?: Event) => {
 	const blockingWindow = document.querySelector(`#${W_BLOCKING}`)
 
 	if (blockingWindow) {

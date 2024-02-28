@@ -4,7 +4,7 @@ import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_
 import { availableDimensions, generateId } from "@/utils"
 import { translateKey } from "@/i18n"
 
-import { createDefaultFolderWindow, createDefaultNotepadWindow, createNameAlreadyInUseWindow } from "./windows"
+import { createDefaultFolderWindow, createDefaultNotepadWindow, createBlockingWindow } from "./windows"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -66,7 +66,7 @@ const avoidChanges = (
 				(di?.name === name || translateKey(di?.name) === name) &&
 				di.desktopIconId !== oldDesktopIcon?.desktopIconId
 			))
-		thereIsADesktopIconWithSameName && createNameAlreadyInUseWindow(desktopIconId, true)
+		thereIsADesktopIconWithSameName && createBlockingWindow(desktopIconId, "nameAlreadyInUse.title")
 	} else if (route && !route.includes(RECYCLE_BIN_ROUTE)) {
 		thereIsADesktopIconWithSameName =
 			Boolean(dis.find((di) =>
@@ -74,7 +74,7 @@ const avoidChanges = (
 				(di?.name === oldDesktopIcon?.name || translateKey(di?.name) === oldDesktopIcon?.name) &&
 				di.desktopIconId !== oldDesktopIcon?.desktopIconId
 			))
-		thereIsADesktopIconWithSameName && createNameAlreadyInUseWindow(desktopIconId)
+		thereIsADesktopIconWithSameName && createBlockingWindow(desktopIconId, "nameAlreadyInUseInNewRoute.title")
 	}
 
 	if (thereIsADesktopIconWithSameName) return true

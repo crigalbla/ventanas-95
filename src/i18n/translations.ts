@@ -64,7 +64,9 @@ const translations: Translations = {
 		"nameAlreadyInUse.title": "Error al renombrar archivo",
 		"nameAlreadyInUse.subtitle": "No se puede renombrar {{filename}}: Ya existe un archivo con este nombre. Especifica un nombre de archivo diferente.",
 		"nameAlreadyInUseInNewRoute.title": "Error al mover archivo",
-		"nameAlreadyInUseInNewRoute.subtitle": "No se puede mover {{filename}}: Ya existe un archivo con este nombre en la nueva ruta de destino."
+		"nameAlreadyInUseInNewRoute.subtitle": "No se puede mover {{filename}}: Ya existe un archivo con este nombre en la nueva ruta de destino.",
+		"charactersNotAllowed.title": "Renombrar archivo",
+		"charactersNotAllowed.subtitle": "El nombre de archivo no puede contener ninguno de los siguientes caracteres: \\/:*?\"<>|"
 	},
 	en: {
 		accept: "OK",
@@ -123,7 +125,9 @@ const translations: Translations = {
 		"nameAlreadyInUse.title": "Error renaming file",
 		"nameAlreadyInUse.subtitle": "Cannot rename {{filename}}: A file with the name you specified already exists. Specify a different filename.",
 		"nameAlreadyInUseInNewRoute.title": "Error moving file",
-		"nameAlreadyInUseInNewRoute.subtitle": "Cannot move {{filename}}: A file with the name you specified already exists in the new destination route."
+		"nameAlreadyInUseInNewRoute.subtitle": "Cannot move {{filename}}: A file with the name you specified already exists in the new destination route.",
+		"charactersNotAllowed.title": "Rename",
+		"charactersNotAllowed.subtitle": "A filename cannot contain any of the following characters: \\/:*?\"<>|"
 	}
 }
 

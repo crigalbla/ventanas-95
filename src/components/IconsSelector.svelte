@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { freezeCurrentCursor, isMouseOutOfThisElement, thereIsWindowBlocking, unfreezeCurrentCursor } from "@/utils"
+  import { freezeCurrentCursor, isMouseOutOfThisElement, thereIsBlockingWindow, unfreezeCurrentCursor } from "@/utils"
 	import { desktopIcons, type DesktopIconsType, type IndividualDesktopIconType } from "@/stores"
   import { DESKTOP_ROUTE } from "@/constants"
   import { onMount } from "svelte"
@@ -49,7 +49,7 @@
   		)
 
   		const onMouseDown = (event: MouseEvent) => {
-  			if (thereIsWindowBlocking()) return
+  			if (thereIsBlockingWindow()) return
 
   			const isLeftClick = event.button === 0
   			if (isMouseInThisHTMLElement(event) && isLeftClick) {

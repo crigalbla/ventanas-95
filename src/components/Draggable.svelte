@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { updateWindowParams, updateDesktopIconParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType, windows, getFolderDesktopIconContainingFile } from "@/stores"
-  import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, thereIsWindowBlocking, unfreezeCurrentCursor } from "@/utils"
+  import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, thereIsBlockingWindow, unfreezeCurrentCursor } from "@/utils"
   import { FAKE_DESKTOP_ICON_ID } from "@/constants"
   import { onMount } from "svelte"
 
@@ -53,7 +53,7 @@
 	}
 
 	const onMouseDown = (e: MouseEvent) => {
-		if (isDesktopIcon && thereIsWindowBlocking()) return
+		if (isDesktopIcon && thereIsBlockingWindow()) return
 		if (e.button === 1 || e.button === 2) return
 
 		const target: HTMLElement = e?.target as HTMLElement
@@ -104,7 +104,7 @@
 	}
 
 	const onTouchStart = (e: TouchEvent) => {
-		if (isDesktopIcon && thereIsWindowBlocking()) return
+		if (isDesktopIcon && thereIsBlockingWindow()) return
 
 		offsetX = e.touches[0].clientX - left
 		offsetY = e.touches[0].clientY - top

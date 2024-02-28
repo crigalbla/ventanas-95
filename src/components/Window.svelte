@@ -148,10 +148,14 @@
   onMount(() => {
   	updateWindowParams(windowId, {
   		width: windowDiv.offsetWidth,
-  		minWidth: minWidth || windowDiv.offsetWidth,
-  	  height: windowDiv.offsetHeight,
-  		minHeight: minHeight || windowDiv.offsetHeight
+  		minWidth: minWidth || windowDiv.offsetWidth
   	})
+  	setTimeout(() => {
+  		updateWindowParams(windowId, {
+  			height: windowDiv.offsetHeight,
+  			minHeight: minHeight || windowDiv.offsetHeight
+  		})
+  	}, 1)
 
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
