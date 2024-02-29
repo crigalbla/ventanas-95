@@ -1,0 +1,25 @@
+<script lang="ts">
+  import { removeWindow } from "@/stores"
+  import Button from "../Button.svelte"
+  import { t } from "@/i18n"
+
+  export let windowId: string
+  export let closeCallBack: () => void
+
+  const onClickAccept = () => {
+  	closeCallBack()
+  	removeWindow(windowId)
+  }
+</script>
+
+<section class="flex m-5 mr-11">
+  <img class="h-16 w-16" src="icons/warning-275px.png" alt="error" draggable="false"/>
+  <div class="flex flex-col gap-4 ml-4">
+    <p>{$t("usingTouchableDevice1")}</p>
+    <p>{$t("usingTouchableDevice2")}</p>
+    <p class="font-black">{$t("usingTouchableDevice3")}</p>
+    <div class="flex self-center mt-2">
+      <Button className="px-9" on:click={onClickAccept}>{$t("accept")}</Button>
+    </div>
+  </div>
+</section>

@@ -175,6 +175,7 @@
   style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth || ""}; --height:{height || initialHeight || ""};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
   on:mousedown={onFocus}
+  on:touchstart={onFocus}
   bind:this={windowDiv}
 >
   <Resize fake {canBeResized} {minWidth} {minHeight} {windowId} {top} {left} {width} {height}>

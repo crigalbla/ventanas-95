@@ -51,7 +51,8 @@
 	  let active = null; let initialRect = null
 
 	  const onMouseDown = (event) => {
-			freezeCurrentCursor(event)
+			const isTouchStart = event.type === "touchstart"
+			!isTouchStart && freezeCurrentCursor(event)
 			resizing = true
 			outOfScreenLeft = 0
 			outOfScreenTop = 0
@@ -67,10 +68,11 @@
 	    }
 	  }
 
-	  const onMouseUp = () => {
+	  const onMouseUp = (event) => {
 	    if (!active) return
 
-			unfreezeCurrentCursor()
+			const isTouchEnd = event.type === "touchend"
+			!isTouchEnd && unfreezeCurrentCursor()
 			resizing = false
 	    active = null
 	    initialRect = null
@@ -93,12 +95,13 @@
 	  const onMouseMove = (event) => {
 	    if (!active || !resizing) return
 
+			const isTouchMove = event.type === "touchmove"
 	    const direction = active.direction
 	    let delta
 
 	    if (direction.match("east")) {
-				if (!isMouseOutOfDesktopScreen(event)) {
-					const newWidth = event.pageX - initialRect.left
+				if (!isMouseOutOfDesktopScreen(event) || isTouchMove) {
+					const newWidth = event.clientX - initialRect.left
 					if (minWidth < newWidth) {
 						if (fake) {
 							fakeWidth = newWidth
@@ -110,16 +113,16 @@
 	    }
 
 	    if (direction.match("west")) {
-				if (!isMouseOutOfDesktopScreen(event)) {
-					delta = initialRect.left - event.pageX
+				if (!isMouseOutOfDesktopScreen(event) || isTouchMove) {
+					delta = initialRect.left - event.clientX
 					const newWidth = initialRect.width + delta
-					const newFakeLeft = event.pageX - left + outOfScreenLeft
+					const newFakeLeft = event.clientX - left + outOfScreenLeft
 					if (minWidth < newWidth) {
 						if (fake) {
 							fakeWidth = newWidth
 							fakeLeft = newFakeLeft
 						} else {
-							updateWindowParams(windowId, { left: event.pageX + outOfScreenLeft, width: newWidth })
+							updateWindowParams(windowId, { left: event.clientX + outOfScreenLeft, width: newWidth })
 						}
 						outOfScreenLeft = 0
 	      	}
@@ -129,16 +132,16 @@
 	    }
 
 	    if (direction.match("north")) {
-				if (!isMouseOutOfDesktopScreen(event)) {
-					delta = initialRect.top - event.pageY
+				if (!isMouseOutOfDesktopScreen(event) || isTouchMove) {
+					delta = initialRect.top - event.clientY
 					const newHeight = initialRect.height + delta
-					const newFakeTop = event.pageY - top + outOfScreenTop
+					const newFakeTop = event.clientY - top + outOfScreenTop
 					if (minHeight < newHeight) {
 						if (fake) {
 							fakeHeight = newHeight
 							fakeTop = newFakeTop
 						} else {
-							updateWindowParams(windowId, { top: event.pageY + outOfScreenTop, height: newHeight })
+							updateWindowParams(windowId, { top: event.clientY + outOfScreenTop, height: newHeight })
 						}
 						outOfScreenTop = 0
 	      	}
@@ -148,8 +151,8 @@
 	    }
 
 	    if (direction.match("south")) {
-				if (!isMouseOutOfDesktopScreen(event)) {
-					const newHeight = event.pageY - initialRect.top
+				if (!isMouseOutOfDesktopScreen(event) || isTouchMove) {
+					const newHeight = event.clientY - initialRect.top
 					if (minHeight < newHeight) {
 						if (fake) {
 							fakeHeight = newHeight
@@ -161,17 +164,26 @@
 	    }
 	  }
 
+		const onTouchMove = (event) =>
+			onMouseMove({ clientX: event.touches[0].clientX, clientY: event.touches[0].clientY, type: "touchmove" })
+		const onTouchEnd = onMouseUp
+
 	  resizers.forEach(resizer => {
 	    element.appendChild(resizer)
 	    resizer.addEventListener("mousedown", onMouseDown)
+			resizer.addEventListener("touchstart", onMouseDown)
 	  })
 
 	  window.addEventListener("mousemove", onMouseMove)
 	  window.addEventListener("mouseup", onMouseUp)
+		window.addEventListener("touchmove", onTouchMove)
+	  window.addEventListener("touchend", onTouchEnd)
 
 	  return () => {
 	    window.removeEventListener("mousemove", onMouseMove)
 	    window.removeEventListener("mouseup", onMouseUp)
+			window.removeEventListener("touchmove", onTouchMove)
+	    window.removeEventListener("touchend", onTouchEnd)
 
 	    resizers.forEach(resizer => element.removeChild(resizer))
 	  }

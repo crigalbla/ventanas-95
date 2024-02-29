@@ -5,10 +5,12 @@ import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, INITIAL_WIND
 import BlockingBody from "@/components/windowBodies/BlockingBody.svelte"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
-import { generateId } from "@/utils"
+import { generateId, isMobileOrTablet } from "@/utils"
 
 import { getDesktopIconName } from "./desktopIcons"
 import { user, type UserType } from "./user"
+import LoginBody from "@/components/windowBodies/LoginBody.svelte"
+import TouchableDeviceBody from "@/components/windowBodies/TouchableDeviceBody.svelte"
 
 export type IndividualWindowType = {
   title: string
@@ -86,6 +88,7 @@ export const createLoginWindow = () => createWindow({
 	canBeDraggabled: true,
 	canBeResized: false,
 	initialWidth: 530,
+	body: LoginBody,
 	closeCallBack: () => user.update((u: UserType) => ({ ...u, isLoggedIn: true }))
 })
 
@@ -96,14 +99,15 @@ export const createIsTouchableDeviceWindow = () => createWindow({
 	canBeResized: false,
 	minWidth: 300,
 	maxWidth: 450,
-	minHeight: 415
+	body: TouchableDeviceBody,
+	closeCallBack: createLoginWindow
 })
 
 export const createDefaultFolderWindow = (desktopIconId: string) => createWindow({
 	title: getDesktopIconName(desktopIconId),
 	desktopIconId,
 	initialWidth: DEFAULT_FOLDER_WINDOW_WIDTH,
-	initialHeight: DEFAULT_FOLDER_WINDOW_HEIGHT,
+	initialHeight: isMobileOrTablet() ? 300 : DEFAULT_FOLDER_WINDOW_HEIGHT,
 	canBeHidden: true,
 	canBeMaximizedOrMinimized: true,
 	minWidth: 360,

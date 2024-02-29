@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
+  import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
-  import { isDifferentOfRecycleBinAndMyPC, playAudio, thereIsBlockingWindow, waitingCursor } from "@/utils"
-  import LoginBody from "@/components/windowBodies/LoginBody.svelte"
+  import { isDifferentOfRecycleBinAndMyPC, isMobileOrTablet, playAudio, thereIsBlockingWindow, waitingCursor } from "@/utils"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
   import Window from "@/components/Window.svelte"
@@ -14,7 +13,6 @@
 
 	let desktopScreenRef: HTMLElement
 	let windowUnderMouseAtInitOfDrag: string | undefined
-  $: loginWindow = $windows.find(w => w.windowId === loginWindowId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	$: if ($user?.isLoggedIn) {
   	playAudio("/sounds/starting.mp3")
@@ -22,7 +20,12 @@
   	loadDesktopIcons()
 	}
 
-  createLoginWindow()
+	// First load
+  if (isMobileOrTablet()) {
+  	createIsTouchableDeviceWindow()
+  } else {
+  	createLoginWindow()
+  }
 
   const wakeUp = (_: HTMLElement) => {
   	const wakingUp = () => {
@@ -95,7 +98,6 @@
 						const ajustmentInY = rectOfShadow.top - event.clientY
 						const newCoordinates = destinationRoute === DESKTOP_ROUTE
 							? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
-							// : { top: 0, left: 0 }
 							: getNewCoordinatesInNewFolder(destinationRoute)
 
 						updateDesktopIconParams(
@@ -139,7 +141,7 @@
 	}
 
 	onMount(() => {
-		const mouseDown = (event: MouseEvent) => {
+		const mouseDown = (event: MouseEvent | TouchEvent) => {
 			if (thereIsBlockingWindow(event)) return
 
 			const target = event.target as Node
@@ -185,17 +187,30 @@
 		}
 		const mouseMove = (event: MouseEvent) => dropDesktopIcon(event)
 		const mouseUp = (event: MouseEvent) => dropDesktopIcon(event)
+		const touchMove = (event: TouchEvent) => dropDesktopIcon({
+			target: event.target, clientX: event.touches[0].clientX, clientY: event.touches[0].clientY, type: "mousemove"
+		} as unknown as MouseEvent)
+		const touchEnd = (event: TouchEvent) => dropDesktopIcon({
+			target: event.target, clientX: event.changedTouches[0].clientX, clientY: event.changedTouches[0].clientY, type: "mouseup"
+		} as unknown as MouseEvent)
+		const touchStart = mouseDown
 
 		document.addEventListener("mousedown", mouseDown)
 		document.addEventListener("keydown", keyDown)
 		document.addEventListener("mousemove", mouseMove)
 		document.addEventListener("mouseup", mouseUp)
+		document.addEventListener("touchstart", touchStart)
+		document.addEventListener("touchmove", touchMove)
+		document.addEventListener("touchend", touchEnd)
 
 		return () => {
 			document.removeEventListener("mousedown", mouseDown)
 			document.removeEventListener("keydown", keyDown)
 			document.removeEventListener("mousemove", mouseMove)
 			document.removeEventListener("mouseup", mouseUp)
+			document.removeEventListener("touchstart", touchStart)
+			document.removeEventListener("touchmove", touchMove)
+			document.removeEventListener("touchend", touchEnd)
 		}
 	})
 </script>
@@ -233,9 +248,9 @@
 		<RightClickMenu {...$rightClickMenu} />
 	{/if}
 {:else}
-  {#if loginWindow} <!-- INITIAL SCREEN! User has to log in -->
-    <Window {...loginWindow}>
-      <LoginBody windowId={loginWindow.windowId} />
+  {#if $windows.length > 0} <!-- INITIAL SCREEN! User has to log in (and accept touchable window if is mobile or tablet) -->
+    <Window {...$windows[0]}>
+			<svelte:component this={$windows[0].body} windowId={$windows[0].windowId} closeCallBack={$windows[0].closeCallBack} />
     </Window>
   {:else} <!-- SUSPENDED SCREEN! User has to click or press a key -->
     <section class="w-full h-full bg-black absolute" use:wakeUp />
