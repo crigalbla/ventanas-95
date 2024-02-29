@@ -20,12 +20,8 @@
   	loadDesktopIcons()
 	}
 
-	// First load
-  if (isMobileOrTablet()) {
-  	createIsTouchableDeviceWindow()
-  } else {
-  	createLoginWindow()
-  }
+	createLoginWindow()
+  if (isMobileOrTablet()) createIsTouchableDeviceWindow()
 
   const wakeUp = (_: HTMLElement) => {
   	const wakingUp = () => {
@@ -249,11 +245,13 @@
 	{/if}
 {:else}
   {#if $windows.length > 0} <!-- INITIAL SCREEN! User has to log in (and accept touchable window if is mobile or tablet) -->
-    <Window {...$windows[0]}>
-			<svelte:component this={$windows[0].body} windowId={$windows[0].windowId} closeCallBack={$windows[0].closeCallBack} />
-    </Window>
+		{#each $windows as { body, ...window }}
+			<Window {...window}>
+				<svelte:component this={body} windowId={window.windowId} />
+			</Window>
+		{/each}
   {:else} <!-- SUSPENDED SCREEN! User has to click or press a key -->
-    <section class="w-full h-full bg-black absolute" use:wakeUp />
+    <section class="w-full h-full bg-black absolute delay-100" use:wakeUp />
   {/if}
 {/if}
 <svelte:window on:scroll={() => window.scrollTo({ top: 0, left: 0 })} />

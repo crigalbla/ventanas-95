@@ -28,7 +28,6 @@ export type IndividualWindowType = {
   isMinimized?: boolean
   isFullScreen?: boolean
   isFocused?: boolean
-	isBlocking?: boolean
   initialWidth?: number
   initialHeight?: number
   left?: number
@@ -98,9 +97,8 @@ export const createIsTouchableDeviceWindow = () => createWindow({
 	canBeDraggabled: true,
 	canBeResized: false,
 	minWidth: 300,
-	maxWidth: 450,
-	body: TouchableDeviceBody,
-	closeCallBack: createLoginWindow
+	maxWidth: 500,
+	body: TouchableDeviceBody
 })
 
 export const createDefaultFolderWindow = (desktopIconId: string) => createWindow({
@@ -134,7 +132,6 @@ export const createBlockingWindow = (desktopIconId: string, title: string) => {
 		title,
 		windowId: W_BLOCKING,
 		desktopIconId,
-		isBlocking: true,
 		canBeResized: false,
 		canLoseFocus: false,
 		maxWidth: 600,

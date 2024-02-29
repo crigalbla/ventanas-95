@@ -4,12 +4,6 @@
   import { t } from "@/i18n"
 
   export let windowId: string
-  export let closeCallBack: () => void
-
-  const onClickAccept = () => {
-  	closeCallBack()
-  	removeWindow(windowId)
-  }
 </script>
 
 <section class="flex m-5 mr-11">
@@ -19,7 +13,7 @@
     <p>{$t("usingTouchableDevice2")}</p>
     <p class="font-black">{$t("usingTouchableDevice3")}</p>
     <div class="flex self-center mt-2">
-      <Button className="px-9" on:click={onClickAccept}>{$t("accept")}</Button>
+      <Button className="px-9" on:click={() => removeWindow(windowId)}>{$t("accept")}</Button>
     </div>
   </div>
 </section>
