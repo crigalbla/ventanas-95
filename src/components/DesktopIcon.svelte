@@ -124,6 +124,8 @@
   }
 
   const onTouchStart = () => {
+  	if (thereIsBlockingWindow()) return
+
   	onMouseDownDesktopIcon({ button: true } as unknown as MouseEvent)
   	const now = new Date().getTime()
   	const timeDiff = now - lastTouchTime
@@ -146,7 +148,7 @@
     tabindex={0}
     on:mousedown={onMouseDownDesktopIcon}
     on:contextmenu={onContextMenu}
-    on:dblclick={() => !isEditingName && onDblClick()}
+    on:dblclick={() => !isEditingName && !thereIsBlockingWindow() && onDblClick()}
     on:touchstart={onTouchStart}
     bind:this={desktopIconRef}
   >
