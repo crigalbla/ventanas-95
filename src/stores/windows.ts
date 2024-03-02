@@ -5,7 +5,7 @@ import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, INITIAL_WIND
 import BlockingBody from "@/components/windowBodies/BlockingBody.svelte"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
-import { generateId, isMobileOrTablet } from "@/utils"
+import { availableDimensions, generateId, isMobileOrTablet } from "@/utils"
 
 import { getDesktopIconName } from "./desktopIcons"
 import { user, type UserType } from "./user"
