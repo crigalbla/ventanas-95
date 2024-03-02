@@ -86,7 +86,7 @@ export const availableDimensions = () => {
 	const body = document.querySelector("body") as HTMLElement
 	const navigationBar = document.getElementById(NAVIGATION_BAR_ID) as HTMLElement
 	const availableWidth = body?.offsetWidth
-	const availableHeight = body?.offsetHeight - navigationBar?.offsetHeight
+	const availableHeight = body?.offsetHeight - (navigationBar ? navigationBar.offsetHeight : 0)
 
 	return { availableWidth, availableHeight }
 }

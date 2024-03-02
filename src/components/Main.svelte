@@ -10,9 +10,11 @@
 
 	import RightClickMenu from "./RightClickMenu.svelte"
   import IconsSelector from "./IconsSelector.svelte"
+  import Curtain from "./Curtain.svelte"
 
 	let desktopScreenRef: HTMLElement
 	let windowUnderMouseAtInitOfDrag: string | undefined
+	let isHorizontalOrientation = false
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	$: if ($user?.isLoggedIn) {
   	playAudio("/sounds/starting.mp3")
@@ -20,7 +22,7 @@
   	loadDesktopIcons()
 	}
 
-	createLoginWindow()
+	if (isMobileOrTablet() !== undefined) createLoginWindow()
   if (isMobileOrTablet()) createIsTouchableDeviceWindow()
 
   const wakeUp = (_: HTMLElement) => {
@@ -54,6 +56,10 @@
 		if (!windowUnderMouseAtInitOfDrag) {
 			windowUnderMouseAtInitOfDrag = elementsUnderMouse.find(x => x.id.substring(0, 1) === windowIdPrefix)?.id || "fake"
 		}
+	}
+
+	const handleResize = () => {
+		isHorizontalOrientation = window.innerWidth > window.innerHeight
 	}
 
 	const dropDesktopIcon = (event: MouseEvent) => {
@@ -199,6 +205,9 @@
 		document.addEventListener("touchmove", touchMove)
 		document.addEventListener("touchend", touchEnd)
 
+		handleResize()
+		window.addEventListener("resize", handleResize)
+
 		return () => {
 			document.removeEventListener("mousedown", mouseDown)
 			document.removeEventListener("keydown", keyDown)
@@ -207,10 +216,14 @@
 			document.removeEventListener("touchstart", touchStart)
 			document.removeEventListener("touchmove", touchMove)
 			document.removeEventListener("touchend", touchEnd)
+			window.removeEventListener("resize", handleResize)
 		}
 	})
 </script>
 
+{#if !isHorizontalOrientation}
+	<Curtain show /> <!-- To block the use of Ventanas 95 -->
+{/if}
 {#if $user?.isLoggedIn} <!-- HOME SCREEN! User can use Ventanas 95 -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<section

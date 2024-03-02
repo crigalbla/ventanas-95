@@ -92,7 +92,7 @@ export const createLoginWindow = () => createWindow({
 })
 
 export const createIsTouchableDeviceWindow = () => createWindow({
-	title: "ohNo",
+	title: "ohWow",
 	canLoseFocus: false,
 	canBeDraggabled: true,
 	canBeResized: false,
