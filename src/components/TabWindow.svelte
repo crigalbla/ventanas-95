@@ -48,7 +48,7 @@
 >
   {#if icon || iconFromDesktopIcon}
     <img
-      class="h-5 w-5"
+      class="h-5 w-5 min-w-[1.25rem]"
       src={`icons/${icon || iconFromDesktopIcon}.png`}
       alt={icon || iconFromDesktopIcon}
       draggable="false"

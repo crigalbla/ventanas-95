@@ -15,6 +15,7 @@
 	let desktopScreenRef: HTMLElement
 	let windowUnderMouseAtInitOfDrag: string | undefined
 	let isHorizontalOrientation = false
+	let innerHeight = 0
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	$: if ($user?.isLoggedIn) {
   	playAudio("/sounds/starting.mp3")
@@ -60,6 +61,7 @@
 
 	const handleResize = () => {
 		isHorizontalOrientation = window.innerWidth > window.innerHeight
+		innerHeight = window.innerHeight
 	}
 
 	const dropDesktopIcon = (event: MouseEvent) => {
@@ -230,7 +232,7 @@
 		class="desktop-screen"
 		id={DESKTOP_SCREEN_ID}
 		data-route={DESKTOP_ROUTE}
-		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT}; --innerHeight:{window?.innerHeight};"
+		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT}; --innerHeight:{innerHeight || window?.innerHeight};"
 		on:contextmenu={onContextMenu}
 		on:drag={(event) => event.preventDefault()}
 		bind:this={desktopScreenRef}

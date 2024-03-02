@@ -1,6 +1,8 @@
 # Ventanas 95
 
-Welcome to Ventanas 95, a nostalgic trip to the iconic operating system from 1995 recreated with [Astro](https://astro.build/) and [Svelte](https://svelte.dev/). This project aims to provide a fun and interactive experience reminiscent of said interface. Below you can see some screenshots
+Welcome to Ventanas 95, a nostalgic trip to the iconic operating system from 1995 recreated with [Astro](https://astro.build/) and [Svelte](https://svelte.dev/). This project aims to provide a fun and interactive experience reminiscent of said interface. You can use it in mobile, but you will have to put your MOBILE IN HORIZONTAL.
+
+Below you can see some screenshots in a desktop:
 
 **Login:**
 ![Login Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpiha59_RgtWVTdb0xD2kkVh_wfpMsXqB_7jKSUhjPaf3Stqn7I-DkV0HTAmTiiGWsG-fMHLRw5JpL6Jn1RaXX75gYp8W0VA=w1920-h868)

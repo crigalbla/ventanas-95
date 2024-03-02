@@ -114,10 +114,12 @@
 		realId = id
 	}
 
-	const onTouchEnd = () => {
+	const onTouchEnd = (e: TouchEvent) => {
+		const newEvent = { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY } as unknown as MouseEvent
+		const isMouseOutOfRange = isDesktopIcon ? isMouseOutOfThisElement(newEvent, document.body) : isMouseOutOfDesktopScreen(newEvent)
 		isDesktopIcon && isDragStarted && updateDesktopIconParams(realId, { isMoving: false })
   	isDragStarted = false
-  	if (fake && fakeDraggable) {
+  	if (fake && fakeDraggable && !isMouseOutOfRange) {
   		fakeDraggable.classList.add("display-none")
   		const newLeft = left + fakeLeft
   		const newTop = top + fakeTop
