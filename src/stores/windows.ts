@@ -97,7 +97,7 @@ export const createIsTouchableDeviceWindow = () => createWindow({
 	canBeDraggabled: true,
 	canBeResized: false,
 	minWidth: 300,
-	maxWidth: 500,
+	initialWidth: window.innerWidth > window.innerHeight ? 500 : availableDimensions().availableWidth - 50,
 	body: TouchableDeviceBody
 })
 
@@ -105,11 +105,11 @@ export const createDefaultFolderWindow = (desktopIconId: string) => createWindow
 	title: getDesktopIconName(desktopIconId),
 	desktopIconId,
 	initialWidth: DEFAULT_FOLDER_WINDOW_WIDTH,
-	initialHeight: isMobileOrTablet() ? 300 : DEFAULT_FOLDER_WINDOW_HEIGHT,
+	initialHeight: isMobileOrTablet() ? 200 : DEFAULT_FOLDER_WINDOW_HEIGHT,
 	canBeHidden: true,
 	canBeMaximizedOrMinimized: true,
 	minWidth: 360,
-	minHeight: 200,
+	minHeight: 150,
 	body: FolderBody
 })
 

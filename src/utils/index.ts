@@ -83,10 +83,9 @@ export const playAudio = (audioUrl: string) => {
 }
 
 export const availableDimensions = () => {
-	const body = document.querySelector("body") as HTMLElement
 	const navigationBar = document.getElementById(NAVIGATION_BAR_ID) as HTMLElement
-	const availableWidth = body?.offsetWidth
-	const availableHeight = body?.offsetHeight - (navigationBar ? navigationBar.offsetHeight : 0)
+	const availableWidth = window?.innerWidth
+	const availableHeight = window?.innerHeight - (navigationBar ? navigationBar.offsetHeight : 0)
 
 	return { availableWidth, availableHeight }
 }

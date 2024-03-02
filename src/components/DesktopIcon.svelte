@@ -21,7 +21,6 @@
 
   let desktopIconRef: HTMLElement
   let textareaRef: HTMLTextAreaElement
-  let lastTouchTime = 0
   $: newName = name
   $: pointerEventsNoneInTextarea = $windows && thereIsBlockingWindow()
   $: thisRoute = icon !== NOTEPAD_ICON ? `${route}\\${name}` : undefined
@@ -127,12 +126,9 @@
   	if (thereIsBlockingWindow()) return
 
   	onMouseDownDesktopIcon({ button: true } as unknown as MouseEvent)
-  	const now = new Date().getTime()
-  	const timeDiff = now - lastTouchTime
-  	lastTouchTime = now
-
-  	if (timeDiff < 300) setTimeout(onDblClick, 100)
   }
+
+  const onDblClickLocal = () => !isEditingName && !thereIsBlockingWindow() && onDblClick()
 </script>
 
 <Draggable id={desktopIconId} canBeDraggabled={!isEditingName} canBeDropped={canBeDropped} {top} {left} fake>
@@ -148,7 +144,7 @@
     tabindex={0}
     on:mousedown={onMouseDownDesktopIcon}
     on:contextmenu={onContextMenu}
-    on:dblclick={() => !isEditingName && !thereIsBlockingWindow() && onDblClick()}
+    on:dblclick={onDblClickLocal}
     on:touchstart={onTouchStart}
     bind:this={desktopIconRef}
   >

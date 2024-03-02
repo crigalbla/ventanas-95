@@ -77,7 +77,7 @@
 
 <Curtain show={showCurtain} />
 <footer
-  class="background-silver border-top-white navigation-bar w-full absolute bottom-0 flex items-center justify-between px-1"
+  class="background-silver border-top-white navigation-bar w-full absolute flex items-center justify-between px-1"
   style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
   id={NAVIGATION_BAR_ID}
 >

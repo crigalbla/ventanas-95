@@ -146,18 +146,16 @@
   })
 
   onMount(() => {
-  	if (canBeResized) {
+  	updateWindowParams(windowId, {
+  		width: windowDiv.offsetWidth,
+  		minWidth: minWidth || windowDiv.offsetWidth
+  	})
+  	setTimeout(() => {
   		updateWindowParams(windowId, {
-  			width: windowDiv.offsetWidth,
-  			minWidth: minWidth || windowDiv.offsetWidth
+  			height: windowDiv.offsetHeight,
+  			minHeight: minHeight || windowDiv.offsetHeight
   		})
-  		setTimeout(() => {
-  			updateWindowParams(windowId, {
-  				height: windowDiv.offsetHeight,
-  				minHeight: minHeight || windowDiv.offsetHeight
-  			})
-  		}, 1)
-  	}
+  	}, 1)
 
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
@@ -175,7 +173,8 @@
   class:display-none={isMinimized}
   id={windowId}
   style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth || ""}; --height:{height || initialHeight || ""};
-         --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2}"
+         --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2};
+         --innerHeight:{window?.innerHeight};"
   on:mousedown={onFocus}
   on:touchstart={onFocus}
   bind:this={windowDiv}
@@ -230,7 +229,7 @@
 
 <style>
   .window-center {
-    top: 50%;
+    top: calc(var(--innerHeight) / 2 * 1px);
     left: 50%;
     transform: translate(-50%, -50%);
   }

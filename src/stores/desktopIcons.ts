@@ -380,7 +380,7 @@ export const createInitialDesktopIcons = () => {
 		left: (DESKTOP_ICON_MARGIN * 2) + DESKTOP_ICON_WIDTH,
 		onDblClick: () => createDefaultFolderWindow(DI_FIRST_FOLDER)
 	})
-	for (let i = 10; i > 2; i--) {
+	for (let i = 6; i > 2; i--) {
 		const desktopIconId = generateId(desktopIconIdPrefix)
 		createDesktopIcon({
 			desktopIconId,

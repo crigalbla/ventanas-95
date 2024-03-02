@@ -230,7 +230,7 @@
 		class="desktop-screen"
 		id={DESKTOP_SCREEN_ID}
 		data-route={DESKTOP_ROUTE}
-		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT};"
+		style="--navigation-bar-height:{NAVIGATION_BAR_HEIGHT}; --innerHeight:{window?.innerHeight};"
 		on:contextmenu={onContextMenu}
 		on:drag={(event) => event.preventDefault()}
 		bind:this={desktopScreenRef}
@@ -272,6 +272,6 @@
 <style>
 	.desktop-screen {
 		width: 100vw;
-		height: calc(100vh - calc(var(--navigation-bar-height) * 1px));
+		height: calc((var(--innerHeight) - var(--navigation-bar-height)) * 1px);
 	}
 </style>
