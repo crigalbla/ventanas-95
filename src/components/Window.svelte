@@ -146,18 +146,18 @@
   })
 
   onMount(() => {
-  	setTimeout(() => {
+  	if (canBeResized) {
   		updateWindowParams(windowId, {
   			width: windowDiv.offsetWidth,
   			minWidth: minWidth || windowDiv.offsetWidth
   		})
-  	}, 0)
-  	setTimeout(() => {
-  		updateWindowParams(windowId, {
-  			height: windowDiv.offsetHeight,
-  			minHeight: minHeight || windowDiv.offsetHeight
-  		})
-  	}, 100)
+  		setTimeout(() => {
+  			updateWindowParams(windowId, {
+  				height: windowDiv.offsetHeight,
+  				minHeight: minHeight || windowDiv.offsetHeight
+  			})
+  		}, 1)
+  	}
 
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
