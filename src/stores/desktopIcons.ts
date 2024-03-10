@@ -4,7 +4,7 @@ import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_
 import { availableDimensions, generateId } from "@/utils"
 import { translateKey } from "@/i18n"
 
-import { createDefaultFolderWindow, createDefaultNotepadWindow, createBlockingWindow } from "./windows"
+import { createDefaultFolderWindow, createDefaultNotepadWindow, createBlockingWindow, removeWindowFromDesktopIcon } from "./windows"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -254,6 +254,7 @@ export const updateDesktopIconsParams = (desktopIconIds: string[], params: Updat
 }
 
 export const removeDesktopIcon = (desktopIconId: string) => {
+	removeWindowFromDesktopIcon(desktopIconId)
 	desktopIcons.update((dis: DesktopIconsType) => {
 		const desktopIconWillBeRemoved = dis.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
 		const routeWillBeRemoved = `${desktopIconWillBeRemoved.route}\\${desktopIconWillBeRemoved.name}`
@@ -296,7 +297,12 @@ export const getCutOrCopiedDesktopIcons = () => {
 export const isThereAnyCutOrCopiedDesktopIcon = () => Boolean(getCutOrCopiedDesktopIcons().length)
 
 export const cleanRecycleBin = () => {
-	desktopIcons.update((dis: DesktopIconsType) => dis.filter(di => !di.route.includes(RECYCLE_BIN_ROUTE)))
+	desktopIcons.update((dis: DesktopIconsType) => {
+		const desktopIconsInRecycleBin = dis.filter(di => di.route.includes(RECYCLE_BIN_ROUTE))
+		desktopIconsInRecycleBin.forEach((di) => removeWindowFromDesktopIcon(di.desktopIconId))
+
+		return dis.filter(di => !di.route.includes(RECYCLE_BIN_ROUTE))
+	})
 	updateRecycleBinIcon()
 }
 
