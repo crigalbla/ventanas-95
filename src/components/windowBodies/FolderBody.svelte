@@ -12,7 +12,7 @@
   export let desktopIconId: string
 
   $: myWindow = $windows.find(w => w.windowId === windowId) as IndividualWindowType
-  $: desktopIcon = $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType
+  $: desktopIcon = ($desktopIcons.find(di => di.desktopIconId === desktopIconId) || {}) as IndividualDesktopIconType
   $: thisRoute = `${desktopIcon.route}\\${desktopIcon.name}`
   $: isThisFolderRecycleBin = desktopIcon.desktopIconId === DI_RECYCLE_BIN
   $: isThisFolderMyPC = desktopIcon.desktopIconId === DI_MY_PC

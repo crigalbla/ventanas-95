@@ -77,6 +77,8 @@ export const updateWindowParams = (windowId: string, params: UpdatableWindowPara
 
 export const removeWindow = (windowId: string) => windows.update((ws: WindowsType) => ws.filter(w => w.windowId !== windowId))
 
+export const removeWindowFromDesktopIcon = (desktopIconId: string) => windows.update((ws: WindowsType) => ws.filter(w => w.desktopIconId !== desktopIconId))
+
 export const loginWindowId = `${windowIdPrefix}-login`
 
 export const createLoginWindow = () => createWindow({
