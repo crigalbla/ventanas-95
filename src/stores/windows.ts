@@ -1,16 +1,18 @@
 import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
 
-import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
+import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, HEADER_HEIGHT, INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
 import BlockingBody from "@/components/windowBodies/BlockingBody.svelte"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
+import TetrisGameBody from "@/components/windowBodies/TetrisGameBody.svelte"
 import { availableDimensions, generateId, isMobileOrTablet } from "@/utils"
 
 import { getDesktopIconName } from "./desktopIcons"
 import { user, type UserType } from "./user"
 import LoginBody from "@/components/windowBodies/LoginBody.svelte"
 import TouchableDeviceBody from "@/components/windowBodies/TouchableDeviceBody.svelte"
+import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH } from "@/games/tetris/constants"
 
 export type IndividualWindowType = {
   title: string
@@ -140,3 +142,13 @@ export const createBlockingWindow = (desktopIconId: string, title: string) => {
 		body: BlockingBody
 	})
 }
+
+export const createTetrisGameWindow = (desktopIconId: string) => createWindow({
+	title: getDesktopIconName(desktopIconId),
+	desktopIconId,
+	initialWidth: BOARD_WIDTH * BLOCK_SIZE + 100,
+	initialHeight: BOARD_HEIGHT * BLOCK_SIZE + HEADER_HEIGHT + 50,
+	canBeHidden: true,
+	canBeMaximizedOrMinimized: true,
+	body: TetrisGameBody
+})
