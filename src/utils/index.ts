@@ -72,14 +72,30 @@ export const thereIsBlockingWindow = (event?: Event) => {
 	return Boolean(blockingWindow)
 }
 
-export const playAudio = (audioUrl: string) => {
+export const playAudio = (audioUrl: string, volume: number = 1): HTMLAudioElement | null => {
 	// eslint-disable-next-line no-undef
 	const audio = new Audio(audioUrl)
 	audioPlayings[audioUrl] = { tracks: (audioPlayings[audioUrl]?.tracks || 0) + 1 }
 
 	audio.addEventListener("ended", () => delete audioPlayings[audioUrl])
 
-	if (audioPlayings[audioUrl]?.tracks === 1) void audio?.play()
+	if (audioPlayings[audioUrl]?.tracks === 1 && audio) {
+		if (volume >= 0 && volume <= 1) {
+			audio.volume = volume
+		}
+
+		void audio.play()
+		return audio
+	}
+
+	return null
+}
+
+export const destroyAudio = (audio?: HTMLAudioElement | null): void => {
+	if (audio) {
+		audio.pause()
+		audio.dispatchEvent(new Event("ended"))
+	}
 }
 
 export const availableDimensions = () => {

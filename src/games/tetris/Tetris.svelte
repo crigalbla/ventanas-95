@@ -1,17 +1,19 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onDestroy, onMount } from "svelte"
 
-  import { playAudio } from "@/utils"
+  import { destroyAudio, playAudio } from "@/utils"
 
   import { BOARD, BLOCK_SIZE, MOVING_PIECE, PIECES, BOARD_WIDTH, BOARD_HEIGHT, EVENT_MOVEMENTS, COLORS, NUMBER_COLOR } from "./constants"
 	import { lightenColorRgb, darkenColorRgb } from "./utils"
 
 	type NUMBER_COLOR_TYPE = 1 | 2 | 3 |4 | 5 | 6 | 7
 
-  let canvasHTML: HTMLCanvasElement = undefined!
   $: score = 0
   let dropCounter = 0
   let lastTime = 0
+	let isPlaying = true
+	let tetrisAudio: HTMLAudioElement | null
+  let canvasHTML: HTMLCanvasElement
 	let context: CanvasRenderingContext2D
 
   const update = (time = 0) => {
@@ -32,7 +34,7 @@
   		draw()
   	}
 
-  	window.requestAnimationFrame(update)
+  	isPlaying && window.requestAnimationFrame(update)
   }
 
 	const drawBlockBorders = (x: number, y: number, color: string, isMovingPiece?: boolean) => {
@@ -126,19 +128,27 @@
   		})
   	})
 
-  	resetMovingPiece()
+  	createNewMovingPiece()
   }
 
-  const resetMovingPiece = () => {
+	const resetBoard = () => {
+		BOARD.forEach((row) => row.fill(0))
+		score = 0
+	}
+
+	const resetMovingPiece = () => {
   	const randomPiece = PIECES[Math.floor(Math.random() * PIECES.length)]
-  	MOVING_PIECE.position.x = Math.floor(BOARD_WIDTH / 2 - 2)
+  	MOVING_PIECE.position.x = Math.floor((BOARD_WIDTH / 2) - 2)
   	MOVING_PIECE.position.y = 0
   	MOVING_PIECE.shape = randomPiece
+	}
+
+  const createNewMovingPiece = () => {
+  	resetMovingPiece()
 
   	if (hasCollision()) {
   		window.alert("Game over!")
-  		BOARD.forEach((row) => row.fill(0))
-  		score = 0
+  		resetBoard()
   	}
   }
 
@@ -157,6 +167,7 @@
   		BOARD.splice(y, 1)
   		BOARD.unshift(newRow)
   		score += 10
+  		playAudio("/sounds/clickNotAllowed.mp3")
   	})
   }
 
@@ -216,8 +227,15 @@
 
 		context.scale(BLOCK_SIZE, BLOCK_SIZE)
 
+  	tetrisAudio = playAudio("/sounds/tetris.mp3", 0.5)
 		update()
-  	// playAudio("/sounds/tetris.mp3")
+	})
+
+	onDestroy(() => {
+		isPlaying = false
+		destroyAudio(tetrisAudio)
+		resetBoard()
+		resetMovingPiece()
 	})
 </script>
 

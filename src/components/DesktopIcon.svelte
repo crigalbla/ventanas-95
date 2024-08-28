@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createRightClickMenuInDesktopIcon, desktopIcons, type DesktopIconsType, type IndividualDesktopIconType, updateDesktopIconParams, cleanRecycleBin, isThereAnyCutOrCopiedDesktopIcon, windows, createBlockingWindow } from "@/stores"
-  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, NOTEPAD_ICON } from "@/constants"
+  import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_WIDTH, DESKTOP_ROUTE, DI_MY_PC, DI_RECYCLE_BIN, DI_TETRIS_GAME, NOTEPAD_ICON } from "@/constants"
   import { thereIsBlockingWindow } from "@/utils"
   import Draggable from "./Draggable.svelte"
   import { t } from "@/i18n"
@@ -100,7 +100,7 @@
   	if (thereIsBlockingWindow()) return
 
   	let customSection
-  	const isMyPc = desktopIconId === DI_MY_PC
+  	const isMyPcOrGame = desktopIconId === DI_MY_PC || desktopIconId === DI_TETRIS_GAME
   	const isRecycleBin = desktopIconId === DI_RECYCLE_BIN
   	const isAlreadyCutOrCopied = isCut || isCopied
   	if (isRecycleBin) {
@@ -114,8 +114,8 @@
   		event,
   		desktopIcon: $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType,
   		canBeEdited: !isRecycleBin,
-  		canBeCutAndCopied: !isMyPc && !isRecycleBin,
-  		canBeDeleted: !isMyPc && !isRecycleBin,
+  		canBeCutAndCopied: !isMyPcOrGame && !isRecycleBin,
+  		canBeDeleted: !isMyPcOrGame && !isRecycleBin,
   		canBePasted: icon !== NOTEPAD_ICON && !isAlreadyCutOrCopied && isThereAnyCutOrCopiedDesktopIcon(),
   		customSection,
   		onDblClick

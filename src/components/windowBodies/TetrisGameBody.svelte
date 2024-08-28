@@ -10,7 +10,7 @@
   .tetris-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: flex-end;
     background-image: url("/icons/tetris-game-background.png");
   }
 </style>
