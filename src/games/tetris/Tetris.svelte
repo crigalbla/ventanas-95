@@ -3,10 +3,13 @@
 
   import { destroyAudio, playAudio } from "@/utils"
 
-  import { BOARD, BLOCK_SIZE, MOVING_PIECE, PIECES, BOARD_WIDTH, BOARD_HEIGHT, EVENT_MOVEMENTS, COLORS, NUMBER_COLOR } from "./constants"
-	import { lightenColorRgb, darkenColorRgb } from "./utils"
+  import { BOARD, MOVING_PIECE, PIECES, BOARD_WIDTH, BOARD_HEIGHT, EVENT_MOVEMENTS, COLORS, NUMBER_COLOR } from "./constants"
+	import { lightenColorRgb, darkenColorRgb, getBlockSize } from "./utils"
+  import { windows, type IndividualWindowType } from "@/stores"
 
 	type NUMBER_COLOR_TYPE = 1 | 2 | 3 |4 | 5 | 6 | 7
+
+	export let windowId: string
 
   $: score = 0
   let dropCounter = 0
@@ -22,7 +25,7 @@
   	lastTime = time
   	dropCounter += deltaTime
 
-  	if (dropCounter > 1000) {
+  	if (dropCounter > 500) {
   		MOVING_PIECE.position.y++
   		dropCounter = 0
 
@@ -34,6 +37,7 @@
   		draw()
   	}
 
+  	tetrisAudio?.ended && void tetrisAudio.play()
   	isPlaying && window.requestAnimationFrame(update)
   }
 
@@ -138,7 +142,7 @@
 
 	const resetMovingPiece = () => {
   	const randomPiece = PIECES[Math.floor(Math.random() * PIECES.length)]
-  	MOVING_PIECE.position.x = Math.floor((BOARD_WIDTH / 2) - 2)
+  	MOVING_PIECE.position.x = Math.floor((BOARD_WIDTH / 2) - 1)
   	MOVING_PIECE.position.y = 0
   	MOVING_PIECE.shape = randomPiece
 	}
@@ -220,22 +224,27 @@
 	})
 
 	onMount(() => {
+		const blockSize = getBlockSize()
 		context = canvasHTML.getContext("2d") as CanvasRenderingContext2D
 
-		canvasHTML.width = BLOCK_SIZE * BOARD_WIDTH
-		canvasHTML.height = BLOCK_SIZE * BOARD_HEIGHT
+		canvasHTML.width = blockSize * BOARD_WIDTH
+		canvasHTML.height = blockSize * BOARD_HEIGHT
 
-		context.scale(BLOCK_SIZE, BLOCK_SIZE)
+		context.scale(blockSize, blockSize)
 
-  	tetrisAudio = playAudio("/sounds/tetris.mp3", 0.5)
+		tetrisAudio = playAudio("/sounds/tetris.mp3", 0.5)
 		update()
 	})
 
 	onDestroy(() => {
+		const isARealDestroy = !$windows.find((w: IndividualWindowType) => w.windowId === windowId)
+
 		isPlaying = false
-		destroyAudio(tetrisAudio)
-		resetBoard()
-		resetMovingPiece()
+		destroyAudio(tetrisAudio) // TODO the audio is reseted
+		if (isARealDestroy) {
+			resetBoard()
+			resetMovingPiece()
+		}
 	})
 </script>
 
@@ -245,5 +254,9 @@
 <style>
 	strong {
 		background: white;
+	}
+
+	canvas {
+		height: fit-content;
 	}
 </style>

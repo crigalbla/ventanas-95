@@ -21,7 +21,9 @@ export const DI_RECYCLE_BIN = "di-recycle-bin"
 export const DI_FIRST_FOLDER = "di-first-folder"
 export const DI_ABOUT_NOTEPAD = "di-about-notepad"
 export const DI_TETRIS_GAME = "di-tetris-game"
+
 export const W_BLOCKING = "w-blocking"
+export const W_TETRIS_GAME = "w-tretris-game"
 
 export const RECYCLE_BIN_NAME = "desktopIcon.recycleBin"
 export const MY_PC_NAME = "desktopIcon.myPc"

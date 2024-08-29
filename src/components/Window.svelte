@@ -158,7 +158,7 @@
 
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
-  		updateWindowParams(windowId, { top: rect.top, left: rect.left })
+  		updateWindowParams(windowId, { top: rect.top - HEADER_HEIGHT, left: rect.left })
   	}
   })
 </script>

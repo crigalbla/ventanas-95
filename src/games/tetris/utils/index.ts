@@ -1,3 +1,5 @@
+import { BOARD_HEIGHT } from "../constants"
+
 const rgbToArray = (rgb: string) => {
 	return rgb.match(/\d+/g)?.map(Number) || []
 }
@@ -23,3 +25,5 @@ export const darkenColorRgb = (rgb: string, percent: number) => {
 	const newB = Math.max(0, Math.floor(b * factor))
 	return arrayToRgb([newR, newG, newB])
 }
+
+export const getBlockSize = () => typeof window !== "undefined" ? Math.floor((window?.innerHeight - 150) / BOARD_HEIGHT) : 0
