@@ -28,6 +28,8 @@
 	let outOfScreenTop = 0
 	let parentScrollLeft = 0
 	let parentScrollTop = 0
+	let lastPageX = 0
+	let lastPageY = 0
 
 	$: desktopIcon = $desktopIcons.find(di => di.desktopIconId === id) as IndividualDesktopIconType
 	$: route = desktopIcon?.route // route to avoid repetitions of getFolderDesktopIconContainingFile
@@ -67,6 +69,8 @@
 		outOfScreenTop = 0
 		fakeLeft = 0 - parentScrollLeft
   	fakeTop = 0 - parentScrollTop
+		lastPageX = e.pageX
+		lastPageY = e.pageY
 	}
 
   const onMouseUp = () => {
@@ -86,20 +90,27 @@
 			const isMouseOutOfRange = isDesktopIcon ? isMouseOutOfThisElement(e, document.body) : isMouseOutOfDesktopScreen(e)
 			isDesktopIcon && updateDesktopIconParams(id, { isMoving: true })
 			isWindow && freezeCurrentCursor(e)
+
+			const deltaX = e.pageX - lastPageX
+			const deltaY = e.pageY - lastPageY
+
 			if (!isMouseOutOfRange) {
 				if (fake && fakeDraggable) {
 					fakeDraggable.classList.remove("display-none")
-					fakeLeft += e.movementX + outOfScreenLeft
-					fakeTop += e.movementY + outOfScreenTop
+					fakeLeft += deltaX + outOfScreenLeft
+					fakeTop += deltaY + outOfScreenTop
 				} else {
-					updateParams(id, { left: left + e.movementX + outOfScreenLeft, top: top + e.movementY + outOfScreenTop })
+					updateParams(id, { left: left + deltaX + outOfScreenLeft, top: top + deltaY + outOfScreenTop })
 				}
 				outOfScreenLeft = 0
 				outOfScreenTop = 0
 			} else {
-				outOfScreenLeft += e.movementX
-				outOfScreenTop += e.movementY
+				outOfScreenLeft += deltaX
+				outOfScreenTop += deltaY
 			}
+
+			lastPageX = e.pageX
+			lastPageY = e.pageY
 		}
 	}
 

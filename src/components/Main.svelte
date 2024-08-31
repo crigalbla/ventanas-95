@@ -237,7 +237,7 @@
 		on:drag={(event) => event.preventDefault()}
 		bind:this={desktopScreenRef}
 	>
-		{#each $windows as { body, canLoseFocus, ...window }}
+		{#each $windows as { body, canLoseFocus, ...window } (window.windowId)}
 			<Window {...window}>
 				<svelte:component
 					this={body}
@@ -247,7 +247,7 @@
 				/>
 			</Window>
 		{/each}
-		{#each desktopIconsInDesktop as { properties, ...icon }}
+		{#each desktopIconsInDesktop as { properties, ...icon } (icon.desktopIconId)}
 			<DesktopIcon {...icon} />
 		{/each}
 	</section>
@@ -260,7 +260,7 @@
 	{/if}
 {:else}
   {#if $windows.length > 0} <!-- INITIAL SCREEN! User has to log in (and accept touchable window if is mobile or tablet) -->
-		{#each $windows as { body, ...window }}
+		{#each $windows as { body, ...window } (window.windowId)}
 			<Window {...window}>
 				<svelte:component this={body} windowId={window.windowId} />
 			</Window>

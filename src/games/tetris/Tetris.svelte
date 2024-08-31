@@ -5,11 +5,8 @@
 
   import { BOARD, MOVING_PIECE, PIECES, BOARD_WIDTH, BOARD_HEIGHT, EVENT_MOVEMENTS, COLORS, NUMBER_COLOR } from "./constants"
 	import { lightenColorRgb, darkenColorRgb, getBlockSize } from "./utils"
-  import { windows, type IndividualWindowType } from "@/stores"
 
 	type NUMBER_COLOR_TYPE = 1 | 2 | 3 |4 | 5 | 6 | 7
-
-	export let windowId: string
 
   $: score = 0
   let dropCounter = 0
@@ -237,14 +234,10 @@
 	})
 
 	onDestroy(() => {
-		const isARealDestroy = !$windows.find((w: IndividualWindowType) => w.windowId === windowId)
-
 		isPlaying = false
 		destroyAudio(tetrisAudio) // TODO the audio is reseted
-		if (isARealDestroy) {
-			resetBoard()
-			resetMovingPiece()
-		}
+		resetBoard()
+		resetMovingPiece()
 	})
 </script>
 

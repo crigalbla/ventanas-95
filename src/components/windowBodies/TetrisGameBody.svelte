@@ -1,11 +1,9 @@
 <script lang="ts">
   import Tetris from "@/games/tetris/Tetris.svelte"
-
-  export let windowId: string
 </script>
 
 <section class="tetris-container">
-  <Tetris windowId={windowId} />
+  <Tetris />
 </section>
 
 <style>
