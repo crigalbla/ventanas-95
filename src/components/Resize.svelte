@@ -192,27 +192,24 @@
 	}
 </script>
 
-<!-- TODO eliminar condicionar para que solo haya un slot -->
-<div class="h-full" class:resizable-box={canBeResized} use:resize={canBeResized}>
+<div class="h-full" class:resizable-box={canBeResized} use:resize>
   <slot />
 
-  {#if canBeResized}
-    <div class="resizer top" />
-    <div class="resizer right" />
-    <div class="resizer bottom" />
-    <div class="resizer left" />
-    <div class="resizer top-right" />
-    <div class="resizer top-left" />
-    <div class="resizer bottom-right" />
-    <div class="resizer bottom-left" />
-    {#if fake && resizing}
-      <div
-        class="fake-resize"
-        bind:this={fakeResizeRef}
-        style="--fakeWidth:{fakeWidth || width}; --fakeHeight:{fakeHeight || height}; --fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}"
-      />
-    {/if}
-  {/if}
+	<div class="resizer top" class:hidden={!canBeResized} />
+	<div class="resizer right" class:hidden={!canBeResized} />
+	<div class="resizer bottom" class:hidden={!canBeResized} />
+	<div class="resizer left" class:hidden={!canBeResized} />
+	<div class="resizer top-right" class:hidden={!canBeResized} />
+	<div class="resizer top-left" class:hidden={!canBeResized} />
+	<div class="resizer bottom-right" class:hidden={!canBeResized} />
+	<div class="resizer bottom-left" class:hidden={!canBeResized} />
+	{#if fake && resizing && canBeResized}
+		<div
+			class="fake-resize"
+			bind:this={fakeResizeRef}
+			style="--fakeWidth:{fakeWidth || width}; --fakeHeight:{fakeHeight || height}; --fakeTop:{fakeTop}; --fakeLeft:{fakeLeft}"
+		/>
+	{/if}
 </div>
 
 <style>
