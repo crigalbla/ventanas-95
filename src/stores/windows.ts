@@ -151,8 +151,8 @@ export const createTetrisGameWindow = (desktopIconId: string) => {
 		title: getDesktopIconName(desktopIconId),
 		windowId: W_TETRIS_GAME,
 		desktopIconId,
-		initialWidth: BOARD_WIDTH * blockSize + 100,
-		initialHeight: BOARD_HEIGHT * blockSize + HEADER_HEIGHT + 50,
+		initialWidth: BOARD_WIDTH * blockSize + 200,
+		initialHeight: BOARD_HEIGHT * blockSize + HEADER_HEIGHT + 70,
 		canBeHidden: true,
 		canBeMaximizedOrMinimized: true,
 		body: TetrisGameBody

@@ -8,7 +8,10 @@
 
 	type NUMBER_COLOR_TYPE = 1 | 2 | 3 |4 | 5 | 6 | 7
 
-  $: score = 0
+	let scoreByVelocity = 0
+  let score = 0
+	let level = 1
+	let lines = 0
   let dropCounter = 0
   let lastTime = 0
 	let isPlaying = true
@@ -22,7 +25,7 @@
   	lastTime = time
   	dropCounter += deltaTime
 
-  	if (dropCounter > 500) {
+  	if (dropCounter > getFallInterval()) {
   		MOVING_PIECE.position.y++
   		dropCounter = 0
 
@@ -34,9 +37,15 @@
   		draw()
   	}
 
+  	updateLevel()
   	tetrisAudio?.ended && void tetrisAudio.play()
   	isPlaying && window.requestAnimationFrame(update)
   }
+
+	const updateLevel = () => {
+		const newLevel = Math.trunc(score / 1000)
+		if (newLevel && newLevel !== level) level = newLevel
+	}
 
 	const drawBlockBorders = (x: number, y: number, color: string, isMovingPiece?: boolean) => {
 		const lighterColor = lightenColorRgb(color, 30)
@@ -134,20 +143,26 @@
 
 	const resetBoard = () => {
 		BOARD.forEach((row) => row.fill(0))
+		scoreByVelocity = 0
+		lines = 0
 		score = 0
+		level = 1
 	}
 
 	const resetMovingPiece = () => {
-  	const randomPiece = PIECES[Math.floor(Math.random() * PIECES.length)]
+		const randomPiece = PIECES[Math.floor(Math.random() * PIECES.length)]
   	MOVING_PIECE.position.x = Math.floor((BOARD_WIDTH / 2) - 1)
   	MOVING_PIECE.position.y = 0
   	MOVING_PIECE.shape = randomPiece
+		score += scoreByVelocity
+		scoreByVelocity = 0
 	}
 
   const createNewMovingPiece = () => {
   	resetMovingPiece()
 
   	if (hasCollision()) {
+  		playAudio("/sounds/clickNotAllowed.mp3")
   		window.alert("Game over!")
   		resetBoard()
   	}
@@ -167,12 +182,13 @@
 
   		BOARD.splice(y, 1)
   		BOARD.unshift(newRow)
-  		score += 10
+  		lines += 1
+  		score += 100
   		playAudio("/sounds/clickNotAllowed.mp3")
   	})
   }
 
-	document.addEventListener("keydown", event => {
+	const keyDown = (event: KeyboardEvent) => {
   	if (event.key === EVENT_MOVEMENTS.LEFT) {
   		MOVING_PIECE.position.x--
   		if (hasCollision()) {
@@ -185,6 +201,7 @@
   		}
   	} else if (event.key === EVENT_MOVEMENTS.DOWN) {
   		MOVING_PIECE.position.y++
+			scoreByVelocity += 1
   		if (hasCollision()) {
   			MOVING_PIECE.position.y--
   			solidifyPiece()
@@ -218,7 +235,13 @@
   	}
 
 		draw()
-	})
+	}
+
+	const getFallInterval = (): number => {
+		const baseInterval = 1000
+		const reductionPerLevel = 100
+		return Math.max(100, baseInterval - (level - 1) * reductionPerLevel)
+	}
 
 	onMount(() => {
 		const blockSize = getBlockSize()
@@ -229,27 +252,49 @@
 
 		context.scale(blockSize, blockSize)
 
-		tetrisAudio = playAudio("/sounds/tetris.mp3", 0.5)
+		document.addEventListener("keydown", keyDown)
+		// tetrisAudio = playAudio("/sounds/tetris.mp3", 0.5)
 		update()
 	})
 
 	onDestroy(() => {
 		isPlaying = false
-		destroyAudio(tetrisAudio) // TODO the audio is reseted
+		destroyAudio(tetrisAudio)
 		resetBoard()
 		resetMovingPiece()
+		document.removeEventListener("keydown", keyDown)
 	})
 </script>
 
-<strong>Score: {score}</strong>
-<canvas bind:this={canvasHTML}></canvas>
+<section class="tetris-border">
+	<div class="border-color-down flex flex-col pt-4 p-3 pb-1">
+		<strong>Score:</strong>
+		<strong class="pl-2">{score}</strong>
+		<strong>Level:</strong>
+		<strong class="pl-2">{level}</strong>
+		<strong>Lines:</strong>
+		<strong class="pl-2">{lines}</strong>
+		<div class="border-color-down flex flex-col items-center px-2 w-20 h-20">
+			<strong>Next</strong>
+			PIECE
+		</div>
+	</div>
+</section>
+<section class="tetris-border">
+	<canvas class="border-color-down" bind:this={canvasHTML}></canvas>
+</section>
 
 <style>
-	strong {
-		background: white;
-	}
-
 	canvas {
 		height: fit-content;
+		padding: 7px;
+		background: #bdbdbd;
+	}
+
+	.tetris-border {
+		padding: 7px;
+		background: #bdbdbd;
+		border: 7px solid ;
+		border-color: #f5f5f5 #777777 #777777 #f5f5f5;
 	}
 </style>
