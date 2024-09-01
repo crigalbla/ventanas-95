@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
+  import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, loginWindowId, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, isMobileOrTablet, playAudio, thereIsBlockingWindow, waitingCursor } from "@/utils"
   import NavigationBar from "@/components/NavigationBar.svelte"
@@ -16,6 +16,8 @@
 	let windowUnderMouseAtInitOfDrag: string | undefined
 	let isHorizontalOrientation = false
 	let innerHeight = 0
+	$: thereIsWindowWithoutDesktopIconId = $windows.some(w => !w.desktopIconId)
+	$: windowsWithoutDesktopIconId = $windows.filter(w => !w.desktopIconId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	$: if ($user?.isLoggedIn) {
   	playAudio("/sounds/starting.mp3")
@@ -259,8 +261,8 @@
 		<RightClickMenu {...$rightClickMenu} />
 	{/if}
 {:else}
-  {#if $windows.length > 0} <!-- INITIAL SCREEN! User has to log in (and accept touchable window if is mobile or tablet) -->
-		{#each $windows as { body, ...window } (window.windowId)}
+  {#if thereIsWindowWithoutDesktopIconId} <!-- INITIAL SCREEN! User has to log in (and accept touchable window if is mobile or tablet) -->
+		{#each windowsWithoutDesktopIconId as { body, ...window } (window.windowId)}
 			<Window {...window}>
 				<svelte:component this={body} windowId={window.windowId} />
 			</Window>
