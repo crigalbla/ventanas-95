@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte"
+  import { onDestroy, onMount, afterUpdate } from "svelte"
 
   import { destroyAudio, playAudio } from "@/utils"
   import { t } from "@/i18n"
@@ -9,14 +9,16 @@
 
 	type NUMBER_COLOR_TYPE = 1 | 2 | 3 |4 | 5 | 6 | 7
 
+	export let level: number = 1
+	export let isPlaying: boolean = true
+	export let isMuted: boolean = false
+
 	let blockSize = 0
 	let scoreByVelocity = 0
   let score = 0
-	let level = 1
 	let lines = 0
   let dropCounter = 0
   let lastTime = 0
-	let isPlaying = true
 	let tetrisAudio: HTMLAudioElement | null
   let tetrisCanvasHTML: HTMLCanvasElement
 	let nextPieceCanvasHTML: HTMLCanvasElement
@@ -29,7 +31,7 @@
   	lastTime = time
   	dropCounter += deltaTime
 
-  	if (dropCounter > getFallInterval()) {
+  	if (isPlaying && dropCounter > getFallInterval()) {
   		MOVING_PIECE.position.y++
   		dropCounter = 0
 
@@ -39,11 +41,11 @@
   			removeRows()
   		}
   		draw()
+  		updateLevel()
+  		!isMuted && tetrisAudio?.ended && void tetrisAudio.play()
   	}
 
-  	updateLevel()
-  	tetrisAudio?.ended && void tetrisAudio.play()
-  	isPlaying && window.requestAnimationFrame(update)
+  	window.requestAnimationFrame(update)
   }
 
 	const updateLevel = () => {
@@ -288,6 +290,14 @@
 		update()
 	})
 
+	afterUpdate(() => {
+		if (isMuted || !isPlaying) {
+			tetrisAudio?.pause()
+		} else {
+			void tetrisAudio?.play()
+		}
+	})
+
 	onDestroy(() => {
 		isPlaying = false
 		destroyAudio(tetrisAudio)
@@ -299,14 +309,14 @@
 
 <section class="tetris-border">
 	<div class="border-color-down flex flex-col pt-4 p-3 pb-1">
-		<strong>{$t("score")}:</strong>
+		<strong>{$t("tetrisGame.score")}:</strong>
 		<strong class="pl-2 text-blue-800">{score}</strong>
-		<strong>{$t("level")}:</strong>
+		<strong>{$t("tetrisGame.level")}:</strong>
 		<strong class="pl-2 text-blue-800">{level}</strong>
-		<strong>{$t("lines")}:</strong>
+		<strong>{$t("tetrisGame.lines")}:</strong>
 		<strong class="pl-2 text-blue-800">{lines}</strong>
 		<div class="border-color-down flex flex-col items-center px-2 w-20 h-20">
-			<strong>{$t("next")}</strong>
+			<strong>{$t("tetrisGame.next")}</strong>
 			<canvas class="next-piece-canvas" bind:this={nextPieceCanvasHTML} />
 		</div>
 	</div>

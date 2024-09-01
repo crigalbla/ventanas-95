@@ -1,12 +1,14 @@
 <script lang="ts">
+  import { onMount } from "svelte"
+
   import { createRightClickMenuInScreen, desktopIcons, windows, type IndividualDesktopIconType, type IndividualWindowType } from "@/stores"
   import { DI_MY_PC, DI_RECYCLE_BIN } from "@/constants"
-  import IconsSelector from "../IconsSelector.svelte"
   import { thereIsBlockingWindow } from "@/utils"
+  import { t } from "@/i18n"
+
+  import IconsSelector from "../IconsSelector.svelte"
   import DesktopIcon from "../DesktopIcon.svelte"
   import Button from "../Button.svelte"
-  import { onMount } from "svelte"
-  import { t } from "@/i18n"
 
   export let windowId: string
   export let desktopIconId: string
