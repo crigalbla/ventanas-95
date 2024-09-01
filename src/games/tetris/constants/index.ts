@@ -1,4 +1,9 @@
+export const BOARD = Array.from({ length: 20 }, () => Array(10).fill(0))
+export const BOARD_WIDTH = BOARD[0].length
+export const BOARD_HEIGHT = BOARD.length
+
 export const COLORS = {
+	TRANSPARENT: "transparent",
 	BLACK: "rgb(0, 0, 0)",
 	RED: "rgb(255, 00, 00)",
 	MAGENTA: "rgb(200, 0, 255)",
@@ -80,12 +85,12 @@ export const PIECES = [
 	REVERSE_L_PIECE
 ]
 
-export const MOVING_PIECE = {
-	position: { x: 4, y: 0 },
-	shape: BOX_PIECE
+export const NEXT_PIECE = {
+	position: { x: Math.floor((BOARD_WIDTH / 2) - 1), y: 0 },
+	shape: PIECES[Math.floor(Math.random() * PIECES.length)]
 }
 
-export const BOARD = Array.from({ length: 20 }, () => Array(10).fill(0))
-
-export const BOARD_WIDTH = BOARD[0].length
-export const BOARD_HEIGHT = BOARD.length
+export const MOVING_PIECE = {
+	position: { x: Math.floor((BOARD_WIDTH / 2) - 1), y: 0 },
+	shape: PIECES[Math.floor(Math.random() * PIECES.length)]
+}

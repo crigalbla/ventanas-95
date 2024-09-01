@@ -2,12 +2,14 @@
   import { onDestroy, onMount } from "svelte"
 
   import { destroyAudio, playAudio } from "@/utils"
+  import { t } from "@/i18n"
 
-  import { BOARD, MOVING_PIECE, PIECES, BOARD_WIDTH, BOARD_HEIGHT, EVENT_MOVEMENTS, COLORS, NUMBER_COLOR } from "./constants"
+  import { BOARD, MOVING_PIECE, PIECES, BOARD_WIDTH, BOARD_HEIGHT, EVENT_MOVEMENTS, COLORS, NUMBER_COLOR, NEXT_PIECE } from "./constants"
 	import { lightenColorRgb, darkenColorRgb, getBlockSize } from "./utils"
 
 	type NUMBER_COLOR_TYPE = 1 | 2 | 3 |4 | 5 | 6 | 7
 
+	let blockSize = 0
 	let scoreByVelocity = 0
   let score = 0
 	let level = 1
@@ -16,8 +18,10 @@
   let lastTime = 0
 	let isPlaying = true
 	let tetrisAudio: HTMLAudioElement | null
-  let canvasHTML: HTMLCanvasElement
-	let context: CanvasRenderingContext2D
+  let tetrisCanvasHTML: HTMLCanvasElement
+	let nextPieceCanvasHTML: HTMLCanvasElement
+	let tetrisContext: CanvasRenderingContext2D
+	let nextPieceContext: CanvasRenderingContext2D
 
   const update = (time = 0) => {
   	const deltaTime = time - lastTime
@@ -44,10 +48,10 @@
 
 	const updateLevel = () => {
 		const newLevel = Math.trunc(score / 1000)
-		if (newLevel && newLevel !== level) level = newLevel
+		if (newLevel && newLevel > level) level = newLevel
 	}
 
-	const drawBlockBorders = (x: number, y: number, color: string, isMovingPiece?: boolean) => {
+	const drawBlockBorders = (context: CanvasRenderingContext2D, x: number, y: number, color: string) => {
 		const lighterColor = lightenColorRgb(color, 30)
 		const darkerColor = darkenColorRgb(color, 50)
 		const borderOffset = 0.05
@@ -80,16 +84,16 @@
 	}
 
   const draw = () => {
-  	context.fillStyle = COLORS.BLACK
-  	context.fillRect(0, 0, canvasHTML.width, canvasHTML.height)
+  	tetrisContext.fillStyle = COLORS.BLACK
+  	tetrisContext.fillRect(0, 0, tetrisCanvasHTML.width, tetrisCanvasHTML.height)
 
   	BOARD.forEach((row, y) => {
   		row.forEach((value, x) => {
   			if (value) {
   				const color = NUMBER_COLOR[value as NUMBER_COLOR_TYPE]
-  				context.fillStyle = color
-  				context.fillRect(x, y, 1, 1)
-  				drawBlockBorders(x, y, color)
+  				tetrisContext.fillStyle = color
+  				tetrisContext.fillRect(x, y, 1, 1)
+  				drawBlockBorders(tetrisContext, x, y, color)
   			}
   		})
   	})
@@ -100,13 +104,35 @@
   				const newX = x + MOVING_PIECE.position.x
   				const newY = y + MOVING_PIECE.position.y
   				const color = NUMBER_COLOR[value as NUMBER_COLOR_TYPE]
-  				context.fillStyle = color
-  				context.fillRect(newX, newY, 1, 1)
-  				drawBlockBorders(newX, newY, color, true)
+  				tetrisContext.fillStyle = color
+  				tetrisContext.fillRect(newX, newY, 1, 1)
+  				drawBlockBorders(tetrisContext, newX, newY, color)
   			}
   		})
   	})
   }
+
+	const drawNextPiece = () => {
+		const nextPieceBlockSize = blockSize / 1.5
+		nextPieceCanvasHTML.width = nextPieceBlockSize * NEXT_PIECE.shape[0].length
+		nextPieceCanvasHTML.height = nextPieceBlockSize * NEXT_PIECE.shape.length
+
+		nextPieceContext.scale(nextPieceBlockSize, nextPieceBlockSize)
+
+  	nextPieceContext.fillStyle = COLORS.TRANSPARENT
+  	nextPieceContext.fillRect(0, 0, nextPieceCanvasHTML.width, nextPieceCanvasHTML.height)
+
+		NEXT_PIECE.shape.forEach((row, y) => {
+  		row.forEach((value, x) => {
+  			if (value) {
+  				const color = NUMBER_COLOR[value as NUMBER_COLOR_TYPE]
+  				nextPieceContext.fillStyle = color
+  				nextPieceContext.fillRect(x, y, 1, 1)
+  				drawBlockBorders(nextPieceContext, x, y, color)
+  			}
+  		})
+  	})
+	}
 
   const hasCollision = () => {
   	return MOVING_PIECE.shape.find((row, y) => {
@@ -151,11 +177,14 @@
 
 	const resetMovingPiece = () => {
 		const randomPiece = PIECES[Math.floor(Math.random() * PIECES.length)]
-  	MOVING_PIECE.position.x = Math.floor((BOARD_WIDTH / 2) - 1)
-  	MOVING_PIECE.position.y = 0
-  	MOVING_PIECE.shape = randomPiece
+  	MOVING_PIECE.position = { ...NEXT_PIECE.position }
+  	MOVING_PIECE.shape = NEXT_PIECE.shape
+		NEXT_PIECE.shape = randomPiece
+
 		score += scoreByVelocity
 		scoreByVelocity = 0
+
+		drawNextPiece()
 	}
 
   const createNewMovingPiece = () => {
@@ -244,16 +273,18 @@
 	}
 
 	onMount(() => {
-		const blockSize = getBlockSize()
-		context = canvasHTML.getContext("2d") as CanvasRenderingContext2D
+		blockSize = getBlockSize()
+		tetrisContext = tetrisCanvasHTML.getContext("2d") as CanvasRenderingContext2D
+		nextPieceContext = nextPieceCanvasHTML.getContext("2d") as CanvasRenderingContext2D
 
-		canvasHTML.width = blockSize * BOARD_WIDTH
-		canvasHTML.height = blockSize * BOARD_HEIGHT
+		tetrisCanvasHTML.width = blockSize * BOARD_WIDTH
+		tetrisCanvasHTML.height = blockSize * BOARD_HEIGHT
 
-		context.scale(blockSize, blockSize)
+		tetrisContext.scale(blockSize, blockSize)
 
 		document.addEventListener("keydown", keyDown)
-		// tetrisAudio = playAudio("/sounds/tetris.mp3", 0.5)
+		tetrisAudio = playAudio("/sounds/tetris.mp3", 0.5)
+		drawNextPiece()
 		update()
 	})
 
@@ -268,24 +299,24 @@
 
 <section class="tetris-border">
 	<div class="border-color-down flex flex-col pt-4 p-3 pb-1">
-		<strong>Score:</strong>
-		<strong class="pl-2">{score}</strong>
-		<strong>Level:</strong>
-		<strong class="pl-2">{level}</strong>
-		<strong>Lines:</strong>
-		<strong class="pl-2">{lines}</strong>
+		<strong>{$t("score")}:</strong>
+		<strong class="pl-2 text-blue-800">{score}</strong>
+		<strong>{$t("level")}:</strong>
+		<strong class="pl-2 text-blue-800">{level}</strong>
+		<strong>{$t("lines")}:</strong>
+		<strong class="pl-2 text-blue-800">{lines}</strong>
 		<div class="border-color-down flex flex-col items-center px-2 w-20 h-20">
-			<strong>Next</strong>
-			PIECE
+			<strong>{$t("next")}</strong>
+			<canvas class="next-piece-canvas" bind:this={nextPieceCanvasHTML} />
 		</div>
 	</div>
 </section>
 <section class="tetris-border">
-	<canvas class="border-color-down" bind:this={canvasHTML}></canvas>
+	<canvas class="tetris-canvas border-color-down" bind:this={tetrisCanvasHTML} />
 </section>
 
 <style>
-	canvas {
+	.tetris-canvas {
 		height: fit-content;
 		padding: 7px;
 		background: #bdbdbd;
