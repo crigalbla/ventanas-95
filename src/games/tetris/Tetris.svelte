@@ -12,7 +12,9 @@
 	export let level: number = 1
 	export let isPlaying: boolean = true
 	export let isMuted: boolean = false
+	export let gameIsFocused: boolean = true
 
+	let internalLevel = 1
 	let blockSize = 0
 	let scoreByVelocity = 0
   let score = 0
@@ -24,6 +26,14 @@
 	let nextPieceCanvasHTML: HTMLCanvasElement
 	let tetrisContext: CanvasRenderingContext2D
 	let nextPieceContext: CanvasRenderingContext2D
+
+	$: {
+		internalLevel = level
+		// eslint-disable-next-line no-use-before-define
+		resetBoard()
+		// eslint-disable-next-line no-use-before-define
+		resetMovingPiece()
+	}
 
   const update = (time = 0) => {
   	const deltaTime = time - lastTime
@@ -41,16 +51,16 @@
   			removeRows()
   		}
   		draw()
-  		updateLevel()
+  		updateInternalLevel()
   		!isMuted && tetrisAudio?.ended && void tetrisAudio.play()
   	}
 
   	window.requestAnimationFrame(update)
   }
 
-	const updateLevel = () => {
-		const newLevel = Math.trunc(score / 1000)
-		if (newLevel && newLevel > level) level = newLevel
+	const updateInternalLevel = () => {
+		const newLevel = Math.trunc((score + 1000) / 1000)
+		if (newLevel && newLevel > internalLevel) internalLevel = newLevel
 	}
 
 	const drawBlockBorders = (context: CanvasRenderingContext2D, x: number, y: number, color: string) => {
@@ -174,7 +184,7 @@
 		scoreByVelocity = 0
 		lines = 0
 		score = 0
-		level = 1
+		internalLevel = level
 	}
 
 	const resetMovingPiece = () => {
@@ -186,14 +196,14 @@
 		score += scoreByVelocity
 		scoreByVelocity = 0
 
-		drawNextPiece()
+		nextPieceCanvasHTML && drawNextPiece()
 	}
 
   const createNewMovingPiece = () => {
   	resetMovingPiece()
 
   	if (hasCollision()) {
-  		playAudio("/sounds/clickNotAllowed.mp3")
+  		!isMuted && playAudio("/sounds/clickNotAllowed.mp3")
   		window.alert("Game over!")
   		resetBoard()
   	}
@@ -215,11 +225,13 @@
   		BOARD.unshift(newRow)
   		lines += 1
   		score += 100
-  		playAudio("/sounds/clickNotAllowed.mp3")
+  		!isMuted && playAudio("/sounds/clickNotAllowed.mp3")
   	})
   }
 
 	const keyDown = (event: KeyboardEvent) => {
+		if (!isPlaying || !gameIsFocused) return
+
   	if (event.key === EVENT_MOVEMENTS.LEFT) {
   		MOVING_PIECE.position.x--
   		if (hasCollision()) {
@@ -271,7 +283,7 @@
 	const getFallInterval = (): number => {
 		const baseInterval = 1000
 		const reductionPerLevel = 100
-		return Math.max(100, baseInterval - (level - 1) * reductionPerLevel)
+		return Math.max(100, baseInterval - (internalLevel - 1) * reductionPerLevel)
 	}
 
 	onMount(() => {
@@ -312,7 +324,7 @@
 		<strong>{$t("tetrisGame.score")}:</strong>
 		<strong class="pl-2 text-blue-800">{score}</strong>
 		<strong>{$t("tetrisGame.level")}:</strong>
-		<strong class="pl-2 text-blue-800">{level}</strong>
+		<strong class="pl-2 text-blue-800">{internalLevel}</strong>
 		<strong>{$t("tetrisGame.lines")}:</strong>
 		<strong class="pl-2 text-blue-800">{lines}</strong>
 		<div class="border-color-down flex flex-col items-center px-2 w-20 h-20">

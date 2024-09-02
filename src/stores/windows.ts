@@ -145,9 +145,10 @@ export const createBlockingWindow = (desktopIconId: string, title: string) => {
 }
 
 export const createTetrisGameWindow = (desktopIconId: string) => {
+	const tetrisGameWindow = document.querySelector(`#${W_TETRIS_GAME}`)
 	const blockSize = getBlockSize()
 
-	createWindow({
+	!tetrisGameWindow && createWindow({
 		title: getDesktopIconName(desktopIconId),
 		windowId: W_TETRIS_GAME,
 		desktopIconId,
