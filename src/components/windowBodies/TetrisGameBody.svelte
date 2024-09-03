@@ -1,6 +1,6 @@
 <script lang="ts">
   import Tetris from "@/games/tetris/Tetris.svelte"
-  import { W_TETRIS_GAME } from "@/constants"
+  import { W_TETRIS_GAME, W_TETRIS_GAME_OVER } from "@/constants"
   import { windows } from "@/stores"
   import { t } from "@/i18n"
 
@@ -11,8 +11,9 @@
   let isMuted = false
   let showLevelDropdown = false
 
-  $: gameIsMinimized = $windows.find(w => w.windowId === W_TETRIS_GAME)?.isMinimized
-  $: gameIsFocused = $windows.find(w => w.windowId === W_TETRIS_GAME)?.isFocused
+  $: isGameMinimized = $windows.find(w => w.windowId === W_TETRIS_GAME)?.isMinimized
+  $: isGameFocused = $windows.find(w => w.windowId === W_TETRIS_GAME)?.isFocused
+  $: gameOverWindow = $windows.find(w => w.windowId === W_TETRIS_GAME_OVER)
 
   const changeLevel = (newLevel: number) => { level = newLevel; showLevelDropdown = false }
 </script>
@@ -38,7 +39,7 @@
   {/if}
 </div>
 <section class="tetris-container">
-  <Tetris {level} {isMuted} {gameIsFocused} isPlaying={isPlaying && !gameIsMinimized} />
+  <Tetris {level} {isMuted} {isGameFocused} isPlaying={isPlaying && !isGameMinimized && !gameOverWindow} />
 </section>
 
 <style>

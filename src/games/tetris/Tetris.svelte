@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onDestroy, onMount, afterUpdate } from "svelte"
 
+  import { createTetrisGameOverWindow, updateWindowParams } from "@/stores"
   import { destroyAudio, playAudio } from "@/utils"
+  import { W_TETRIS_GAME } from "@/constants"
   import { t } from "@/i18n"
 
   import { BOARD, MOVING_PIECE, PIECES, BOARD_WIDTH, BOARD_HEIGHT, EVENT_MOVEMENTS, COLORS, NUMBER_COLOR, NEXT_PIECE } from "./constants"
@@ -12,7 +14,7 @@
 	export let level: number = 1
 	export let isPlaying: boolean = true
 	export let isMuted: boolean = false
-	export let gameIsFocused: boolean = true
+	export let isGameFocused: boolean = true
 
 	let internalLevel = 1
 	let blockSize = 0
@@ -26,7 +28,9 @@
 	let nextPieceCanvasHTML: HTMLCanvasElement
 	let tetrisContext: CanvasRenderingContext2D
 	let nextPieceContext: CanvasRenderingContext2D
+	let animationId: number
 
+	$: isGameOver = !isPlaying
 	$: {
 		internalLevel = level
 		// eslint-disable-next-line no-use-before-define
@@ -39,7 +43,7 @@
   	const deltaTime = time - lastTime
 
   	lastTime = time
-  	dropCounter += deltaTime
+  	dropCounter += isPlaying ? deltaTime : 0
 
   	if (isPlaying && dropCounter > getFallInterval()) {
   		MOVING_PIECE.position.y++
@@ -55,7 +59,7 @@
   		!isMuted && tetrisAudio?.ended && void tetrisAudio.play()
   	}
 
-  	window.requestAnimationFrame(update)
+  	animationId = window.requestAnimationFrame(update)
   }
 
 	const updateInternalLevel = () => {
@@ -96,6 +100,8 @@
 	}
 
   const draw = () => {
+  	if (isGameOver) return
+
   	tetrisContext.fillStyle = COLORS.BLACK
   	tetrisContext.fillRect(0, 0, tetrisCanvasHTML.width, tetrisCanvasHTML.height)
 
@@ -204,8 +210,12 @@
 
   	if (hasCollision()) {
   		!isMuted && playAudio("/sounds/clickNotAllowed.mp3")
-  		window.alert("Game over!")
-  		resetBoard()
+  		createTetrisGameOverWindow(() => {
+  			resetBoard()
+  			resetMovingPiece()
+  			updateWindowParams(W_TETRIS_GAME, { isFocused: true })
+  		})
+  		isGameOver = true
   	}
   }
 
@@ -230,7 +240,7 @@
   }
 
 	const keyDown = (event: KeyboardEvent) => {
-		if (!isPlaying || !gameIsFocused) return
+		if (!isPlaying || !isGameFocused) return
 
   	if (event.key === EVENT_MOVEMENTS.LEFT) {
   		MOVING_PIECE.position.x--
@@ -316,6 +326,7 @@
 		resetBoard()
 		resetMovingPiece()
 		document.removeEventListener("keydown", keyDown)
+		window.cancelAnimationFrame(animationId)
 	})
 </script>
 

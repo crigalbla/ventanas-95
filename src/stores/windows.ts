@@ -1,19 +1,20 @@
 import type { ComponentType } from "svelte"
 import { writable } from "svelte/store"
 
-import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, HEADER_HEIGHT, INITIAL_WINDOW_Z_INDEX, W_BLOCKING, W_TETRIS_GAME } from "@/constants"
+import { DEFAULT_FOLDER_WINDOW_HEIGHT, DEFAULT_FOLDER_WINDOW_WIDTH, DI_TETRIS_GAME, HEADER_HEIGHT, INITIAL_WINDOW_Z_INDEX, W_BLOCKING, W_TETRIS_GAME, W_TETRIS_GAME_OVER } from "@/constants"
 import BlockingBody from "@/components/windowBodies/BlockingBody.svelte"
 import NotepadBody from "@/components/windowBodies/NotepadBody.svelte"
 import FolderBody from "@/components/windowBodies/FolderBody.svelte"
 import TetrisGameBody from "@/components/windowBodies/TetrisGameBody.svelte"
+import LoginBody from "@/components/windowBodies/LoginBody.svelte"
+import TouchableDeviceBody from "@/components/windowBodies/TouchableDeviceBody.svelte"
+import TetrisGameOverBody from "@/components/windowBodies/TetrisGameOverBody.svelte"
 import { availableDimensions, generateId, isMobileOrTablet } from "@/utils"
+import { BOARD_HEIGHT, BOARD_WIDTH } from "@/games/tetris/constants"
+import { getBlockSize } from "@/games/tetris/utils"
 
 import { getDesktopIconName } from "./desktopIcons"
 import { user, type UserType } from "./user"
-import LoginBody from "@/components/windowBodies/LoginBody.svelte"
-import TouchableDeviceBody from "@/components/windowBodies/TouchableDeviceBody.svelte"
-import { BOARD_HEIGHT, BOARD_WIDTH } from "@/games/tetris/constants"
-import { getBlockSize } from "@/games/tetris/utils"
 
 export type IndividualWindowType = {
   title: string
@@ -157,5 +158,19 @@ export const createTetrisGameWindow = (desktopIconId: string) => {
 		canBeHidden: true,
 		canBeMaximizedOrMinimized: true,
 		body: TetrisGameBody
+	})
+}
+
+export const createTetrisGameOverWindow = (closeCallBack: IndividualWindowType["closeCallBack"]) => {
+	createWindow({
+		title: getDesktopIconName(DI_TETRIS_GAME),
+		windowId: W_TETRIS_GAME_OVER,
+		desktopIconId: DI_TETRIS_GAME,
+		canBeResized: false,
+		canLoseFocus: false,
+		maxWidth: 400,
+		zIndex: 1000,
+		body: TetrisGameOverBody,
+		closeCallBack
 	})
 }

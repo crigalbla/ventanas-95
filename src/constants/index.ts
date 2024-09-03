@@ -24,6 +24,7 @@ export const DI_TETRIS_GAME = "di-tetris-game"
 
 export const W_BLOCKING = "w-blocking"
 export const W_TETRIS_GAME = "w-tretris-game"
+export const W_TETRIS_GAME_OVER = "w-tretris-game-over"
 
 export const RECYCLE_BIN_NAME = "desktopIcon.recycleBin"
 export const MY_PC_NAME = "desktopIcon.myPc"
