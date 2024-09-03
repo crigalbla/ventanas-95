@@ -1,10 +1,10 @@
 import { writable } from "svelte/store"
 
-import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON, DEFAULT_FOLDER_WINDOW_WIDTH } from "@/constants"
+import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON, DEFAULT_FOLDER_WINDOW_WIDTH, DI_TETRIS_GAME, OPEN_FOLDER_ICON, MY_COMPUTER_ICON, TETRIS_GAME_ICON } from "@/constants"
 import { availableDimensions, generateId } from "@/utils"
 import { translateKey } from "@/i18n"
 
-import { createDefaultFolderWindow, createDefaultNotepadWindow, createBlockingWindow, removeWindowFromDesktopIcon } from "./windows"
+import { createDefaultFolderWindow, createDefaultNotepadWindow, createBlockingWindow, removeWindowFromDesktopIcon, createTetrisGameWindow } from "./windows"
 
 export type IndividualDesktopIconType = {
   desktopIconId: string,
@@ -358,7 +358,7 @@ export const loadDesktopIcons = () => {
 export const createInitialDesktopIcons = () => {
 	createDesktopIcon({
 		desktopIconId: DI_MY_PC,
-		icon: "my-computer-280px",
+		icon: MY_COMPUTER_ICON,
 		name: MY_PC_NAME,
 		route: DESKTOP_ROUTE,
 		isFocused: false,
@@ -378,7 +378,7 @@ export const createInitialDesktopIcons = () => {
 	})
 	createDesktopIcon({
 		desktopIconId: DI_FIRST_FOLDER,
-		icon: "open-folder",
+		icon: OPEN_FOLDER_ICON,
 		name: "desktopIcon.myFirstFolder",
 		route: DESKTOP_ROUTE,
 		isFocused: false,
@@ -390,7 +390,7 @@ export const createInitialDesktopIcons = () => {
 		const desktopIconId = generateId(desktopIconIdPrefix)
 		createDesktopIcon({
 			desktopIconId,
-			icon: "open-folder",
+			icon: OPEN_FOLDER_ICON,
 			name: (i - 2).toString(),
 			route: DESKTOP_ROUTE,
 			isFocused: false,
@@ -412,6 +412,17 @@ export const createInitialDesktopIcons = () => {
 			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
 			left: availableWidth - DESKTOP_ICON_MARGIN - DESKTOP_ICON_WIDTH,
 			onDblClick: () => createDefaultNotepadWindow(DI_ABOUT_NOTEPAD)
+		})
+
+		createDesktopIcon({
+			desktopIconId: DI_TETRIS_GAME,
+			icon: TETRIS_GAME_ICON,
+			name: "desktopIcon.tetrisGame",
+			route: DESKTOP_ROUTE,
+			isFocused: false,
+			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
+			left: DESKTOP_ICON_MARGIN,
+			onDblClick: () => createTetrisGameWindow(DI_TETRIS_GAME)
 		})
 	}, 1)
 }

@@ -16,6 +16,8 @@
 	let windowUnderMouseAtInitOfDrag: string | undefined
 	let isHorizontalOrientation = false
 	let innerHeight = 0
+	$: thereIsWindowWithoutDesktopIconId = $windows.some(w => !w.desktopIconId)
+	$: windowsWithoutDesktopIconId = $windows.filter(w => !w.desktopIconId)
 	$: desktopIconsInDesktop = $desktopIcons.filter(di => di.route === DESKTOP_ROUTE)
 	$: if ($user?.isLoggedIn) {
   	playAudio("/sounds/starting.mp3")
@@ -237,7 +239,7 @@
 		on:drag={(event) => event.preventDefault()}
 		bind:this={desktopScreenRef}
 	>
-		{#each $windows as { body, canLoseFocus, ...window }}
+		{#each $windows as { body, canLoseFocus, ...window } (window.windowId)}
 			<Window {...window}>
 				<svelte:component
 					this={body}
@@ -247,7 +249,7 @@
 				/>
 			</Window>
 		{/each}
-		{#each desktopIconsInDesktop as { properties, ...icon }}
+		{#each desktopIconsInDesktop as { properties, ...icon } (icon.desktopIconId)}
 			<DesktopIcon {...icon} />
 		{/each}
 	</section>
@@ -259,8 +261,8 @@
 		<RightClickMenu {...$rightClickMenu} />
 	{/if}
 {:else}
-  {#if $windows.length > 0} <!-- INITIAL SCREEN! User has to log in (and accept touchable window if is mobile or tablet) -->
-		{#each $windows as { body, ...window }}
+  {#if thereIsWindowWithoutDesktopIconId} <!-- INITIAL SCREEN! User has to log in (and accept touchable window if is mobile or tablet) -->
+		{#each windowsWithoutDesktopIconId as { body, ...window } (window.windowId)}
 			<Window {...window}>
 				<svelte:component this={body} windowId={window.windowId} />
 			</Window>

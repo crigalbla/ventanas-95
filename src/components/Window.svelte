@@ -3,7 +3,7 @@
 
   import type { IndividualDesktopIconType, IndividualWindowType, WindowsType } from "@/stores"
   import { removeWindow, windows, updateWindowParams, desktopIcons } from "@/stores"
-  import { INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
+  import { HEADER_HEIGHT, INITIAL_WINDOW_Z_INDEX, W_BLOCKING } from "@/constants"
   import { availableDimensions } from "@/utils"
   import { t } from "@/i18n"
 
@@ -48,7 +48,6 @@
   let showTooltip = false
   let tooltipTop = 0
   let tooltipLeft = 0
-  const headerHeight = 24
 
   const doIfIsFullScreen = () => {
   	if (isFullScreen) {
@@ -159,7 +158,7 @@
 
   	if (!left && !top) {
   		const rect = windowDiv.getBoundingClientRect()
-  		updateWindowParams(windowId, { top: rect.top, left: rect.left })
+  		updateWindowParams(windowId, { top: rect.top - HEADER_HEIGHT, left: rect.left })
   	}
   })
 </script>
@@ -173,7 +172,7 @@
   class:display-none={isMinimized}
   id={windowId}
   style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth || ""}; --height:{height || initialHeight || ""};
-         --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{headerHeight + 2};
+         --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{HEADER_HEIGHT + 2};
          --innerHeight:{window?.innerHeight};"
   on:mousedown={onFocus}
   on:touchstart={onFocus}
@@ -255,6 +254,7 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+    line-clamp: 1;
     overflow: hidden;
   }
 </style>
