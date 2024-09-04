@@ -45,8 +45,8 @@ const STICK_PIECE = [
 
 // COLORS.GRAY
 const PYRAMID_PIECE = [
-	[0, 6, 0],
-	[6, 6, 6]
+	[6, 6, 6],
+	[0, 6, 0]
 ]
 
 // COLORS.LIME
@@ -63,16 +63,14 @@ const REVERSE_Z_PIECE = [
 
 // COLORS.YELLOW
 const L_PIECE = [
-	[3, 0],
-	[3, 0],
-	[3, 3]
+	[3, 3, 3],
+	[3, 0, 0]
 ]
 
 // COLORS.MAGENTA
 const REVERSE_L_PIECE = [
-	[0, 2],
-	[0, 2],
-	[2, 2]
+	[2, 2, 2],
+	[0, 0, 2]
 ]
 
 export const PIECES = [

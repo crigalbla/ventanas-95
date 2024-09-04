@@ -173,7 +173,7 @@
   id={windowId}
   style="--zIndex:{zIndex}; --left:{left}; --top:{top}; --width:{width || initialWidth || ""}; --height:{height || initialHeight || ""};
          --maxWidth:{maxWidth}; --minWidth:{minWidth}; --minHeight:{minHeight}; --headerHeight:{HEADER_HEIGHT + 2};
-         --innerHeight:{window?.innerHeight};"
+         --innerHeight:{typeof window !== "undefined" ? window?.innerHeight : ""};"
   on:mousedown={onFocus}
   on:touchstart={onFocus}
   bind:this={windowDiv}
