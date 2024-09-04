@@ -16,6 +16,7 @@
 	export let isMuted: boolean = false
 	export let isGameFocused: boolean = true
 
+	let nextPieceBlockSize = 0
 	let internalLevel = 1
 	let blockSize = 0
 	let scoreByVelocity = 0
@@ -131,7 +132,7 @@
   }
 
 	const drawNextPiece = () => {
-		const nextPieceBlockSize = blockSize / 1.5
+		nextPieceBlockSize = blockSize / 1.8
 		nextPieceCanvasHTML.width = nextPieceBlockSize * NEXT_PIECE.shape[0].length
 		nextPieceCanvasHTML.height = nextPieceBlockSize * NEXT_PIECE.shape.length
 
@@ -330,7 +331,7 @@
 	})
 </script>
 
-<section class="tetris-border">
+<section class="tetris-border self-start mr-2 mt-7">
 	<div class="border-color-down flex flex-col pt-4 p-3 pb-1">
 		<strong>{$t("tetrisGame.score")}:</strong>
 		<strong class="pl-2 text-blue-800">{score}</strong>
@@ -338,9 +339,14 @@
 		<strong class="pl-2 text-blue-800">{internalLevel}</strong>
 		<strong>{$t("tetrisGame.lines")}:</strong>
 		<strong class="pl-2 text-blue-800">{lines}</strong>
-		<div class="border-color-down flex flex-col items-center px-2 w-20 h-20">
+		<div
+			class="next-piece-container border-color-down"
+			style="--nextPieceWidth:{(nextPieceBlockSize * 4) + 16 + 4}; --nextPieceHeight:{(nextPieceBlockSize * 2) + 24 + 16 + 4};"
+		>
 			<strong>{$t("tetrisGame.next")}</strong>
-			<canvas class="next-piece-canvas" bind:this={nextPieceCanvasHTML} />
+			<div class="next-piece-canvas-container">
+				<canvas bind:this={nextPieceCanvasHTML} />
+			</div>
 		</div>
 	</div>
 </section>
@@ -360,5 +366,20 @@
 		background: #bdbdbd;
 		border: 7px solid ;
 		border-color: #f5f5f5 #777777 #777777 #f5f5f5;
+	}
+
+	.next-piece-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: calc(var(--nextPieceWidth) * 1px);
+		min-height: calc(var(--nextPieceHeight) * 1px);
+	}
+
+	.next-piece-canvas-container {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		padding: 8px;
 	}
 </style>
