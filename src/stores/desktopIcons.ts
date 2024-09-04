@@ -1,7 +1,7 @@
 import { writable } from "svelte/store"
 
 import { DESKTOP_ICON_HEIGHT, DESKTOP_ICON_MARGIN, DESKTOP_ICON_WIDTH, DI_ABOUT_NOTEPAD, DI_MY_PC, DI_FIRST_FOLDER, DI_RECYCLE_BIN, DESKTOP_ROUTE, RECYCLE_BIN_NAME, MY_PC_NAME, RECYCLE_BIN_ICON, FULL_RECYCLE_BIN_ICON, RECYCLE_BIN_ROUTE, NOTEPAD_ICON, DEFAULT_FOLDER_WINDOW_WIDTH, DI_TETRIS_GAME, OPEN_FOLDER_ICON, MY_COMPUTER_ICON, TETRIS_GAME_ICON } from "@/constants"
-import { availableDimensions, generateId } from "@/utils"
+import { availableDimensions, generateId, isMobileOrTablet } from "@/utils"
 import { translateKey } from "@/i18n"
 
 import { createDefaultFolderWindow, createDefaultNotepadWindow, createBlockingWindow, removeWindowFromDesktopIcon, createTetrisGameWindow } from "./windows"
@@ -401,6 +401,7 @@ export const createInitialDesktopIcons = () => {
 	}
 	setTimeout(() => {
 		const { availableHeight, availableWidth } = availableDimensions()
+		const disableTetrisGame = isMobileOrTablet()
 
 		createDesktopIcon({
 			desktopIconId: DI_ABOUT_NOTEPAD,
@@ -417,12 +418,12 @@ export const createInitialDesktopIcons = () => {
 		createDesktopIcon({
 			desktopIconId: DI_TETRIS_GAME,
 			icon: TETRIS_GAME_ICON,
-			name: "desktopIcon.tetrisGame",
+			name: disableTetrisGame ? "desktopIcon.disabledTetrisGame" : "desktopIcon.tetrisGame",
 			route: DESKTOP_ROUTE,
 			isFocused: false,
 			top: availableHeight - DESKTOP_ICON_MARGIN - DESKTOP_ICON_HEIGHT,
 			left: DESKTOP_ICON_MARGIN,
-			onDblClick: () => createTetrisGameWindow(DI_TETRIS_GAME)
+			onDblClick: () => disableTetrisGame ? undefined : createTetrisGameWindow(DI_TETRIS_GAME)
 		})
 	}, 1)
 }
