@@ -5,28 +5,28 @@ Welcome to Ventanas 95, a nostalgic trip to the iconic operating system from 199
 Below you can see some screenshots in a desktop:
 
 **Login:**
-![Login Screen Shot 2024-02-28](https://drive.google.com/file/d/15E8pFESZkHZHDmqZcAUifJCoiXVTmP8B)
+[Login Screen Shot 2024-02-28](https://drive.google.com/file/d/15E8pFESZkHZHDmqZcAUifJCoiXVTmP8B)
 
 **Help Tooltip:**
-![Tooltip Screen Shot 2024-02-28](https://drive.google.com/file/d/1Gw5impxjcqJyDGm56v1KiYxMNSXWLsTq)
+[Tooltip Screen Shot 2024-02-28](https://drive.google.com/file/d/1Gw5impxjcqJyDGm56v1KiYxMNSXWLsTq)
 
 **Some Windows:**
-![Some Windows Screen Shot 2024-02-28](https://drive.google.com/file/d/1IV-5xrvgsK-at4PVd4Ee2_SjM1ay_ty7)
+[Some Windows Screen Shot 2024-02-28](https://drive.google.com/file/d/1IV-5xrvgsK-at4PVd4Ee2_SjM1ay_ty7)
 
 **Right Click:**
-![Right Click Screen Shot 2024-02-28](https://drive.google.com/file/d/1JonBPt-WjyBA3Zyx0n13-UIB-ZPh4OAk)
+[Right Click Screen Shot 2024-02-28](https://drive.google.com/file/d/1JonBPt-WjyBA3Zyx0n13-UIB-ZPh4OAk)
 
 **Renaming:**
-![Renaming Screen Shot 2024-02-28](https://drive.google.com/file/d/1Mv7U5cJp9jhBSmk-BBFIq7x_-lfb9O06)
+[Renaming Screen Shot 2024-02-28](https://drive.google.com/file/d/1Mv7U5cJp9jhBSmk-BBFIq7x_-lfb9O06)
 
 **Start Menu:**
-![Start Menu Screen Shot 2024-02-28](https://drive.google.com/file/d/1ExnN5475HmbGtPBFQVtX4UL56ZVPf1NN)
+[Start Menu Screen Shot 2024-02-28](https://drive.google.com/file/d/1ExnN5475HmbGtPBFQVtX4UL56ZVPf1NN)
 
 **Shut Down:**
-![Shut Down Screen Shot 2024-02-28](https://drive.google.com/file/d/12doEKRFiPjoxpxZjwzIi-AwRkqjz4PDG)
+[Shut Down Screen Shot 2024-02-28](https://drive.google.com/file/d/12doEKRFiPjoxpxZjwzIi-AwRkqjz4PDG)
 
 **Tetris Game:**
-![Tetris Game Screen Shot 2024-09-09](https://drive.google.com/file/d/1kHqudLJF5yVBUlCZ2N4tRHCNOaWObcvU)
+[Tetris Game Screen Shot 2024-09-09](https://drive.google.com/file/d/1kHqudLJF5yVBUlCZ2N4tRHCNOaWObcvU)
 
 ## Features
 
