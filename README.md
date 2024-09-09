@@ -5,25 +5,28 @@ Welcome to Ventanas 95, a nostalgic trip to the iconic operating system from 199
 Below you can see some screenshots in a desktop:
 
 **Login:**
-![Login Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpiha59_RgtWVTdb0xD2kkVh_wfpMsXqB_7jKSUhjPaf3Stqn7I-DkV0HTAmTiiGWsG-fMHLRw5JpL6Jn1RaXX75gYp8W0VA=w1920-h868)
+![Login Screen Shot 2024-02-28](https://drive.google.com/file/d/15E8pFESZkHZHDmqZcAUifJCoiXVTmP8B)
 
 **Help Tooltip:**
-![Tooltip Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihaZMPJE3OOIxOu_QZx2VATOZqLURnq5zFyJN51ajU15SJ2HcNKO-ylFpajHYdN7SjPWDMkjq58458AaukhQCnjzz4FEIA=w1920-h868)
+![Tooltip Screen Shot 2024-02-28](https://drive.google.com/file/d/1Gw5impxjcqJyDGm56v1KiYxMNSXWLsTq)
 
 **Some Windows:**
-![Some Windows Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihb44xAxGyH-dpi4nR7KuEBLKL8nZ9RC-lIA21Q2zhRrIlzzIffEjYGltr3ngLC9eE88by5gyxIuCN51en1TfRjf46ngQg=w1920-h868)
+![Some Windows Screen Shot 2024-02-28](https://drive.google.com/file/d/1IV-5xrvgsK-at4PVd4Ee2_SjM1ay_ty7)
 
 **Right Click:**
-![Right Click Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihYl7KQZ7C2p2mzNPKCb4pupAQNNcHCyELhPeXcTiDJxNHxQDCWYe-6SymjVU7I8Gd_rqV8rxpkLHTOm5EuCe52oxwYWIw=w1920-h868)
+![Right Click Screen Shot 2024-02-28](https://drive.google.com/file/d/1JonBPt-WjyBA3Zyx0n13-UIB-ZPh4OAk)
 
 **Renaming:**
-![Renaming Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihYHRyNHLje_bsC-BCiPKyvDs9l3EhXkjhnfPJXUMn3yzOvMAiesiI2yLrbsuTjnTXkdEpk5nK_adaKf-o2vDttfQ07gyA=w1920-h868)
+![Renaming Screen Shot 2024-02-28](https://drive.google.com/file/d/1Mv7U5cJp9jhBSmk-BBFIq7x_-lfb9O06)
 
 **Start Menu:**
-![Start Menu Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihYOMLCGfYfNCLeMVETJLmDZPE6MYgeobTNyjBiOKSRMsThJGcmEQj8TLcLiEvzC9vZXx4o_CmdS7uIwHnohmt5YdAWV=w1920-h868)
+![Start Menu Screen Shot 2024-02-28](https://drive.google.com/file/d/1ExnN5475HmbGtPBFQVtX4UL56ZVPf1NN)
 
 **Shut Down:**
-![Shut Down Screen Shot 2024-02-28](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihbeIc8ZqPk7zEk-PKzM2jRGaxPjTqWrEUZ4bxPJ6d4R7tatWpCHTBVyo7NFCSaIqFDVwoHx7uoBHRYeOR_2lWXxtilw7Q=w1920-h868)
+![Shut Down Screen Shot 2024-02-28](https://drive.google.com/file/d/12doEKRFiPjoxpxZjwzIi-AwRkqjz4PDG)
+
+**Tetris Game:**
+![Tetris Game Screen Shot 2024-09-09](https://drive.google.com/file/d/1kHqudLJF5yVBUlCZ2N4tRHCNOaWObcvU)
 
 ## Features
 
@@ -41,6 +44,8 @@ Below you can see some screenshots in a desktop:
 > You can select several desktopIcons at the same time, although at the moment you cannot do anything with all of them at the same time.
 - **Translations:**
 > This project has Spanish and English languages, so all the texts generated at the beginning can be translated when the language is changed
+- **Tetris game:**
+> This project has a small and characteristic game, you will play in 10 different levels with their music is you want. Every thousand points you will level up. Of course You can pause the game in case you have to stop to go to the bathroom ;)
 
 ## Commands
 
