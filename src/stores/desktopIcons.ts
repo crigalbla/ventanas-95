@@ -106,21 +106,26 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 			onDblClick: () => isNotepad ? createDefaultNotepadWindow(desktopIconId) : createDefaultFolderWindow(desktopIconId)
 		}
 		pastedDesktopIcons.push(newPastedDesktopIcon)
-		createDesktopIcon(pastedDesktopIcons[pastedDesktopIcons.length - 1])
+		createDesktopIcon({
+			...pastedDesktopIcons[pastedDesktopIcons.length - 1],
+			...getNewCoordinatesInNewFolder(newPastedDesktopIcon.route)
+		})
 
 		// Creating the copies of the element inside of the main folder/s
 		allDesktopIcons.forEach((di2) => {
 			const oldRoute = routesWithNameOfCopiedDIs.find((x) => di2.route.includes(x))
 			if (oldRoute) {
-				const desktopIconId2 = generateId(desktopIconIdPrefix)
+				const isTetrisGame = di2.desktopIconId.includes(DI_TETRIS_GAME)
+				const desktopIconId2 = generateId(isTetrisGame ? DI_TETRIS_GAME : desktopIconIdPrefix)
 				const newRoute = `${newPastedDesktopIcon.route}\\${newPastedDesktopIcon.name}`
 				const isNotepad = di2.icon === NOTEPAD_ICON
+				const ondblclick = isNotepad ? createDefaultNotepadWindow(desktopIconId2) : createDefaultFolderWindow(desktopIconId2)
 
 				createDesktopIcon({
 					...di2,
 					desktopIconId: desktopIconId2,
 					route: di2.route.replace(oldRoute, newRoute),
-					onDblClick: () => isNotepad ? createDefaultNotepadWindow(desktopIconId2) : createDefaultFolderWindow(desktopIconId2)
+					onDblClick: () => isTetrisGame ? di2.onDblClick() : ondblclick
 				})
 			}
 		})
@@ -315,7 +320,7 @@ export const moveDesktopIconsToNewRoute = (
 	const wereCopied = cutOrCopiedDesktopIcons.find((di) => di.isCopied)
 	let newParams: UpdatableDesktopIconParams = { route: params.route, top: params.top ?? 0, left: params.left ?? 0 }
 
-	if (wereCut) newParams = { ...newParams, isCut: false }
+	if (wereCut) newParams = { ...newParams, ...getNewCoordinatesInNewFolder(params.route), isCut: false }
 	if (wereCopied) {
 		newParams = { ...newParams, isCopied: false }
 		pasteACopyOfDesktopIcons(newParams)

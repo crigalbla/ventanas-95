@@ -100,7 +100,7 @@
   	if (thereIsBlockingWindow()) return
 
   	let customSection
-  	const isMyPcOrGame = desktopIconId === DI_MY_PC || desktopIconId === DI_TETRIS_GAME
+  	const isMyPcOrTetrisGame = desktopIconId === DI_MY_PC || desktopIconId.includes(DI_TETRIS_GAME)
   	const isRecycleBin = desktopIconId === DI_RECYCLE_BIN
   	const isAlreadyCutOrCopied = isCut || isCopied
   	if (isRecycleBin) {
@@ -114,8 +114,8 @@
   		event,
   		desktopIcon: $desktopIcons.find(di => di.desktopIconId === desktopIconId) as IndividualDesktopIconType,
   		canBeEdited: !isRecycleBin,
-  		canBeCutAndCopied: !isMyPcOrGame && !isRecycleBin,
-  		canBeDeleted: !isMyPcOrGame && !isRecycleBin,
+  		canBeCutAndCopied: !isMyPcOrTetrisGame && !isRecycleBin,
+  		canBeDeleted: !isMyPcOrTetrisGame && !isRecycleBin,
   		canBePasted: icon !== NOTEPAD_ICON && !isAlreadyCutOrCopied && isThereAnyCutOrCopiedDesktopIcon(),
   		customSection,
   		onDblClick
