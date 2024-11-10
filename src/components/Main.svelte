@@ -2,7 +2,7 @@
   import { onMount } from "svelte"
 
   import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
-  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
+  import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, DI_TETRIS_GAME, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, isMobileOrTablet, playAudio, thereIsBlockingWindow, waitingCursor } from "@/utils"
   import NavigationBar from "@/components/NavigationBar.svelte"
   import DesktopIcon from "@/components/DesktopIcon.svelte"
@@ -81,9 +81,10 @@
 			const elementUnderDesktopIcon = elementsUnderMouse[1] as HTMLElement
 			const destinationRoute = elementUnderDesktopIcon?.dataset.route
 			const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
+			const isTetrisGame = elementUnderDesktopIcon.id !== DI_TETRIS_GAME
 			const isMovingFewPixels = elementUnderDesktopIcon.id === movingDesktopIcons[0].desktopIconId
 			const isRecycleBinOrMyPC = !isDifferentOfRecycleBinAndMyPC(movingDesktopIcons[0].desktopIconId)
-			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || !isDestinationADesktopIcon || !isRecycleBinOrMyPC
+			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || ((!isDestinationADesktopIcon || !isRecycleBinOrMyPC) && isTetrisGame)
 			const isDestinationRouteDifferentOfOrigin = destinationRoute && destinationRoute !== movingDesktopIcons[0].route
 			const routePlusName = `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
 			const isDestinationRouteDifferentOfOriginWithName = destinationRoute && destinationRoute !== routePlusName
