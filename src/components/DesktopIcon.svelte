@@ -44,10 +44,14 @@
 
   const onMouseDownDesktopIcon = (event: MouseEvent) => !isEditingName && event.button !== 1 && !thereIsBlockingWindow() &&
     desktopIcons.update((dis: DesktopIconsType) => {
-    	const oldZIndex = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)?.zIndex as number
+    	const currentDi = dis.find((di: IndividualDesktopIconType) => di.desktopIconId === desktopIconId)
+    	const oldZIndex = currentDi?.zIndex as number
+    	const wasAlreadyFocused = currentDi?.isFocused
 
     	return dis.map((di: IndividualDesktopIconType) => {
     		if (di.desktopIconId === desktopIconId) return ({ ...di, isFocused: true, zIndex: dis.length + 1 })
+    		// If clicked icon was NOT focused, deselect all others
+    		if (!wasAlreadyFocused && di.isFocused) return ({ ...di, isFocused: false, zIndex: (di.zIndex as number) > oldZIndex ? (di.zIndex as number) - 1 : di.zIndex })
     		if ((di.zIndex as number) > oldZIndex) return ({ ...di, zIndex: (di.zIndex as number) - 1 })
 
     		return di

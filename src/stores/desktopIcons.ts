@@ -132,7 +132,7 @@ const pasteACopyOfDesktopIcons = (params: UpdatableDesktopIconParams) => {
 	})
 }
 
-export const getNewCoordinatesInNewFolder = (route: string, offsetIndex = 0) => {
+export const getNewCoordinatesInNewFolder = (route: string, offsetIndex = 0, excludeIds: string[] = []) => {
 	const insideFolder = document.querySelector(`[data-route="${route.replaceAll("\\", "\\\\")}"]:not([id^="di"])`)
 	const clientWidth = insideFolder?.clientWidth as number || DEFAULT_FOLDER_WINDOW_WIDTH
 	const widthPlusMargin = DESKTOP_ICON_WIDTH + DESKTOP_ICON_MARGIN
@@ -140,32 +140,8 @@ export const getNewCoordinatesInNewFolder = (route: string, offsetIndex = 0) => 
 	let newCoordinates = { top: 0, left: 0 }
 
 	const unsubscribe = desktopIcons.subscribe((dis) => {
-		const disInThisRoute = dis.filter((di) => di.route === route)
-
-		// Create virtual positions for icons being moved simultaneously
-		const virtualPositions: { top: number, left: number }[] = []
-		for (let i = 0; i < offsetIndex; i++) {
-			const prevCoords = i === 0 ? { top: 0, left: 0 } : virtualPositions[i - 1]
-			const nextLeft = prevCoords.left + widthPlusMargin
-			const isInsideWidth = nextLeft + DESKTOP_ICON_WIDTH <= clientWidth
-			if (isInsideWidth) {
-				virtualPositions.push({ top: prevCoords.top, left: nextLeft })
-			} else {
-				virtualPositions.push({ top: prevCoords.top + heightPlusMargin, left: 0 })
-			}
-		}
-
-		// Start search from the offset position
-		if (offsetIndex > 0 && virtualPositions.length > 0) {
-			const lastVirtual = virtualPositions[virtualPositions.length - 1]
-			const nextLeft = lastVirtual.left + widthPlusMargin
-			const isInsideWidth = nextLeft + DESKTOP_ICON_WIDTH <= clientWidth
-			if (isInsideWidth) {
-				newCoordinates = { top: lastVirtual.top, left: nextLeft }
-			} else {
-				newCoordinates = { top: lastVirtual.top + heightPlusMargin, left: 0 }
-			}
-		}
+		// Exclude icons that are being moved simultaneously
+		const disInThisRoute = dis.filter((di) => di.route === route && !excludeIds.includes(di.desktopIconId))
 
 		const getSides = (di: IndividualDesktopIconType) => {
 			const top = di.top as number + DESKTOP_ICON_MARGIN
@@ -209,7 +185,20 @@ export const getNewCoordinatesInNewFolder = (route: string, offsetIndex = 0) => 
 
 			if (thereIsIntersection) lookForASpace()
 		}
+
+		// First find where the first icon (offsetIndex=0) would go
 		lookForASpace()
+
+		// Then calculate offset positions from the base
+		for (let i = 0; i < offsetIndex; i++) {
+			const nextLeft = newCoordinates.left + widthPlusMargin
+			const isInsideWidth = nextLeft + DESKTOP_ICON_WIDTH <= clientWidth
+			if (isInsideWidth) {
+				newCoordinates = { top: newCoordinates.top, left: nextLeft }
+			} else {
+				newCoordinates = { top: newCoordinates.top + heightPlusMargin, left: 0 }
+			}
+		}
 	})
 	unsubscribe()
 

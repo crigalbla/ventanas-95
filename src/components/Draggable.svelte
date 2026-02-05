@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { updateWindowParams, updateDesktopIconParams, updateDesktopIconsParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType, windows, getFolderDesktopIconContainingFile } from "@/stores"
+	import { updateWindowParams, updateDesktopIconParams, updateDesktopIconsParams, desktopIconIdPrefix, windowIdPrefix, desktopIcons, type IndividualDesktopIconType, windows, getFolderDesktopIconContainingFile, multiDrag, startMultiDrag, updateMultiDragPosition, stopMultiDrag } from "@/stores"
   import { freezeCurrentCursor, isMouseOutOfDesktopScreen, isMouseOutOfThisElement, thereIsBlockingWindow, unfreezeCurrentCursor } from "@/utils"
   import { FAKE_DESKTOP_ICON_ID } from "@/constants"
   import { onMount } from "svelte"
@@ -36,6 +36,10 @@
 
 	$: desktopIcon = $desktopIcons.find(di => di.desktopIconId === id) as IndividualDesktopIconType
 	$: route = desktopIcon?.route // route to avoid repetitions of getFolderDesktopIconContainingFile
+	// Check if this icon is a secondary icon being dragged (not the main one)
+	$: isSecondaryDragging = $multiDrag.isDragging &&
+		$multiDrag.draggingIconIds.includes(id) &&
+		$multiDrag.mainDraggingIconId !== id
 	$: updateParams = (() => {
 		if (isDesktopIcon && canBeDropped) return updateDesktopIconParams
 		if (isWindow) return updateWindowParams
@@ -88,10 +92,13 @@
 					relativeLeft: di.left - currentIcon.left,
 					relativeTop: di.top - currentIcon.top
 				}))
+				// Start multi-drag store for other icons to listen
+				startMultiDrag(id, focusedIcons.map(di => di.desktopIconId))
 			} else {
 				// Dragging a non-selected icon or single selection - deselect others
 				isDraggingMultiple = false
 				selectedIconsRelativePositions = []
+				stopMultiDrag() // Clear any previous multi-drag state
 				if (!currentIcon?.isFocused) {
 					// Deselect all other icons
 					$desktopIcons.forEach(di => {
@@ -118,22 +125,18 @@
   				const newLeft = left + fakeLeft + parentScrollLeft
   				const newTop = top + fakeTop + parentScrollTop
 
-  				// Update main icon position
-  				if (id === realId) updateParams(realId, { left: newLeft, top: newTop })
-
-  				// Update other selected icons maintaining relative positions
+  				// Update all selected icons maintaining relative positions
   				selectedIconsRelativePositions.forEach(pos => {
-  					if (pos.desktopIconId !== realId) {
-  						updateDesktopIconParams(pos.desktopIconId, {
-  							left: newLeft + pos.relativeLeft,
-  							top: newTop + pos.relativeTop
-  						})
-  					}
+  					updateDesktopIconParams(pos.desktopIconId, {
+  						left: newLeft + pos.relativeLeft,
+  						top: newTop + pos.relativeTop
+  					})
   				})
   			}
 
   			isDraggingMultiple = false
   			selectedIconsRelativePositions = []
+  			stopMultiDrag()
   		} else {
   			updateDesktopIconParams(realId, { isMoving: false })
   			if (fake && fakeDraggable) {
@@ -176,6 +179,10 @@
 					fakeDraggable.classList.remove("display-none")
 					fakeLeft += deltaX + outOfScreenLeft
 					fakeTop += deltaY + outOfScreenTop
+					// Update multi-drag store so other icons can sync
+					if (isDraggingMultiple) {
+						updateMultiDragPosition(fakeLeft, fakeTop, plusFakeLeft, plusFakeTop)
+					}
 				} else {
 					updateParams(id, { left: left + deltaX + outOfScreenLeft, top: top + deltaY + outOfScreenTop })
 				}
@@ -213,9 +220,12 @@
 					relativeLeft: di.left - currentIcon.left,
 					relativeTop: di.top - currentIcon.top
 				}))
+				// Start multi-drag store for other icons to listen
+				startMultiDrag(id, focusedIcons.map(di => di.desktopIconId))
 			} else {
 				isDraggingMultiple = false
 				selectedIconsRelativePositions = []
+				stopMultiDrag() // Clear any previous multi-drag state
 				if (!currentIcon?.isFocused) {
 					$desktopIcons.forEach(di => {
 						if (di.isFocused && di.desktopIconId !== id) {
@@ -241,20 +251,18 @@
 					const newLeft = left + fakeLeft
 					const newTop = top + fakeTop
 
-					if (id === realId) updateParams(realId, { left: newLeft, top: newTop })
-
+					// Update all selected icons maintaining relative positions
 					selectedIconsRelativePositions.forEach(pos => {
-						if (pos.desktopIconId !== realId) {
-							updateDesktopIconParams(pos.desktopIconId, {
-								left: newLeft + pos.relativeLeft,
-								top: newTop + pos.relativeTop
-							})
-						}
+						updateDesktopIconParams(pos.desktopIconId, {
+							left: newLeft + pos.relativeLeft,
+							top: newTop + pos.relativeTop
+						})
 					})
 				}
 
 				isDraggingMultiple = false
 				selectedIconsRelativePositions = []
+				stopMultiDrag()
 			} else {
 				updateDesktopIconParams(realId, { isMoving: false })
 				if (fake && fakeDraggable && !isMouseOutOfRange) {
@@ -288,6 +296,10 @@
 				fakeDraggable.classList.remove("display-none")
 				fakeLeft = e.touches[0].clientX - offsetX - left
 				fakeTop = e.touches[0].clientY - offsetY - top
+				// Update multi-drag store so other icons can sync
+				if (isDraggingMultiple) {
+					updateMultiDragPosition(fakeLeft, fakeTop, plusFakeLeft, plusFakeTop)
+				}
 			} else {
 				updateParams(id, { left: e.touches[0].clientX - offsetX - left, top: e.touches[0].clientY - offsetY - top })
 			}
@@ -334,6 +346,22 @@
 				<slot />
 			</div>
 		{/if}
+	{/if}
+	<!-- Ghost for secondary icons during multi-drag -->
+	{#if fake && isSecondaryDragging}
+		<div
+			class="fake-desktop-icon position"
+			style="
+				--fakeTop:{$multiDrag.fakeTop};
+				--fakeLeft:{$multiDrag.fakeLeft};
+				--plusFakeTop:{$multiDrag.plusFakeTop};
+				--plusFakeLeft:{$multiDrag.plusFakeLeft};
+				--color:black;
+				--none:none;
+				--cursor:{canBeDropped ? "" : "url('/cursors/no-drop.cur'), no-drop"};"
+		>
+			<slot />
+		</div>
 	{/if}
 {:else}
 	<slot />

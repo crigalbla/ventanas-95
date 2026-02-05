@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows } from "@/stores"
+  import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows, stopMultiDrag } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, DI_TETRIS_GAME, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, isMobileOrTablet, playAudio, thereIsBlockingWindow, waitingCursor } from "@/utils"
   import NavigationBar from "@/components/NavigationBar.svelte"
@@ -108,16 +108,19 @@
 						const ajustmentInY = rectOfShadow.top - event.clientY
 
 						// Move all selected icons to the new route
+						const movingIconIds = movingDesktopIcons.map(di => di.desktopIconId)
 						movingDesktopIcons.forEach((movingIcon, index) => {
 							const newCoordinates = destinationRoute === DESKTOP_ROUTE
 								? { top: event.clientY + ajustmentInY + (index * 20), left: event.clientX + ajustmentInX + (index * 20) }
-								: getNewCoordinatesInNewFolder(destinationRoute, index)
+								: getNewCoordinatesInNewFolder(destinationRoute, index, movingIconIds)
 
 							updateDesktopIconParams(
 								movingIcon.desktopIconId,
 								{ ...newCoordinates, route: destinationRoute, isMoving: false }
 							)
 						})
+						// Clear multi-drag state to remove ghost icons
+						stopMultiDrag()
 					} else {
 						const windowUnderMouse = elementsUnderMouse.find(x => x.id.substring(0, 1) === windowIdPrefix)?.id || "fake"
 						if (isDestinationADesktopIcon || windowUnderMouseAtInitOfDrag !== windowUnderMouse) {
@@ -177,12 +180,19 @@
 				}
 			})
 
+			// Check if click was on any focused desktop icon (for multi-select drag)
+			const clickedOnFocusedIcon = $desktopIcons.some(di => {
+				const diHTML = document.querySelector(`#${di.desktopIconId}`)
+				return di.isFocused && diHTML?.contains(target)
+			})
+
 			$desktopIcons.forEach((di) => {
 				const desktopIconHTML = document.querySelector(`#${di.desktopIconId}`)
 
 				// The target is not the desktopIcon
 				if (!desktopIconHTML?.contains(target)) {
-					if (di.isFocused) {
+					// Don't deselect if click was on another focused icon (multi-select drag)
+					if (di.isFocused && !clickedOnFocusedIcon) {
 						updateDesktopIconParams(di.desktopIconId, { isFocused: false, isEditingName: false })
 					} else if (di.isEditingName) {
 						setTimeout(() => {
