@@ -67,7 +67,7 @@
 	}
 
 	const dropDesktopIcon = (event: MouseEvent) => {
-		// Complete method when there is the possibility to move several desktopIcons
+		// Method to move several desktopIcons at once
 		const movingDesktopIcons = $desktopIcons.filter(di => di.isMoving)
 		if (movingDesktopIcons?.length > 0) {
 			if (thereIsBlockingWindow(event)) return
@@ -82,15 +82,18 @@
 			const destinationRoute = elementUnderDesktopIcon?.dataset.route
 			const isDestinationADesktopIcon = elementUnderDesktopIcon.id.substring(0, 2) === desktopIconIdPrefix
 			const isTetrisGame = elementUnderDesktopIcon.id !== DI_TETRIS_GAME
-			const isMovingFewPixels = elementUnderDesktopIcon.id === movingDesktopIcons[0].desktopIconId
-			const isRecycleBinOrMyPC = !isDifferentOfRecycleBinAndMyPC(movingDesktopIcons[0].desktopIconId)
-			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || ((!isDestinationADesktopIcon || !isRecycleBinOrMyPC) && isTetrisGame)
+			const movingIconIds = movingDesktopIcons.map(di => di.desktopIconId)
+			const isMovingFewPixels = movingIconIds.includes(elementUnderDesktopIcon.id)
+			const hasRecycleBinOrMyPC = movingDesktopIcons.some(di => !isDifferentOfRecycleBinAndMyPC(di.desktopIconId))
+			const canBeDroppedInFolderOrDesktopIcon = isMovingFewPixels || ((!isDestinationADesktopIcon || !hasRecycleBinOrMyPC) && isTetrisGame)
 			const isDestinationRouteDifferentOfOrigin = destinationRoute && destinationRoute !== movingDesktopIcons[0].route
 			const routePlusName = `${movingDesktopIcons[0].route}\\${movingDesktopIcons[0].name}`
 			const isDestinationRouteDifferentOfOriginWithName = destinationRoute && destinationRoute !== routePlusName
 			const isRecycleBinOrMyPCMovingToFolder =
-				isRecycleBinOrMyPC && isDestinationRouteDifferentOfOrigin && isDestinationRouteDifferentOfOriginWithName
-			const isOldRouteIncludedInDestinationRoute = destinationRoute?.includes(routePlusName)
+				hasRecycleBinOrMyPC && isDestinationRouteDifferentOfOrigin && isDestinationRouteDifferentOfOriginWithName
+			const isOldRouteIncludedInDestinationRoute = movingDesktopIcons.some(di =>
+				destinationRoute?.includes(`${di.route}\\${di.name}`)
+			)
 
 			if (
 				canBeDroppedInFolderOrDesktopIcon &&
@@ -103,43 +106,50 @@
 						const rectOfShadow = elementShadow.getBoundingClientRect()
 						const ajustmentInX = rectOfShadow.left - event.clientX
 						const ajustmentInY = rectOfShadow.top - event.clientY
-						const newCoordinates = destinationRoute === DESKTOP_ROUTE
-							? { top: event.clientY + ajustmentInY, left: event.clientX + ajustmentInX }
-							: getNewCoordinatesInNewFolder(destinationRoute)
 
-						updateDesktopIconParams(
-							movingDesktopIcons[0].desktopIconId,
-							{ ...newCoordinates, route: destinationRoute, isMoving: false }
-						)
+						// Move all selected icons to the new route
+						movingDesktopIcons.forEach((movingIcon, index) => {
+							const newCoordinates = destinationRoute === DESKTOP_ROUTE
+								? { top: event.clientY + ajustmentInY + (index * 20), left: event.clientX + ajustmentInX + (index * 20) }
+								: getNewCoordinatesInNewFolder(destinationRoute, index)
+
+							updateDesktopIconParams(
+								movingIcon.desktopIconId,
+								{ ...newCoordinates, route: destinationRoute, isMoving: false }
+							)
+						})
 					} else {
 						const windowUnderMouse = elementsUnderMouse.find(x => x.id.substring(0, 1) === windowIdPrefix)?.id || "fake"
 						if (isDestinationADesktopIcon || windowUnderMouseAtInitOfDrag !== windowUnderMouse) {
-							updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
+							movingDesktopIcons.forEach(di => {
+								updateDesktopIconParams(di.desktopIconId, { canBeDropped: false })
+							})
 						}
 					}
 				}
 				if (isMouseMove && !movingDesktopIcons[0].canBeDropped) {
-					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: true })
+					movingDesktopIcons.forEach(di => {
+						updateDesktopIconParams(di.desktopIconId, { canBeDropped: true })
+					})
 				}
 
 				// Focus or unfocus destination desktopIcon
 				if (isMouseMove && isDestinationADesktopIcon) {
 					desktopIcons.update(dis =>
 						dis.map(di => {
-							if (di.desktopIconId === movingDesktopIcons[0].desktopIconId || di.desktopIconId === elementUnderDesktopIcon.id) {
+							if (movingIconIds.includes(di.desktopIconId) || di.desktopIconId === elementUnderDesktopIcon.id) {
 								return { ...di, isFocused: true }
 							} else {
 								return { ...di, isFocused: false }
 							}
 						}))
-				} else if (isMouseMove && $desktopIcons.filter(di => di.isFocused).length > 1) {
-					desktopIcons.update(dis =>
-						dis.map(di =>
-							di.desktopIconId !== movingDesktopIcons[0].desktopIconId ? { ...di, isFocused: false } : di))
 				}
+				// Note: Removed the deselection logic when moving, to keep multi-selection intact
 			} else {
 				if (isMouseMove && movingDesktopIcons[0].canBeDropped) {
-					updateDesktopIconParams(movingDesktopIcons[0].desktopIconId, { canBeDropped: false })
+					movingDesktopIcons.forEach(di => {
+						updateDesktopIconParams(di.desktopIconId, { canBeDropped: false })
+					})
 				}
 			}
 

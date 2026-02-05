@@ -153,7 +153,7 @@ export const getCurrentTime = () => {
 export const generateId = (prefix: string) => `${prefix}-${Math.random().toString().replace("0.", "")}`
 
 export const isMobileOrTablet = (): boolean | undefined => {
-	if (typeof navigator !== "undefined") {
+	if (typeof navigator !== "undefined" && typeof document !== "undefined") {
 		const userAgent = navigator.userAgent.toLowerCase()
 		const hasTouchstart = "ontouchstart" in document
 
