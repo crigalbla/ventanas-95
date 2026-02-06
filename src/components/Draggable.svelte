@@ -33,6 +33,7 @@
 	// For multi-select drag
 	let selectedIconsRelativePositions: { desktopIconId: string, relativeLeft: number, relativeTop: number }[] = []
 	let isDraggingMultiple = false
+	let didDrag = false
 
 	$: desktopIcon = $desktopIcons.find(di => di.desktopIconId === id) as IndividualDesktopIconType
 	$: route = desktopIcon?.route // route to avoid repetitions of getFolderDesktopIconContainingFile
@@ -71,6 +72,7 @@
 		parentScrollLeft = parentElement?.scrollLeft || 0
 		parentScrollTop = parentElement?.scrollTop || 0
 		isDragStarted = true
+		didDrag = false
 		realId = id
 		outOfScreenLeft = 0
 		outOfScreenTop = 0
@@ -120,7 +122,14 @@
   			const iconIds = selectedIconsRelativePositions.map(p => p.desktopIconId)
   			updateDesktopIconsParams(iconIds, { isMoving: false })
 
-  			if (fake && fakeDraggable) {
+  			if (!didDrag) {
+  				// Click without drag → deselect others, keep only clicked icon
+  				$desktopIcons.forEach(di => {
+  					if (di.isFocused && di.desktopIconId !== id) {
+  						updateDesktopIconParams(di.desktopIconId, { isFocused: false })
+  					}
+  				})
+  			} else if (fake && fakeDraggable) {
   				fakeDraggable.classList.add("display-none")
   				const newLeft = left + fakeLeft + parentScrollLeft
   				const newTop = top + fakeTop + parentScrollTop
@@ -158,6 +167,7 @@
 
 	const onMouseMove = (e: MouseEvent) => {
 		if (isDragStarted) {
+			didDrag = true
 			const isMouseOutOfRange = isDesktopIcon ? isMouseOutOfThisElement(e, document.body) : isMouseOutOfDesktopScreen(e)
 			isWindow && freezeCurrentCursor(e)
 
@@ -206,6 +216,7 @@
 		fakeLeft = 0
 		fakeTop = 0
 		isDragStarted = true
+		didDrag = false
 		realId = id
 
 		// Handle multi-select drag for desktop icons (touch)
@@ -246,7 +257,14 @@
 				const iconIds = selectedIconsRelativePositions.map(p => p.desktopIconId)
 				updateDesktopIconsParams(iconIds, { isMoving: false })
 
-				if (fake && fakeDraggable && !isMouseOutOfRange) {
+				if (!didDrag) {
+					// Tap without drag → deselect others, keep only tapped icon
+					$desktopIcons.forEach(di => {
+						if (di.isFocused && di.desktopIconId !== id) {
+							updateDesktopIconParams(di.desktopIconId, { isFocused: false })
+						}
+					})
+				} else if (fake && fakeDraggable && !isMouseOutOfRange) {
 					fakeDraggable.classList.add("display-none")
 					const newLeft = left + fakeLeft
 					const newTop = top + fakeTop
@@ -284,6 +302,7 @@
 
 	const onTouchMove = (e: TouchEvent) => {
 		if (isDragStarted) {
+			didDrag = true
 			if (isDesktopIcon) {
 				if (isDraggingMultiple) {
 					const iconIds = selectedIconsRelativePositions.map(p => p.desktopIconId)
@@ -350,7 +369,7 @@
 	<!-- Ghost for secondary icons during multi-drag -->
 	{#if fake && isSecondaryDragging}
 		<div
-			class="fake-desktop-icon position"
+			class="fake-desktop-icon position pointer-events-none"
 			style="
 				--fakeTop:{$multiDrag.fakeTop};
 				--fakeLeft:{$multiDrag.fakeLeft};
@@ -358,7 +377,7 @@
 				--plusFakeLeft:{$multiDrag.plusFakeLeft};
 				--color:black;
 				--none:none;
-				--cursor:{canBeDropped ? "" : "url('/cursors/no-drop.cur'), no-drop"};"
+				--cursor:{$multiDrag.canBeDropped ? "" : "url('/cursors/no-drop.cur'), no-drop"};"
 		>
 			<slot />
 		</div>
@@ -395,5 +414,9 @@
 		cursor: var(--cursor);
 		z-index: 1500;
 		opacity: 0.5;
+	}
+
+	.pointer-events-none {
+		pointer-events: none;
 	}
 </style>

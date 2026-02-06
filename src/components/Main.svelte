@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
 
-  import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows, stopMultiDrag } from "@/stores"
+  import { createIsTouchableDeviceWindow, createLoginWindow, createRightClickMenuInScreen, desktopIconIdPrefix, desktopIcons, getNewCoordinatesInNewFolder, loadDesktopIcons, removeRightClickMenu, rightClickMenu, updateDesktopIconParams, updateWindowParams, user, windowIdPrefix, windows, multiDrag, stopMultiDrag, updateMultiDragCanBeDropped } from "@/stores"
   import { DESKTOP_ROUTE, DESKTOP_SCREEN_ID, DI_TETRIS_GAME, FAKE_DESKTOP_ICON_ID, NAVIGATION_BAR_HEIGHT, RIGHT_CLICK_MENU_ID, SUB_RIGHT_CLICK_MENU_ID, W_BLOCKING } from "@/constants"
   import { isDifferentOfRecycleBinAndMyPC, isMobileOrTablet, playAudio, thereIsBlockingWindow, waitingCursor } from "@/utils"
   import NavigationBar from "@/components/NavigationBar.svelte"
@@ -109,9 +109,12 @@
 
 						// Move all selected icons to the new route
 						const movingIconIds = movingDesktopIcons.map(di => di.desktopIconId)
+						const mainIcon = movingDesktopIcons.find(di => di.desktopIconId === $multiDrag.mainDraggingIconId) || movingDesktopIcons[0]
 						movingDesktopIcons.forEach((movingIcon, index) => {
+							const relativeLeft = (movingIcon.left ?? 0) - (mainIcon.left ?? 0)
+							const relativeTop = (movingIcon.top ?? 0) - (mainIcon.top ?? 0)
 							const newCoordinates = destinationRoute === DESKTOP_ROUTE
-								? { top: event.clientY + ajustmentInY + (index * 20), left: event.clientX + ajustmentInX + (index * 20) }
+								? { top: event.clientY + ajustmentInY + relativeTop, left: event.clientX + ajustmentInX + relativeLeft }
 								: getNewCoordinatesInNewFolder(destinationRoute, index, movingIconIds)
 
 							updateDesktopIconParams(
@@ -127,6 +130,7 @@
 							movingDesktopIcons.forEach(di => {
 								updateDesktopIconParams(di.desktopIconId, { canBeDropped: false })
 							})
+							updateMultiDragCanBeDropped(false)
 						}
 					}
 				}
@@ -134,6 +138,7 @@
 					movingDesktopIcons.forEach(di => {
 						updateDesktopIconParams(di.desktopIconId, { canBeDropped: true })
 					})
+					updateMultiDragCanBeDropped(true)
 				}
 
 				// Focus or unfocus destination desktopIcon
@@ -153,6 +158,19 @@
 					movingDesktopIcons.forEach(di => {
 						updateDesktopIconParams(di.desktopIconId, { canBeDropped: false })
 					})
+					updateMultiDragCanBeDropped(false)
+				}
+			}
+
+			// Unfocus non-moving icons when cursor is not over a desktop icon
+			if (isMouseMove && !isDestinationADesktopIcon) {
+				const hasUnwantedFocus = $desktopIcons.some(di => di.isFocused && !movingIconIds.includes(di.desktopIconId))
+				if (hasUnwantedFocus) {
+					desktopIcons.update(dis =>
+						dis.map(di => {
+							if (movingIconIds.includes(di.desktopIconId)) return di
+							return di.isFocused ? { ...di, isFocused: false } : di
+						}))
 				}
 			}
 

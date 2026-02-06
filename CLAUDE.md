@@ -74,7 +74,7 @@ src/
 
 ### Arrastre múltiple de iconos
 
-**Estado:** Funcional con 1 bug pendiente
+**Estado:** Funcional - todos los bugs conocidos corregidos
 
 **Descripción:** Cuando se seleccionan varios iconos con el cajón de selección y se arrastra uno, todos los seleccionados se mueven juntos manteniendo sus posiciones relativas.
 
@@ -95,16 +95,22 @@ src/
 6. ✅ El icono arrastrado directamente no se movía dentro de carpetas (usaba `updateParams` que dependía de `canBeDropped`)
 7. ✅ Al soltar iconos dentro de carpeta, solo quedaba seleccionado el arrastrado directamente
 
-**Bug pendiente:**
-- **Cursor incorrecto en iconos secundarios:** Al arrastrar múltiples iconos dentro de una carpeta, solo el icono que se arrastra directamente muestra el cursor correcto. Los otros iconos fantasma muestran el cursor de "prohibido" aunque todo funciona bien. El problema es que cada icono tiene su propio `canBeDropped` y los secundarios no usan el valor del icono principal.
-  - **Intento fallido:** Se intentó agregar `canBeDropped` al store `multiDrag` pero no funcionó. Revisar por qué el valor no se propaga correctamente a los iconos secundarios.
-  - **Archivos relevantes:** `src/stores/multiDrag.ts`, `src/components/Draggable.svelte` (línea ~361 donde se usa `canBeDropped` en el fantasma secundario)
+**Bugs corregidos en sesión 2:**
+8. ✅ Icono destino quedaba con foco azul al pasar por encima arrastrando: `dropDesktopIcon` en `Main.svelte` solo gestionaba el foco cuando `isDestinationADesktopIcon` era true. Se añadió lógica de unfocus después del if/else principal que desfoca iconos no movidos cuando el cursor no está sobre un icono destino.
+9. ✅ Fantasmas secundarios aparecían en posición incorrecta al hacer click (antes de mover): `startMultiDrag` ponía `isDragging: true` inmediatamente, mostrando los fantasmas con `plusFakeTop/plusFakeLeft = 0`. Fix: `startMultiDrag` ahora pone `isDragging: false` y `updateMultiDragPosition` lo pone a `true` en el primer movimiento real.
+10. ✅ Click (mousedown+mouseup sin mover) en un icono de una multi-selección no deseleccionaba los demás: Se añadió flag `didDrag` en `Draggable.svelte` que distingue click de arrastre. En `onMouseUp`/`onTouchEnd`, si `!didDrag` y era multi-selección → deselecciona todos menos el clickado. El arrastre múltiple no se ve afectado.
+11. ✅ Cursor "prohibido" en arrastre múltiple dependiendo de qué icono se arrastraba: Los fantasmas secundarios no tenían `pointer-events: none`, así que `elementsFromPoint` los detectaba y arruinaba la lógica de drop en `Main.svelte`. Fix: añadido `pointer-events: none` a los fantasmas secundarios en `Draggable.svelte`. Esto también completa los cambios parciales previos (`canBeDropped` en multiDrag store + `updateMultiDragCanBeDropped` en Main.svelte).
 
 **Comportamiento actual (funcionando):**
 - Arrastrar icono seleccionado → mueve todos los seleccionados con fantasmas visibles
 - Arrastrar icono NO seleccionado → deselecciona otros y mueve solo ese
+- Click sin mover en icono de multi-selección → deselecciona los demás
 - Posiciones relativas se mantienen en el escritorio
 - Al mover a carpeta, se colocan secuencialmente sin huecos
 - Iconos permanecen seleccionados después de mover dentro de carpeta
+- Al arrastrar un icono sobre otro y salir, el icono destino pierde el foco correctamente
+- Fantasmas secundarios solo aparecen al iniciar movimiento real (no al hacer click)
+- Cursor correcto al arrastrar múltiples iconos independientemente de cuál se arrastre
+- Al soltar múltiples iconos en el escritorio desde carpeta, mantienen la disposición relativa de los fantasmas
 
-**Para continuar:** `npm run dev` → probar el bug del cursor en arrastre múltiple dentro de carpetas
+12. ✅ Posición incorrecta al soltar múltiples iconos en el escritorio desde carpeta: usaba `index * 20` como offset (escalera). Fix: se calcula la posición relativa real de cada icono respecto al principal (`$multiDrag.mainDraggingIconId`) para mantener la disposición exacta de los fantasmas al soltar.
